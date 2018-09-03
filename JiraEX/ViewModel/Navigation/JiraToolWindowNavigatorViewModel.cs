@@ -1,4 +1,5 @@
-﻿using JiraEX.View;
+﻿using ConfluenceEX.Helper;
+using JiraEX.View;
 using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowConnection(object sender, EventArgs e)
         {
-            /*try
+            try
             {
                 string accessToken = UserSettingsHelper.ReadFromUserSettings("JiraAccessToken");
                 string accessTokenSecret = UserSettingsHelper.ReadFromUserSettings("JiraAccessTokenSecret");
@@ -39,9 +40,9 @@ namespace JiraEX.ViewModel.Navigation
                 }
             }
             catch (Exception ex)
-            {*/
+            {
                 this.ShowBeforeSignIn();
-            //}
+            }
         }
 
         public void ShowBeforeSignIn()
