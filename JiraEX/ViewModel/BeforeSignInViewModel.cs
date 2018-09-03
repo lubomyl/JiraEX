@@ -1,4 +1,6 @@
-﻿using DevDefined.OAuth.Framework;
+﻿using ConfluenceEX.Command;
+using ConfluenceEX.Helper;
+using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
@@ -8,6 +10,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -26,7 +29,7 @@ namespace JiraEX.ViewModel
 
         private WritableSettingsStore _userSettingsStore;
 
-        //public DelegateCommand SignInOAuthCommand { get; private set; }
+        public DelegateCommand SignInOAuthCommand { get; private set; }
 
         public BeforeSignInViewModel(JiraToolWindowNavigatorViewModel parent)
         {
@@ -35,10 +38,10 @@ namespace JiraEX.ViewModel
             SettingsManager settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
-            //this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
+            this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
         }
 
-        /*private async void SignInOAuth(object parameter)
+        private async void SignInOAuth(object parameter)
         {
             this._oAuthService = new OAuthService();
 
@@ -51,13 +54,13 @@ namespace JiraEX.ViewModel
 
                 this._oAuthService.InitializeOAuthSession(this.BaseUrl);
 
-                UserSettingsHelper.WriteToUserSettings("ConfluenceBaseUrl", this.BaseUrl);
+                UserSettingsHelper.WriteToUserSettings("JiraBaseUrl", this.BaseUrl);
 
                 requestToken = await this._oAuthService.GetRequestToken();
                 authorizationUrl = await this._oAuthService.GetUserAuthorizationUrlForToken(requestToken);
 
                 System.Diagnostics.Process.Start(authorizationUrl);
-                this._parent.ShowOAuthVerificationConfirmation(null, null, requestToken);
+                //this._parent.ShowOAuthVerificationConfirmation(null, null, requestToken);
             }
             catch (OAuthException ex)
             {
@@ -71,7 +74,7 @@ namespace JiraEX.ViewModel
             {
                 this.ErrorMessage = ex.Message;
             }
-        }*/
+        }
 
         private string ProcessBaseUrlInput(string baseUrl)
         {
