@@ -7,6 +7,16 @@
 
   <Commands package="guidJiraPackage">
 
+    <Menus>
+      <Menu guid="guidJiraPackage" id="JiraToolbar" type="ToolWindowToolbar">
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText>Jira Toolbar</ButtonText>
+          <CommandName>Jira Toolbar</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+    
     <Groups>
       <Group guid="guidJiraMenuGroup" id="JiraMenuGroup" priority="0x000">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW" />
@@ -27,6 +37,8 @@
 
   <Symbols>
     <GuidSymbol name="guidJiraPackage" value="{923D3D57-D913-4751-93AA-14D5026B1144}">
+      <IDSymbol name="JiraToolbar" value="0x1000" />
+      <IDSymbol name="JiraToolbarGroup" value="0x1050" />
     </GuidSymbol>
 
     <GuidSymbol name="guidJiraMenuGroup" value="{C900F2A3-AAD5-4EAF-A04E-B1BFC7741C45}">
