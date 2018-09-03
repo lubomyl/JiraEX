@@ -17,7 +17,7 @@ namespace JiraRESTClient.Service
         /// <summary>
         /// Method to initialize communication session.
         /// </summary>
-        /// <param name="baseUrl">Base url used to make api calls. (e. g. https://confluencetest.atlassian.net)</param>
+        /// <param name="baseUrl">Base url used to make api calls. (e. g. https://jiratest.atlassian.net)</param>
         void InitializeOAuthSession(string baseUrl);
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace JiraRESTClient.Service
         /// </summary>
         /// <param name="token">AccessToken obtained after successfull <see cref="ExchangeRequestTokenForAccessToken(IToken, string)"/> method call.</param>
         /// <param name="tokenSecret">AccessTokenSecret obtained after successfull <see cref="ExchangeRequestTokenForAccessToken(IToken, string)"/> method call.</param>
-        /// <param name="baseUrl">Base url used to make api calls. (e. g. https://confluencetest.atlassian.net)</param>
+        /// <param name="baseUrl">Base url used to make api calls. (e. g. https://jiratest.atlassian.net)</param>
         void ReinitializeOAuthSessionAccessToken(string token, string tokenSecret, string baseUrl);
 
         /// <summary>

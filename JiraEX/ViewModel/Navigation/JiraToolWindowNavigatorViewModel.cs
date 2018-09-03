@@ -1,6 +1,8 @@
 ﻿using ConfluenceEX.Helper;
+using DevDefined.OAuth.Framework;
 using JiraEX.View;
 using JiraRESTClient.Service;
+using JiraRESTClient.Service.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +20,13 @@ namespace JiraEX.ViewModel.Navigation
         private IOAuthService _oAuthService;
 
         private BeforeSignInView _beforeSignInView;
+        private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
             this._parent = parent;
+
+            this._oAuthService = new OAuthService();
         }
 
         public void ShowConnection(object sender, EventArgs e)
@@ -59,6 +64,15 @@ namespace JiraEX.ViewModel.Navigation
             {
                 SelectedView = _beforeSignInView;
             }
+        }
+
+        public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
+        {
+            _parent.Caption = "Confirm OAuth Verification Code";
+
+            this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
+
+            SelectedView = this._oAuthVerifierConfirmationView;
         }
 
         public object SelectedView

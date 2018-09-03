@@ -60,7 +60,7 @@ namespace JiraEX.ViewModel
                 authorizationUrl = await this._oAuthService.GetUserAuthorizationUrlForToken(requestToken);
 
                 System.Diagnostics.Process.Start(authorizationUrl);
-                //this._parent.ShowOAuthVerificationConfirmation(null, null, requestToken);
+                this._parent.ShowOAuthVerificationConfirmation(null, null, requestToken);
             }
             catch (OAuthException ex)
             {

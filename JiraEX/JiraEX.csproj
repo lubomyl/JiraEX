@@ -67,12 +67,16 @@
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
+    <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\BeforeSignInView.xaml.cs">
       <DependentUpon>BeforeSignInView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Navigation\JiraToolWindowNavigator.xaml.cs">
       <DependentUpon>JiraToolWindowNavigator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OAuthVerifierConfirmationView.xaml.cs">
+      <DependentUpon>OAuthVerifierConfirmationView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Navigation\JiraToolWindowNavigator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OAuthVerifierConfirmationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
