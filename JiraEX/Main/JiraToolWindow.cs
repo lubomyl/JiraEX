@@ -43,6 +43,8 @@ namespace JiraEX
             base.Content = _view;
 
             this.ToolBar = new CommandID(Guids.guidJiraPackage, Guids.JIRA_TOOLBAR_ID);
+
+            this._navigator.ShowConnection(null, null);
         }
 
         protected override void Dispose(bool disposing)

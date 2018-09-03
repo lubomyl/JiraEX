@@ -31,35 +31,12 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--TODO uncomment in case of allowing basic authentication
-        
-        <TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource PlainText}">Login credentials:</TextBlock>
-
-        <Label Grid.Row="1">Username:</Label>
-        <TextBox Grid.Column="1" Grid.Row="1" Width="150px" Margin="0,0,0,10">
-            <TextBox.Text>
-                <Binding x:Name="username" Path="Username" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <validation:EmptyOrWhitespaceRule></validation:EmptyOrWhitespaceRule>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-
-        <Label Grid.Row="2">Password:</Label>
-        <PasswordBox x:Name="UserPassword" Grid.Column="1" Grid.Row="2" Width="150px" Margin="0,0,0,10"/>
-
-        <Button Command="{Binding SignInCommand}" CommandParameter="{Binding ElementName=This}" Content="Sign in" Grid.Column="0" 
-                Grid.Row="3" Height="25" x:Name="SignIn" Width="75" Margin="0,0,0,10"/>
-
-        -->
-
         <TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource PlainText}" Margin="0,0,20,10">OAuth1.0:</TextBlock>
 
         <Button Grid.Column="1" Grid.Row="0" Command="{Binding SignInOAuthCommand}" CommandParameter="{Binding ElementName=This}" Content="Redirect" 
                 Height="25" x:Name="SignInOAuth" Width="75" Margin="0,0,20,10"/>
 
-        <TextBlock Grid.Column="0" Grid.Row="1" Style="{StaticResource PlainText}" Margin="0,0,0,10">Enter base Confluence URL:</TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="1" Style="{StaticResource PlainText}" Margin="0,0,0,10">Enter base Jira URL:</TextBlock>
 
         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding BaseUrl}" Margin="0,0,10,10"/>
 
