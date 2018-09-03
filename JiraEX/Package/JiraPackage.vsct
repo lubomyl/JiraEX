@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Include href="KnownImageIds.vsct"/>
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidJiraPackage">
+
+    <Groups>
+      <Group guid="guidJiraMenuGroup" id="JiraMenuGroup" priority="0x000">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW" />
+      </Group>
+    </Groups>
+      
+    <!-- VS menu main button to show Tool Window -->
+    <Buttons>
+      <Button guid="guidJiraCommand" id="JiraCommand" priority="0x0100" type="Button">
+        <Parent guid="guidJiraMenuGroup" id="JiraMenuGroup" />
+        <Strings>
+          <ButtonText>Jira</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidJiraPackage" value="{923D3D57-D913-4751-93AA-14D5026B1144}">
+    </GuidSymbol>
+
+    <GuidSymbol name="guidJiraMenuGroup" value="{C900F2A3-AAD5-4EAF-A04E-B1BFC7741C45}">
+      <IDSymbol name="JiraMenuGroup" value="0x1000" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidJiraCommand" value="{3F01A173-9B5A-4CCF-A484-EB41152ABAB2}">
+      <IDSymbol name="JiraCommand" value="0x0101" />
+    </GuidSymbol>
+
+  </Symbols>
+</CommandTable>
