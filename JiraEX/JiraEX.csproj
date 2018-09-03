@@ -56,6 +56,7 @@
     <Compile Include="Package\JiraPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\Navigation\JiraToolWindowNavigator.xaml.cs">
       <DependentUpon>JiraToolWindowNavigator.xaml</DependentUpon>
     </Compile>
@@ -170,6 +171,7 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
