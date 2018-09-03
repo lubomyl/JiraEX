@@ -41,8 +41,19 @@ namespace JiraEX
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(Guids.GUID_JIRA_PACKAGE_STRING)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideToolWindow(typeof(JiraToolWindow),
+        Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
+        Window = "3ae79031-e1bc-11d0-8f78-00a0c9110057")]
     public sealed class JiraPackage : Package
     {
+
+        private static OleMenuCommandService _mcs;
+
+        public static OleMenuCommandService Mcs
+        {
+            get { return _mcs; }
+            private set { _mcs = value; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Jira"/> class.
@@ -55,6 +66,14 @@ namespace JiraEX
             // initialization is the Initialize method.
         }
 
+        private void ShowJiraToolWindow(object sender, EventArgs e)
+        {
+            JiraToolWindow toolWindow = (JiraToolWindow)this.FindToolWindow(typeof(JiraToolWindow), 0, true);
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)toolWindow.Frame;
+            ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
         #region Package Members
 
         /// <summary>
@@ -64,6 +83,16 @@ namespace JiraEX
         protected override void Initialize()
         {
             base.Initialize();
+
+            _mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (null != _mcs)
+            {
+                CommandID menuCommandID = new CommandID(Guids.guidJiraCommand, Guids.JIRA_COMMAND_ID);
+
+                MenuCommand onMenuCommandClickShowToolWindow = new MenuCommand(ShowJiraToolWindow, menuCommandID);
+
+                _mcs.AddCommand(onMenuCommandClickShowToolWindow);
+            }
         }
 
         #endregion
