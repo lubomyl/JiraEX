@@ -21,6 +21,7 @@ namespace JiraEX.ViewModel.Navigation
 
         private BeforeSignInView _beforeSignInView;
         private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
+        private AfterSignInView _afterSignInView;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
@@ -63,6 +64,22 @@ namespace JiraEX.ViewModel.Navigation
             else
             {
                 SelectedView = _beforeSignInView;
+            }
+        }
+
+        public void ShowAfterSignIn()
+        {
+            _parent.Caption = "Jira - Signed-in";
+
+            if (this._afterSignInView == null)
+            {
+                this._afterSignInView = new AfterSignInView(this);
+
+                SelectedView = this._afterSignInView;
+            }
+            else
+            {
+                SelectedView = _afterSignInView;
             }
         }
 

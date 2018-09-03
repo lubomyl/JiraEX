@@ -63,7 +63,7 @@ namespace JiraEX.ViewModel
                 UserSettingsHelper.WriteToUserSettings("JiraAccessToken", accessToken.Token);
                 UserSettingsHelper.WriteToUserSettings("JiraAccessTokenSecret", accessToken.TokenSecret);
 
-                //this._parent.ShowAfterSignIn();
+                this._parent.ShowAfterSignIn();
                 this._timer.Stop();
             }
             catch (OAuthException ex)
