@@ -11,6 +11,8 @@ namespace JiraEX
     using Microsoft.VisualStudio.Shell;
     using ViewModel.Navigation;
     using View;
+    using Main;
+    using System.ComponentModel.Design;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -23,7 +25,7 @@ namespace JiraEX
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid("7953b9ea-8958-4cea-abe9-7cf58fc7d0c6")]
+    [Guid(Guids.GUID_JIRA_TOOL_WINDOW_STRING)]
     public class JiraToolWindow : ToolWindowPane
     {
         private readonly object _view;
@@ -34,10 +36,13 @@ namespace JiraEX
         /// </summary>
         public JiraToolWindow() : base(null)
         {
+            this.Caption = Resources.JiraToolWindowTitle;
             this._navigator = new JiraToolWindowNavigatorViewModel(this);
 
             this._view = new JiraToolWindowNavigator(this._navigator);
             base.Content = _view;
+
+            this.ToolBar = new CommandID(Guids.guidJiraPackage, Guids.JIRA_TOOLBAR_ID);
         }
 
         protected override void Dispose(bool disposing)

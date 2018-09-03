@@ -21,6 +21,11 @@
       <Group guid="guidJiraMenuGroup" id="JiraMenuGroup" priority="0x000">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW" />
       </Group>
+
+      <!--ToolWindow - ToolBar - Menu Group-->
+      <Group guid="guidJiraPackage" id="JiraToolbarGroup" priority="0x0000">
+        <Parent guid="guidJiraPackage" id="JiraToolbar" />
+      </Group>
     </Groups>
       
     <!-- VS menu main button to show Tool Window -->
@@ -31,6 +36,56 @@
           <ButtonText>Jira</ButtonText>
         </Strings>
       </Button>
+
+    <!--ToolWindow - ToolBar - Menu Buttons-->
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandHome" priority="0x0000" type="Button" >
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Icon guid="ImageCatalogGuid" id="Home" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <Strings>
+        <CommandName>Home</CommandName>
+        <ButtonText>Home</ButtonText>
+      </Strings>
+    </Button>
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandBack" priority="0x0000" type="Button" >
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Icon guid="ImageCatalogGuid" id="Backwards" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <CommandFlag>DefaultDisabled</CommandFlag>
+      <Strings>
+        <ButtonText>Back</ButtonText>
+        <CommandName>Back</CommandName>
+      </Strings>
+    </Button>
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandForward" priority="0x0000" type="Button" >
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Icon guid="ImageCatalogGuid" id="Forwards" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <CommandFlag>DefaultDisabled</CommandFlag>
+      <Strings>
+        <ButtonText>Forward</ButtonText>
+        <CommandName>Forward</CommandName>
+      </Strings>
+    </Button>
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandConnection" priority="0x0000" type="Button" >
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Icon guid="ImageCatalogGuid" id="AddConnection" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <Strings>
+        <CommandName>Sign-in</CommandName>
+        <ButtonText>Sign-in</ButtonText>
+      </Strings>
+    </Button>
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandRefresh" priority="0x0000" type="Button" >
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Icon guid="ImageCatalogGuid" id="Refresh" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <CommandFlag>DefaultDisabled</CommandFlag>
+      <Strings>
+        <CommandName>Refresh Issues</CommandName>
+        <ButtonText>Refresh Issues</ButtonText>
+      </Strings>
+    </Button>
     </Buttons>
 
   </Commands>
@@ -39,6 +94,14 @@
     <GuidSymbol name="guidJiraPackage" value="{923D3D57-D913-4751-93AA-14D5026B1144}">
       <IDSymbol name="JiraToolbar" value="0x1000" />
       <IDSymbol name="JiraToolbarGroup" value="0x1050" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidJiraToolbarMenu" value="{81EE54E9-FC51-4A19-8964-6C52F1917B97}">
+      <IDSymbol name="ToolbarCommandHome" value="0x0129" />
+      <IDSymbol name="ToolbarCommandBack" value="0x0130" />
+      <IDSymbol name="ToolbarCommandForward" value="0x0131" />
+      <IDSymbol name="ToolbarCommandConnection" value="0x0132" />
+      <IDSymbol name="ToolbarCommandRefresh" value="0x0133" />
     </GuidSymbol>
 
     <GuidSymbol name="guidJiraMenuGroup" value="{C900F2A3-AAD5-4EAF-A04E-B1BFC7741C45}">
