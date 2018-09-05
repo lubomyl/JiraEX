@@ -25,6 +25,7 @@ namespace JiraEX.ViewModel.Navigation
         private BeforeSignInView _beforeSignInView;
         private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
         private AfterSignInView _afterSignInView;
+        private ProjectListView _projectListView;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
@@ -93,6 +94,22 @@ namespace JiraEX.ViewModel.Navigation
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
 
             SelectedView = this._oAuthVerifierConfirmationView;
+        }
+
+        public void ShowProjects(object sender, EventArgs e)
+        {
+            _parent.Caption = "Jira Projects";
+
+            if (this._projectListView == null)
+            {
+                this._projectListView = new ProjectListView(this);
+
+                SelectedView = this._projectListView;
+            }
+            else
+            {
+                SelectedView = this._projectListView;
+            }
         }
 
         private void InitializeCommands(OleMenuCommandService service)
