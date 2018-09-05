@@ -2,6 +2,7 @@
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Settings;
@@ -60,9 +61,9 @@ namespace JiraEX.ViewModel
 
         private void SignOut(object parameter)
         {
-            UserSettingsHelper.DeletePropertyFromUserSettings("ConfluenceAccessToken");
-            UserSettingsHelper.DeletePropertyFromUserSettings("ConfluenceAccessTokenSecret");
-            UserSettingsHelper.DeletePropertyFromUserSettings("ConfluenceBaseUrl");
+            UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
+            UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
+            UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
             this._parent.ShowBeforeSignIn();
         }

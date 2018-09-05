@@ -1,5 +1,4 @@
-﻿using JiraEX.ViewModel;
-using JiraEX.ViewModel.Navigation;
+﻿using JiraEX.ViewModel.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +17,19 @@ using System.Windows.Shapes;
 namespace JiraEX.View
 {
     /// <summary>
-    /// Interaction logic for AfterSignInView.xaml
+    /// Interaction logic for ProjectsListView.xaml
     /// </summary>
-    public partial class AfterSignInView : UserControl
+    public partial class ProjectListView : UserControl
     {
 
-        private AfterSignInViewModel _viewModel;
+        //private ProjectListViewModel _viewModel;
 
-        public AfterSignInView(JiraToolWindowNavigatorViewModel parent)
+        public ProjectListView(JiraToolWindowNavigatorViewModel parent)
         {
             InitializeComponent();
 
-            this._viewModel = new AfterSignInViewModel(parent);
-            this.DataContext = this._viewModel;
+            /*this._viewModel = new ProjectListViewModel(parent);
+            this.DataContext = this._viewModel;*/
         }
     }
 }

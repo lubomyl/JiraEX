@@ -42,7 +42,7 @@ namespace JiraEX.ViewModel.Navigation
                 {
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
-                    //this.ShowAfterSignIn();
+                    this.ShowAfterSignIn();
                 }
             }
             catch (Exception ex)

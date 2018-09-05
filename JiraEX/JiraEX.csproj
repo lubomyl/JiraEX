@@ -82,6 +82,9 @@
     <Compile Include="View\OAuthVerifierConfirmationView.xaml.cs">
       <DependentUpon>OAuthVerifierConfirmationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ProjectListView.xaml.cs">
+      <DependentUpon>ProjectListView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -237,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OAuthVerifierConfirmationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProjectListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
