@@ -50,11 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ProjectList.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Implementation\OAuthService.cs" />
+    <Compile Include="Service\Implementation\ProjectService.cs" />
     <Compile Include="Service\Implementation\UserService.cs" />
     <Compile Include="Service\IOAuthService.cs" />
+    <Compile Include="Service\IProjectService.cs" />
     <Compile Include="Service\IUserService.cs" />
   </ItemGroup>
   <ItemGroup />

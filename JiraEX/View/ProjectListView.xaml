@@ -37,6 +37,7 @@
                         <TextBlock Style="{StaticResource PlainText}">
                             <Hyperlink Command="{Binding Path=DataContext.SpaceSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                                        CommandParameter="{Binding}">
+                                <TextBlock Text="{Binding Key}"/>
                                 <TextBlock Text="{Binding Name}"/>
                             </Hyperlink>
                         </TextBlock>

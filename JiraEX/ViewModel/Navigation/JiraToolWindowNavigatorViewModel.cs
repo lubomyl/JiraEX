@@ -1,10 +1,13 @@
 ﻿using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
+using JiraEX.Main;
 using JiraEX.View;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,12 +25,19 @@ namespace JiraEX.ViewModel.Navigation
         private BeforeSignInView _beforeSignInView;
         private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
         private AfterSignInView _afterSignInView;
+        private ProjectListView _projectListView;
+
+        private OleMenuCommandService _service;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
             this._parent = parent;
 
+            this._service = JiraPackage.Mcs;
+
             this._oAuthService = new OAuthService();
+
+            InitializeCommands(this._service);
         }
 
         public void ShowConnection(object sender, EventArgs e)
@@ -90,6 +100,37 @@ namespace JiraEX.ViewModel.Navigation
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
 
             SelectedView = this._oAuthVerifierConfirmationView;
+        }
+
+        public void ShowProjects(object sender, EventArgs e)
+        {
+            _parent.Caption = "Jira Projects";
+
+            if (this._projectListView == null)
+            {
+                this._projectListView = new ProjectListView(this);
+
+                SelectedView = this._projectListView;
+            }
+            else
+            {
+                SelectedView = this._projectListView;
+            }
+        }
+
+        private void InitializeCommands(OleMenuCommandService service)
+        {
+            if (service != null)
+            {
+                CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
+                CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+
+                MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
+                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+
+                service.AddCommand(onToolbarMenuCommandHomeClick);
+                service.AddCommand(onToolbarMenuCommandConnectionClick);
+            }
         }
 
         public object SelectedView

@@ -69,6 +69,7 @@
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
+    <Compile Include="ViewModel\ProjectListViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\AfterSignInView.xaml.cs">
       <DependentUpon>AfterSignInView.xaml</DependentUpon>
