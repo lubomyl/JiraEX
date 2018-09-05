@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="JiraEX.View.ProjectListView"
+﻿<UserControl x:Class="JiraEX.View.IssueListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -28,17 +28,17 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0">Projects list:</Label>
+        <Label Grid.Column="0" Grid.Row="0">Issues list:</Label>
 
-        <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding ProjectList}">
+        <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding IssueList}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0,0,5">
                         <TextBlock Style="{StaticResource PlainText}">
-                            <Hyperlink Command="{Binding Path=DataContext.ProjectSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                            <Hyperlink Command="{Binding Path=DataContext.IssueSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                                        CommandParameter="{Binding}">
+                                <TextBlock Text="{Binding Id}"/>
                                 <TextBlock Text="{Binding Key}"/>
-                                <TextBlock Text="{Binding Name}"/>
                             </Hyperlink>
                         </TextBlock>
                     </Grid>
