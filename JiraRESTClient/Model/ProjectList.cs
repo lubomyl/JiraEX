@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class ProjectList
+    public class ProjectList : List<Project>
     {
-
-        public List<Project> Results { get; set; } 
 
     }
 }

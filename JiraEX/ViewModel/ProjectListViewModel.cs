@@ -48,7 +48,7 @@ namespace JiraEX.ViewModel
 
             var projectList = await projectTask as ProjectList;
 
-            foreach (Project p in projectList.Results)
+            foreach (Project p in projectList)
             {
                 this.ProjectList.Add(p);
             }
