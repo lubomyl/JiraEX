@@ -1,5 +1,6 @@
 ﻿using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;

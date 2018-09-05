@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Issue.cs" />
+    <Compile Include="Model\IssueList.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\ProjectList.cs" />
     <Compile Include="Model\User.cs" />
