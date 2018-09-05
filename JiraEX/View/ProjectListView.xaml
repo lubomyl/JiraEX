@@ -35,7 +35,7 @@
                 <DataTemplate>
                     <Grid Margin="0,0,0,5">
                         <TextBlock Style="{StaticResource PlainText}">
-                            <Hyperlink Command="{Binding Path=DataContext.IssueSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                            <Hyperlink Command="{Binding Path=DataContext.ProjectSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                                        CommandParameter="{Binding}">
                                 <TextBlock Text="{Binding Key}"/>
                                 <TextBlock Text="{Binding Name}"/>

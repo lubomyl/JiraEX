@@ -2,6 +2,7 @@
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
+using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,19 @@ namespace JiraEX.ViewModel
 
         private JiraToolWindowNavigatorViewModel _parent;
 
+        private Project _project;
+
         private ObservableCollection<Issue> _issueList;
 
         public DelegateCommand IssueSelectedCommand { get; private set; }
 
-        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent)
+        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, Project project)
         {
             this._issueService = new IssueService();
 
             this._parent = parent;
+
+            this._project = project;
 
             this.IssueList = new ObservableCollection<Issue>();
 
@@ -41,7 +46,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllProjectsAsync();
+            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
 
             var issueList = await issueTask as IssueList;
 

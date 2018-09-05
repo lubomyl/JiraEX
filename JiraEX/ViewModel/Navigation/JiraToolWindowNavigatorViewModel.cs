@@ -2,6 +2,7 @@
 using DevDefined.OAuth.Framework;
 using JiraEX.Main;
 using JiraEX.View;
+using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Shell;
@@ -26,6 +27,7 @@ namespace JiraEX.ViewModel.Navigation
         private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
         private AfterSignInView _afterSignInView;
         private ProjectListView _projectListView;
+        private IssueListView _issueListView;
 
         private OleMenuCommandService _service;
 
@@ -116,6 +118,15 @@ namespace JiraEX.ViewModel.Navigation
             {
                 SelectedView = this._projectListView;
             }
+        }
+
+        public void ShowIssuesOfProject(Project project)
+        {
+            this._parent.Caption = project.Name + " issues";
+
+            this._issueListView = new IssueListView(this, project);
+
+            SelectedView = this._issueListView;
         }
 
         private void InitializeCommands(OleMenuCommandService service)
