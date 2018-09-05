@@ -1,6 +1,7 @@
 ﻿using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(JiraToolWindowNavigatorViewModel parent)
         {
-            this._issueService = new IIssueService();
+            this._issueService = new IssueService();
 
             this._parent = parent;
 
