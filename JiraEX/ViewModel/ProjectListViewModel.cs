@@ -1,6 +1,8 @@
 ﻿using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
+using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
@@ -34,7 +36,6 @@ namespace JiraEX.ViewModel
 
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
-            InitializeCommands(service);
 
             GetProjectsAsync();
 
