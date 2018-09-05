@@ -1,10 +1,13 @@
 ﻿using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
+using JiraEX.Main;
 using JiraEX.View;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,6 +93,21 @@ namespace JiraEX.ViewModel.Navigation
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
 
             SelectedView = this._oAuthVerifierConfirmationView;
+        }
+
+        private void InitializeCommands(OleMenuCommandService service)
+        {
+            if (service != null)
+            {
+                CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
+                CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+
+                MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
+                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+
+                service.AddCommand(onToolbarMenuCommandHomeClick);
+                service.AddCommand(onToolbarMenuCommandConnectionClick);
+            }
         }
 
         public object SelectedView
