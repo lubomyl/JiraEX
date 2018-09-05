@@ -27,11 +27,17 @@ namespace JiraEX.ViewModel.Navigation
         private AfterSignInView _afterSignInView;
         private ProjectListView _projectListView;
 
+        private OleMenuCommandService _service;
+
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
             this._parent = parent;
 
+            this._service = JiraPackage.Mcs;
+
             this._oAuthService = new OAuthService();
+
+            InitializeCommands(this._service);
         }
 
         public void ShowConnection(object sender, EventArgs e)

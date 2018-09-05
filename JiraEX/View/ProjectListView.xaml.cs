@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel.Navigation;
+﻿using JiraEX.ViewModel;
+using JiraEX.ViewModel.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,14 @@ namespace JiraEX.View
     public partial class ProjectListView : UserControl
     {
 
-        //private ProjectListViewModel _viewModel;
+        private ProjectListViewModel _viewModel;
 
         public ProjectListView(JiraToolWindowNavigatorViewModel parent)
         {
             InitializeComponent();
 
-            /*this._viewModel = new ProjectListViewModel(parent);
-            this.DataContext = this._viewModel;*/
+            this._viewModel = new ProjectListViewModel(parent);
+            this.DataContext = this._viewModel;
         }
     }
 }
