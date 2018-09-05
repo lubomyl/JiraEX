@@ -67,6 +67,7 @@
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\AfterSignInViewModel.cs" />
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
+    <Compile Include="ViewModel\IssueListViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />
