@@ -77,6 +77,9 @@
     <Compile Include="View\BeforeSignInView.xaml.cs">
       <DependentUpon>BeforeSignInView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\IssueListView.xaml.cs">
+      <DependentUpon>IssueListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Navigation\JiraToolWindowNavigator.xaml.cs">
       <DependentUpon>JiraToolWindowNavigator.xaml</DependentUpon>
     </Compile>
@@ -233,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BeforeSignInView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\IssueListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
