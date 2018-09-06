@@ -9,7 +9,7 @@ namespace JiraRESTClient.Model
     public class BoardList
     {
 
-        public List<Board> Values { get; set; }
+        public List<BoardProject> Values { get; set; }
 
     }
 }
