@@ -97,7 +97,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
-            _parent.Caption = "Confirm OAuth Verification Code";
+            _parent.Caption = "Jira - Confirm OAuth Verification Code";
 
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
 
@@ -106,7 +106,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowProjects(object sender, EventArgs e)
         {
-            _parent.Caption = "Jira Projects";
+            _parent.Caption = "Jira - Projects";
 
             if (this._projectListView == null)
             {
@@ -122,7 +122,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfProject(Project project)
         {
-            this._parent.Caption = project.Name + " issues";
+            this._parent.Caption = "Jira - " + project.Name + " issues";
 
             this._issueListView = new IssueListView(this, project);
 
