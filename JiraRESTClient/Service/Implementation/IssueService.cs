@@ -41,7 +41,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/{sprintId}/issue";
 
-                return this._baseService.Get<IssueList>(resource);
+                return this._baseService.GetAgile<IssueList>(resource);
             });
         }
 
@@ -50,7 +50,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"board/{boardId}/issue";
 
-                return this._baseService.Get<IssueList>(resource);
+                return this._baseService.GetAgile<IssueList>(resource);
             });
         }
     }
