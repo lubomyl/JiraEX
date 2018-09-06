@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class Issue
+    public class Fields
     {
 
-        public int Id { get; set; }
-        public string Key { get; set; }
-        public Fields Fields { get; set; }
+        public string Summary { get; set; }
+        public Status Status { get; set; }
 
     }
 }
