@@ -21,5 +21,7 @@ namespace JiraRESTClient.Service
         Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey);
 
         Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(int boardId, int sprintId);
+
+        Task<IssueList> GetAllIssuesOfBoardAsync(int boardId);
     }
 }

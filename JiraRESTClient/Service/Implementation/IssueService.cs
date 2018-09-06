@@ -45,5 +45,13 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<IssueList> GetAllIssuesOfBoardAsync(int boardId)
+        {
+            return Task.Run(() => {
+                var resource = $"board/{boardId}/issue";
+
+                return this._baseService.Get<IssueList>(resource);
+            });
+        }
     }
 }

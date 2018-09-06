@@ -13,6 +13,11 @@ namespace JiraRESTClient.Service.Implementation
 
         private BaseService _baseService;
 
+        public BoardService()
+        {
+            this._baseService = BaseService.JiraInstance;
+        }
+
         public Task<BoardList> GetAllBoards()
         {
             return Task.Run(() => {
