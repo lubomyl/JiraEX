@@ -20,19 +20,19 @@ namespace JiraEX.ViewModel
 
         private JiraToolWindowNavigatorViewModel _parent;
 
-        private Project _project;
+        private BoardProject _boardProject;
 
         private ObservableCollection<Issue> _issueList;
 
         public DelegateCommand IssueSelectedCommand { get; private set; }
 
-        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, Project project)
+        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
             this._issueService = new IssueService();
 
             this._parent = parent;
 
-            this._project = project;
+            this._boardProject = boardProject;
 
             this.IssueList = new ObservableCollection<Issue>();
 
@@ -46,7 +46,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
+            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
 
             var issueList = await issueTask as IssueList;
 

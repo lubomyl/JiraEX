@@ -120,11 +120,11 @@ namespace JiraEX.ViewModel.Navigation
             }
         }
 
-        public void ShowIssuesOfProject(Project project)
+        public void ShowIssuesOfProject(BoardProject boardProject)
         {
-            this._parent.Caption = "Jira - " + project.Name + " issues";
+            this._parent.Caption = "Jira - " + boardProject.Name + " issues";
 
-            this._issueListView = new IssueListView(this, project);
+            this._issueListView = new IssueListView(this, boardProject);
 
             SelectedView = this._issueListView;
         }
