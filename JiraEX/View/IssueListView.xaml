@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="20" x:Name="This">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
@@ -33,15 +33,16 @@
         <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding IssueList}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,0,0,5">
-                        <TextBlock Style="{StaticResource PlainText}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
                             <Hyperlink Command="{Binding Path=DataContext.IssueSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                                        CommandParameter="{Binding}">
                                 <TextBlock Text="{Binding Id}"/>
                                 <TextBlock Text="{Binding Key}"/>
                             </Hyperlink>
                         </TextBlock>
-                    </Grid>
+                        <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
+                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
