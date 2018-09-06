@@ -30,15 +30,15 @@
 
         <Label Grid.Column="0" Grid.Row="0">Projects list:</Label>
 
-        <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding ProjectList}">
+        <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding BoardProjectList}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0,0,5">
                         <TextBlock Style="{StaticResource PlainText}">
                             <Hyperlink Command="{Binding Path=DataContext.ProjectSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                                        CommandParameter="{Binding}">
-                                <TextBlock Text="{Binding Key}"/>
-                                <TextBlock Text="{Binding Name}"/>
+                                <TextBlock Text="{Binding Location.ProjectKey}"/>
+                                <TextBlock Text="{Binding Location.ProjectName}"/>
                             </Hyperlink>
                         </TextBlock>
                     </Grid>

@@ -36,5 +36,22 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(int boardId, int sprintId)
+        {
+            return Task.Run(() => {
+                var resource = $"board/{boardId}/sprint/{sprintId}/issue";
+
+                return this._baseService.GetAgile<IssueList>(resource);
+            });
+        }
+
+        public Task<IssueList> GetAllIssuesOfBoardAsync(int boardId)
+        {
+            return Task.Run(() => {
+                var resource = $"board/{boardId}/issue";
+
+                return this._baseService.GetAgile<IssueList>(resource);
+            });
+        }
     }
 }

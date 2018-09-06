@@ -17,42 +17,77 @@ namespace JiraEX.ViewModel
     public class IssueListViewModel : ViewModelBase
     {
         private IIssueService _issueService;
+        private ISprintService _sprintService;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
-        private Project _project;
+        private BoardProject _boardProject;
 
         private ObservableCollection<Issue> _issueList;
+        private ObservableCollection<Sprint> _sprintList;
+
+        private Sprint _selectedSprint;
 
         public DelegateCommand IssueSelectedCommand { get; private set; }
 
-        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, Project project)
+        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
             this._issueService = new IssueService();
+            this._sprintService = new SprintService();
 
             this._parent = parent;
 
-            this._project = project;
+            this._boardProject = boardProject;
 
             this.IssueList = new ObservableCollection<Issue>();
+            this.SprintList = new ObservableCollection<Sprint>();
+
+            this.SelectedSprint = null;
 
             this.IssueSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
             GetIssuesAsync();
+            GetSprintsAsync();
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
+            this.SprintList.CollectionChanged += this.OnCollectionChanged;
         }
 
         private async void GetIssuesAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
+            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
 
             var issueList = await issueTask as IssueList;
 
             foreach (Issue i in issueList.Issues)
             {
                 this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetIssuesBySprintAsync()
+        {
+            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
+
+            var issueList = await issueTask as IssueList;
+            this.IssueList.Clear();
+
+            foreach (Issue i in issueList.Issues)
+            {
+                this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetSprintsAsync()
+        {
+            System.Threading.Tasks.Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
+
+            var sprintList = await sprintTask as SprintList;
+
+            foreach (Sprint s in sprintList.Values)
+            {
+                this.SprintList.Add(s);
             }
         }
 
@@ -69,6 +104,26 @@ namespace JiraEX.ViewModel
         {
             get { return this._issueList; }
             set { this._issueList = value; }
+        }
+
+        public ObservableCollection<Sprint> SprintList
+        {
+            get { return this._sprintList; }
+            set { this._sprintList = value; }
+        }
+
+        public Sprint SelectedSprint
+        {
+            get { return this._selectedSprint; }
+            set {
+                this._selectedSprint = value;
+
+                if (this._selectedSprint != null)
+                {
+                    this.GetIssuesBySprintAsync();
+                }
+                OnPropertyChanged("SelectedSprint");
+            }
         }
 
     }
