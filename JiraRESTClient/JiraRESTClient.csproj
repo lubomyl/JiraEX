@@ -70,9 +70,11 @@
     <Compile Include="Service\Implementation\IssueService.cs" />
     <Compile Include="Service\Implementation\OAuthService.cs" />
     <Compile Include="Service\Implementation\ProjectService.cs" />
+    <Compile Include="Service\Implementation\SprintService.cs" />
     <Compile Include="Service\Implementation\UserService.cs" />
     <Compile Include="Service\IOAuthService.cs" />
     <Compile Include="Service\IProjectService.cs" />
+    <Compile Include="Service\ISprintService.cs" />
     <Compile Include="Service\IUserService.cs" />
   </ItemGroup>
   <ItemGroup />
