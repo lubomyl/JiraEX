@@ -26,6 +26,8 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Issue> _issueList;
         private ObservableCollection<Sprint> _sprintList;
 
+        private Sprint _selectedSprint;
+
         public DelegateCommand IssueSelectedCommand { get; private set; }
 
         public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
@@ -39,6 +41,8 @@ namespace JiraEX.ViewModel
 
             this.IssueList = new ObservableCollection<Issue>();
             this.SprintList = new ObservableCollection<Sprint>();
+
+            this.SelectedSprint = null;
 
             this.IssueSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
@@ -55,6 +59,19 @@ namespace JiraEX.ViewModel
             System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
 
             var issueList = await issueTask as IssueList;
+
+            foreach (Issue i in issueList.Issues)
+            {
+                this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetIssuesBySprintAsync()
+        {
+            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
+
+            var issueList = await issueTask as IssueList;
+            this.IssueList.Clear();
 
             foreach (Issue i in issueList.Issues)
             {
@@ -93,6 +110,20 @@ namespace JiraEX.ViewModel
         {
             get { return this._sprintList; }
             set { this._sprintList = value; }
+        }
+
+        public Sprint SelectedSprint
+        {
+            get { return this._selectedSprint; }
+            set {
+                this._selectedSprint = value;
+
+                if (this._selectedSprint != null)
+                {
+                    this.GetIssuesBySprintAsync();
+                }
+                OnPropertyChanged("SelectedSprint");
+            }
         }
 
     }

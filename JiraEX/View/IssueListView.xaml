@@ -31,8 +31,11 @@
 
         <ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
                   DisplayMemberPath="Name"
-                  SelectedValuePath="Id" />
-        
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding Path=Name}"
+                  SelectedItem="{Binding Path=SelectedSprint}">
+        </ComboBox>
+
         <Label Grid.Column="0" Grid.Row="1">Issues list:</Label>
 
         <ItemsControl Grid.Column="0" Grid.Row="2" Name="icProjectsList" ItemsSource="{Binding IssueList}">
