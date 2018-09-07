@@ -27,6 +27,7 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Sprint> _sprintList;
 
         private Sprint _selectedSprint;
+        private Sprint _defaultSprintSelected;
 
         public DelegateCommand IssueSelectedCommand { get; private set; }
 
@@ -42,7 +43,7 @@ namespace JiraEX.ViewModel
             this.IssueList = new ObservableCollection<Issue>();
             this.SprintList = new ObservableCollection<Sprint>();
 
-            this.SelectedSprint = null;
+            this._defaultSprintSelected = new Sprint(0, "All sprints");
 
             this.IssueSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
@@ -60,6 +61,8 @@ namespace JiraEX.ViewModel
 
             var issueList = await issueTask as IssueList;
 
+            this.IssueList.Clear();
+
             foreach (Issue i in issueList.Issues)
             {
                 this.IssueList.Add(i);
@@ -71,6 +74,7 @@ namespace JiraEX.ViewModel
             System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
 
             var issueList = await issueTask as IssueList;
+
             this.IssueList.Clear();
 
             foreach (Issue i in issueList.Issues)
@@ -84,6 +88,9 @@ namespace JiraEX.ViewModel
             System.Threading.Tasks.Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
 
             var sprintList = await sprintTask as SprintList;
+
+            this.SprintList.Add(this._defaultSprintSelected);
+            this.SelectedSprint = this.SprintList[0];
 
             foreach (Sprint s in sprintList.Values)
             {
@@ -118,13 +125,16 @@ namespace JiraEX.ViewModel
             set {
                 this._selectedSprint = value;
 
-                if (this._selectedSprint != null)
+                if (this._selectedSprint.Id == 0)
+                {
+                    this.GetIssuesAsync();
+                }
+                else
                 {
                     this.GetIssuesBySprintAsync();
                 }
                 OnPropertyChanged("SelectedSprint");
             }
         }
-
     }
 }
