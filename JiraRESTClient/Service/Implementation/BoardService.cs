@@ -11,7 +11,7 @@ namespace JiraRESTClient.Service.Implementation
     public class BoardService : IBoardService
     {
 
-        private BaseService _baseService;
+        private JiraService _baseService;
 
         public BoardService()
         {
@@ -23,7 +23,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = "board";
 
-                return this._baseService.GetAgile<BoardList>(resource);
+                return this._baseService.GetAgileResource<BoardList>(resource);
             });
         }
 

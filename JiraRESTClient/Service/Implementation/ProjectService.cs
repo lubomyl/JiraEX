@@ -18,7 +18,7 @@ namespace JiraRESTClient.Service.Implementation
     public class ProjectService : IProjectService
     {
 
-        private IBaseService<IToken> _baseService;
+        private JiraService _baseService;
 
         public ProjectService()
         {
@@ -33,7 +33,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = "project";
 
-                return this._baseService.Get<ProjectList>(resource);
+                return this._baseService.GetResource<ProjectList>(resource);
             });
         }
 

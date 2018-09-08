@@ -17,7 +17,7 @@ namespace JiraRESTClient.Service.Implementation
     public class IssueService : IIssueService
     {
 
-        private IBaseService<IToken> _baseService;
+        private JiraService _baseService;
 
         public IssueService()
         {
@@ -32,7 +32,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"search?jql=project={projectKey}";
 
-                return this._baseService.Get<IssueList>(resource);
+                return this._baseService.GetResource<IssueList>(resource);
             });
         }
 
@@ -41,7 +41,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/{sprintId}/issue";
 
-                return this._baseService.GetAgile<IssueList>(resource);
+                return this._baseService.GetAgileResource<IssueList>(resource);
             });
         }
 
@@ -50,7 +50,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"board/{boardId}/issue";
 
-                return this._baseService.GetAgile<IssueList>(resource);
+                return this._baseService.GetAgileResource<IssueList>(resource);
             });
         }
     }
