@@ -1,5 +1,6 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,11 @@ namespace JiraEX.View
 
         private IssueDetailViewModel _viewModel;
 
-        public IssueDetailView(JiraToolWindowNavigatorViewModel parent)
+        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             InitializeComponent();
 
-            this._viewModel = new IssueDetailViewModel(parent);
+            this._viewModel = new IssueDetailViewModel(parent, issue);
             this.DataContext = this._viewModel;
         }
     }

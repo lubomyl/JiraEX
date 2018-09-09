@@ -130,11 +130,11 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._issueListView;
         }
 
-        public void ShowIssueDetail()
+        public void ShowIssueDetail(Issue issue)
         {
             this._parent.Caption = "Jira - issue";
 
-            this._issueDetailView = new IssueDetailView(this);
+            this._issueDetailView = new IssueDetailView(this, issue);
 
             SelectedView = this._issueDetailView;
         }

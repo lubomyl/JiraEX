@@ -17,5 +17,7 @@ namespace JiraRESTClient.Model
         public string Summary { get; set; }
         public Status Status { get; set; }
 
+        public Priority Priority { get; set; }
+
     }
 }

@@ -4,42 +4,51 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
 
     <UserControl.Resources>
-        <Style x:Key="TitleVerticalSeparator" TargetType="{x:Type Separator}">
-        <Setter Property="Foreground" Value="#BBBBBB"/>
-        <Setter Property="Width" Value="2"/>
-        <Setter Property="Margin" Value="3,0,3,0"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border Width="{TemplateBinding Width}"
-                            Background="{TemplateBinding Foreground}"
-                            BorderBrush="{TemplateBinding Foreground}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            SnapsToDevicePixels="True"/>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
-            <Setter Property="Background" Value="#FF2D2D30" />
-            <Setter Property="Height" Value="2" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Style x:Key="TitleVerticalSeparator" TargetType="{x:Type Separator}">
+            <Setter Property="Foreground" Value="#BBBBBB"/>
+            <Setter Property="Width" Value="2"/>
+            <Setter Property="Margin" Value="3,0,3,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Separator}">
                         <Border Width="{TemplateBinding Width}"
-                      Background="{TemplateBinding Background}"
-                      BorderBrush="{TemplateBinding Background}"
-                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                Background="{TemplateBinding Foreground}"
+                                BorderBrush="{TemplateBinding Foreground}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
+            </Style>
+
+            <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
+                <Setter Property="Background" Value="#FF2D2D30" />
+                <Setter Property="Height" Value="2" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Separator}">
+                            <Border Width="{TemplateBinding Width}"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding Background}"
+                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     <DockPanel>
@@ -49,15 +58,15 @@
             <TextBlock Margin="0,-5,0,0"
                  FontSize="14.7"
                  FontWeight="SemiBold"
-                 Foreground="#FFFFFF"
-                 Text="Issue #TP-10" />
+                 Style="{StaticResource PlainText}"
+                 Text="{Binding Issue.Key, StringFormat={}Issue #{0}}"/>
             <Separator Margin="5,-2,5,0"
                  Foreground="#FFFFFF"
                  Style="{StaticResource TitleVerticalSeparator}" />
             <TextBlock Margin="0,-5,0,0"
                  VerticalAlignment="Center"
                  Foreground="#FF717171"
-                 Text="OstracontProject" />
+                 Text="{Binding Issue.Fields.Project.Name}" />
         </StackPanel>
 
         <Separator Margin="0,0,0,2"
@@ -65,7 +74,33 @@
                Style="{StaticResource PaneHorizontalSeparator}" />
 
         <Grid>
+            <DockPanel Grid.IsSharedSizeScope="True">
+                <StackPanel DockPanel.Dock="Top"
+                    Orientation="Vertical"
+                    Margin="8 0 0 0">
 
+                    <!-- Summary -->
+                    <TextBlock
+                           TextWrapping="Wrap"
+                           Margin="0 0 5 10"
+                           Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Summary}"/>
+                
+                    <StackPanel Orientation="Horizontal">
+                        <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
+                        </Border>
+                        <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
+                        </Border>
+
+                        <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" />
+                        </Border>
+
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </DockPanel>
 </UserControl>
