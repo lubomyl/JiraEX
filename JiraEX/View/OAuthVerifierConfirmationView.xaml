@@ -9,15 +9,6 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{DynamicResource ToolWindowBackgroundBrushKey}">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Uid="VisualStudioThemeResources"
-					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
