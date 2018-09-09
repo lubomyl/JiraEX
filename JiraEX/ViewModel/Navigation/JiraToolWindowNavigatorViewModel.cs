@@ -28,6 +28,7 @@ namespace JiraEX.ViewModel.Navigation
         private AfterSignInView _afterSignInView;
         private ProjectListView _projectListView;
         private IssueListView _issueListView;
+        private IssueDetailView _issueDetailView;
 
         private OleMenuCommandService _service;
 
@@ -127,6 +128,15 @@ namespace JiraEX.ViewModel.Navigation
             this._issueListView = new IssueListView(this, boardProject);
 
             SelectedView = this._issueListView;
+        }
+
+        public void ShowIssueDetail()
+        {
+            this._parent.Caption = "Jira - issue";
+
+            this._issueDetailView = new IssueDetailView(this);
+
+            SelectedView = this._issueDetailView;
         }
 
         private void InitializeCommands(OleMenuCommandService service)

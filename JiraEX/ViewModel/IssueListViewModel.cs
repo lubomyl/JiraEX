@@ -100,7 +100,7 @@ namespace JiraEX.ViewModel
 
         private void OnItemSelected(object sender)
         {
-
+            this._parent.ShowIssueDetail();
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
