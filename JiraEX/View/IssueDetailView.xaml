@@ -80,18 +80,32 @@
 
             <!-- Type, Status, Priority -->
             <StackPanel Orientation="Horizontal">
-                <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
                 </Border>
                 
-                <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
                 </Border>
 
-                <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" />
-                </Border>
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+                                    Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditPriorityCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
 
+                    <ComboBox  ItemsSource="{Binding PriorityList}"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Id"
+                                  Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
+                                  SelectedValue="{Binding Path=Name}"
+                                  SelectedItem="{Binding Path=SelectedPriority}">
+                    </ComboBox>
+                </Grid>
             </StackPanel>
             
             <!-- Created, Updated -->
@@ -124,7 +138,8 @@
             <!-- Description -->
             <Label>Description:</Label>
             <Grid Margin="0 0 0 10">
-                <TextBlock Text="{Binding Issue.Fields.Description}" 
+                <TextBlock
+                    Text="{Binding Issue.Fields.Description}"
                     TextWrapping="Wrap"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsEditingDescription, Converter={StaticResource FalseToVisibleConverter}}"

@@ -5,6 +5,7 @@ using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,15 @@ namespace JiraEX.ViewModel
     {
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
+        private bool _isEditingPriority = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
         private IIssueService _issueService;
 
         private Issue _issue;
+
+        private ObservableCollection<Priority> _priorityList;
 
         public DelegateCommand EditSummaryCommand { get; private set; }
         public DelegateCommand ConfirmEditSummaryCommand { get; private set; }
@@ -29,6 +33,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditDescriptionCommand { get; private set; }
         public DelegateCommand ConfirmEditDescriptionCommand { get; private set; }
         public DelegateCommand CancelEditDescriptionCommand { get; private set; }
+
+        public DelegateCommand EditPriorityCommand { get; private set; }
 
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
@@ -45,6 +51,8 @@ namespace JiraEX.ViewModel
             this.EditDescriptionCommand = new DelegateCommand(EnableEditDescription);
             this.ConfirmEditDescriptionCommand = new DelegateCommand(ConfirmEditDescription);
             this.CancelEditDescriptionCommand = new DelegateCommand(CancelEditDescription);
+
+            this.EditPriorityCommand = new DelegateCommand(EnableEditPriority);
         }
 
         private void EnableEditSummary(object parameter)
@@ -81,6 +89,11 @@ namespace JiraEX.ViewModel
             this.IsEditingDescription = false;
         }
 
+        private void EnableEditPriority(object parameter)
+        {
+            this.IsEditingPriority = true;
+        }
+
         public Issue Issue
         {
             get { return this._issue; }
@@ -108,6 +121,26 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingDescription = value;
                 OnPropertyChanged("IsEditingDescription");
+            }
+        }
+
+        public bool IsEditingPriority
+        {
+            get { return this._isEditingPriority; }
+            set
+            {
+                this._isEditingPriority = value;
+                OnPropertyChanged("IsEditingPriority");
+            }
+        }
+
+        public ObservableCollection<Priority> PriorityList
+        {
+            get { return this._priorityList; }
+            set
+            {
+                this._priorityList = value;
+                OnPropertyChanged("PriorityList");
             }
         }
 
