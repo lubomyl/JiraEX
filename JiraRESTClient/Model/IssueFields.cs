@@ -22,5 +22,9 @@ namespace JiraRESTClient.Model
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
 
+        public User Assignee { get; set; }
+
+        public string[] Labels { get; set; }
+
     }
 }
