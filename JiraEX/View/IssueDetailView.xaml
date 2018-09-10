@@ -43,11 +43,16 @@
                 Margin="8 0 0 0">
 
             <!-- Summary -->
-            <TextBlock
-                        TextWrapping="Wrap"
-                        Margin="0 0 5 10"
-                        Style="{StaticResource PlainText}"
-                        Text="{Binding Issue.Fields.Summary}"/>
+            <Grid Margin="0 0 0 10">
+                <TextBlock Text="{Binding Issue.Fields.Summary}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource PlainText}"/>
+                
+                <TextBox Text="{Binding Issue.Fields.Summary}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"/>
+            </Grid>
 
             <!-- Type, Status, Priority -->
             <StackPanel Orientation="Horizontal">
