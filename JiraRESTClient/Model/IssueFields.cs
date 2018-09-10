@@ -19,5 +19,8 @@ namespace JiraRESTClient.Model
 
         public Priority Priority { get; set; }
 
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
+
     }
 }

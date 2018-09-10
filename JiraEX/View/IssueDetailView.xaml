@@ -17,11 +17,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top"
-                Margin="6,9,9,5"
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Margin="6,9,9,5"
                 Orientation="Horizontal">
+            
             <TextBlock Margin="0,-5,0,0"
                  FontSize="14.7"
                  FontWeight="SemiBold"
@@ -37,43 +37,53 @@
         </StackPanel>
 
         <Separator Margin="0,0,0,2"
-               DockPanel.Dock="Top"
                Style="{StaticResource PaneHorizontalSeparator}" />
 
-        <Grid>
-            <DockPanel Grid.IsSharedSizeScope="True">
-                <StackPanel DockPanel.Dock="Top"
-                    Orientation="Vertical"
-                    Margin="8 0 0 0">
+        <StackPanel Orientation="Vertical"
+                Margin="8 0 0 0">
 
-                    <!-- Summary -->
-                    <TextBlock
-                           TextWrapping="Wrap"
-                           Margin="0 0 5 10"
-                           Style="{StaticResource PlainText}"
-                           Text="{Binding Issue.Fields.Summary}"/>
+            <!-- Summary -->
+            <TextBlock
+                        TextWrapping="Wrap"
+                        Margin="0 0 5 10"
+                        Style="{StaticResource PlainText}"
+                        Text="{Binding Issue.Fields.Summary}"/>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
-                        </Border>
-                        <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
-                        </Border>
+            <StackPanel Orientation="Horizontal">
+                <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
+                </Border>
+                <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
+                </Border>
 
-                        <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" />
-                        </Border>
+                <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" />
+                </Border>
 
-                    </StackPanel>
-                </StackPanel>
-            </DockPanel>
+            </StackPanel>
 
-            <Separator Margin="0,0,0,2"
-                       DockPanel.Dock="Top"
-                       Style="{StaticResource PaneHorizontalSeparator}" />
-        </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
 
-        
-    </DockPanel>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Opacity="0.5">Created</Label>
+                <TextBlock Grid.Row="0" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Opacity="0.5">Updated</Label>
+                <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
+            </Grid>
+        </StackPanel>
+        <Separator Margin="0,5,0,0"
+               Style="{StaticResource PaneHorizontalSeparator}" />
+    </StackPanel>
 </UserControl>
