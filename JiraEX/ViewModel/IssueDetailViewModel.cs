@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel.Navigation;
+﻿using ConfluenceEX.Command;
+using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,40 @@ namespace JiraEX.ViewModel
     public class IssueDetailViewModel : ViewModelBase
     {
 
+        private bool _isEditingSummary = false;
+
         private JiraToolWindowNavigatorViewModel _parent;
 
         private Issue _issue;
+
+        public DelegateCommand EditSummaryCommand { get; private set; }
+        public DelegateCommand ConfirmEditSummaryCommand { get; private set; }
+        public DelegateCommand CancelEditSummaryCommand { get; private set; }
 
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
 
             this._issue = issue;
+
+            this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
+            this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
+            this.CancelEditSummaryCommand = new DelegateCommand(CancelEditSummary);
+        }
+
+        private void EnableEditSummary(object parameter)
+        {
+            this.IsEditingSummary = true;
+        }
+
+        private void ConfirmEditSummary(object parameter)
+        {
+            this.IsEditingSummary = false;
+        }
+
+        private void CancelEditSummary(object parameter)
+        {
+            this.IsEditingSummary = false;
         }
 
         public Issue Issue
@@ -29,6 +55,16 @@ namespace JiraEX.ViewModel
             {
                 this._issue = value;
                 OnPropertyChanged("Issue");
+            }
+        }
+
+        public bool IsEditingSummary
+        {
+            get { return this._isEditingSummary; }
+            set
+            {
+                this._isEditingSummary = value;
+                OnPropertyChanged("IsEditingSummary");
             }
         }
 
