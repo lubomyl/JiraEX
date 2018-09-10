@@ -1347,4 +1347,38 @@
 		</Style.Triggers>
 	</Style>
 
+    <!-- Vertical separator -->
+    <Style x:Key="TitleVerticalSeparator" TargetType="{x:Type Separator}">
+        <Setter Property="Foreground" Value="#BBBBBB"/>
+        <Setter Property="Width" Value="2"/>
+        <Setter Property="Margin" Value="3,0,3,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border Width="{TemplateBinding Width}"
+                                Background="{TemplateBinding Foreground}"
+                                BorderBrush="{TemplateBinding Foreground}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Horizontal separator -->
+    <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
+        <Setter Property="Background" Value="#FF2D2D30" />
+        <Setter Property="Height" Value="2" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border Width="{TemplateBinding Width}"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding Background}"
+                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

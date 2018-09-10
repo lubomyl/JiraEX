@@ -15,39 +15,6 @@
                 <ResourceDictionary x:Uid="VisualStudioThemeResources"
 					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="TitleVerticalSeparator" TargetType="{x:Type Separator}">
-            <Setter Property="Foreground" Value="#BBBBBB"/>
-            <Setter Property="Width" Value="2"/>
-            <Setter Property="Margin" Value="3,0,3,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Separator}">
-                        <Border Width="{TemplateBinding Width}"
-                                Background="{TemplateBinding Foreground}"
-                                BorderBrush="{TemplateBinding Foreground}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                SnapsToDevicePixels="True"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            </Style>
-
-            <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
-                <Setter Property="Background" Value="#FF2D2D30" />
-                <Setter Property="Height" Value="2" />
-                <Setter Property="SnapsToDevicePixels" Value="True" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Separator}">
-                            <Border Width="{TemplateBinding Width}"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding Background}"
-                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -85,7 +52,7 @@
                            Margin="0 0 5 10"
                            Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Summary}"/>
-                
+
                     <StackPanel Orientation="Horizontal">
                         <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                             <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Field.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
@@ -101,6 +68,12 @@
                     </StackPanel>
                 </StackPanel>
             </DockPanel>
+
+            <Separator Margin="0,0,0,2"
+                       DockPanel.Dock="Top"
+                       Style="{StaticResource PaneHorizontalSeparator}" />
         </Grid>
+
+        
     </DockPanel>
 </UserControl>
