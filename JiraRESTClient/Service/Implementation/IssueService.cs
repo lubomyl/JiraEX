@@ -53,5 +53,17 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetAgileResource<IssueList>(resource);
             });
         }
+
+        public void UpdateIssueSummaryAsync(string issueKey, string newSummary)
+        {
+
+            string updateString = $"{{\"update\":{{\"summary\":[{{\"set\":\"{newSummary}\"}}]}}}}";
+
+            Task.Run(() => {
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource<Issue>(resource, Encoding.UTF8.GetBytes(updateString));
+            });
+        }
     }
 }

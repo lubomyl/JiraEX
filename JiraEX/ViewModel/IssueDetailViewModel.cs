@@ -1,6 +1,8 @@
 ﻿using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
+using JiraRESTClient.Service.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +13,11 @@ namespace JiraEX.ViewModel
 {
     public class IssueDetailViewModel : ViewModelBase
     {
-
         private bool _isEditingSummary = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
+
+        private IIssueService _issueService;
 
         private Issue _issue;
 
@@ -25,6 +28,8 @@ namespace JiraEX.ViewModel
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
+
+            this._issueService = new IssueService();
 
             this._issue = issue;
 
@@ -40,6 +45,8 @@ namespace JiraEX.ViewModel
 
         private void ConfirmEditSummary(object parameter)
         {
+            this._issueService.UpdateIssueSummaryAsync(this._issue.Key, this._issue.Fields.Summary);
+
             this.IsEditingSummary = false;
         }
 
