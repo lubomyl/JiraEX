@@ -10,28 +10,28 @@ namespace JiraRESTClient.Service.Implementation
 {
 
     /// <summary>
-    /// Concrete implementation of IBoardService utilizing <see cref="BaseService"/> as <see cref="IBaseService{T}"/>.
-    /// <see cref="IBoardService"/>
+    /// Concrete implementation of IPriorityService utilizing <see cref="BaseService"/> as <see cref="IBaseService{T}"/>.
+    /// <see cref="IPriorityService"/>
     /// </summary>
-    public class BoardService : IBoardService
+    public class PriorityService : IPriorityService
     {
 
         private JiraService _baseService;
 
-        public BoardService()
+        public PriorityService()
         {
             this._baseService = BaseService.JiraInstance;
         }
 
         /// <summary>
-        /// <see cref="IBoardService.GetAllBoards"/>
+        /// <see cref="IPriorityService.GetAllPrioritiesAsync"/>
         /// </summary>
-        public Task<BoardList> GetAllBoards()
+        public Task<PriorityList> GetAllPrioritiesAsync()
         {
             return Task.Run(() => {
-                var resource = "board";
+                var resource = "priority";
 
-                return this._baseService.GetAgileResource<BoardList>(resource);
+                return this._baseService.GetResource<PriorityList>(resource);
             });
         }
 
