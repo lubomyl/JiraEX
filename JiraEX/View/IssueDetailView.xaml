@@ -52,7 +52,7 @@
                     TextWrapping="Wrap"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsEditingSummary, Converter={StaticResource FalseToVisibleConverter}}"
-                    Style="{StaticResource PlainText}">
+                    Style="{StaticResource TitleText}">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding EditSummaryCommand}" MouseAction="LeftClick" />
                     </TextBlock.InputBindings>

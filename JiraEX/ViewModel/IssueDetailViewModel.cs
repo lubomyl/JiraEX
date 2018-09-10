@@ -45,7 +45,7 @@ namespace JiraEX.ViewModel
 
         private void ConfirmEditSummary(object parameter)
         {
-            this._issueService.UpdateIssueSummaryAsync(this._issue.Key, this._issue.Fields.Summary);
+            this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "summary", this._issue.Fields.Summary);
 
             this.IsEditingSummary = false;
         }

@@ -54,10 +54,10 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public void UpdateIssueSummaryAsync(string issueKey, string newSummary)
+        public void UpdateIssuePropertyAsync(string issueKey, string propertyName, string newSummary)
         {
 
-            string updateString = $"{{\"update\":{{\"summary\":[{{\"set\":\"{newSummary}\"}}]}}}}";
+            string updateString = $"{{\"update\":{{\"{propertyName}\":[{{\"set\":\"{newSummary}\"}}]}}}}";
 
             Task.Run(() => {
                 var resource = $"issue/{issueKey}";
