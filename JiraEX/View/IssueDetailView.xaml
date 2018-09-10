@@ -120,12 +120,39 @@
 
         <StackPanel Orientation="Vertical"
                 Margin="8 0 8 0">
-            
+
             <!-- Description -->
-            <TextBlock TextWrapping="Wrap"
-                    Margin="0 0 0 5"
-                    Style="{StaticResource PlainText}"
-                    Text="{Binding Issue.Fields.Issuetype.Description}"/>
+            <Label>Description:</Label>
+            <Grid Margin="0 0 0 10">
+                <TextBlock Text="{Binding Issue.Fields.Description}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource FalseToVisibleConverter}}"
+                    Style="{StaticResource PlainText}">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding EditDescriptionCommand}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+
+                <TextBox Text="{Binding Issue.Fields.Description}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ConfirmEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                    Content="Save" 
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
+
+                <Button Command="{Binding CancelEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
+            </StackPanel>
 
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">

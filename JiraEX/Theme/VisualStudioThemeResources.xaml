@@ -122,7 +122,7 @@
 	</Style>
 	<Style x:Key="TitleText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.FontWeight" Value="Bold" />
-		<Setter Property="TextBlock.FontSize" Value="15" />
+		<Setter Property="TextBlock.FontSize" Value="13" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
         <Setter Property="VerticalAlignment" Value="Center" />
 	</Style>

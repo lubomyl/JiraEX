@@ -24,6 +24,8 @@ namespace JiraRESTClient.Model
 
         public User Assignee { get; set; }
 
+        public string Description { get; set; }
+
         public string[] Labels { get; set; }
 
     }

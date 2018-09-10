@@ -14,6 +14,7 @@ namespace JiraEX.ViewModel
     public class IssueDetailViewModel : ViewModelBase
     {
         private bool _isEditingSummary = false;
+        private bool _isEditingDescription = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -24,6 +25,10 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditSummaryCommand { get; private set; }
         public DelegateCommand ConfirmEditSummaryCommand { get; private set; }
         public DelegateCommand CancelEditSummaryCommand { get; private set; }
+
+        public DelegateCommand EditDescriptionCommand { get; private set; }
+        public DelegateCommand ConfirmEditDescriptionCommand { get; private set; }
+        public DelegateCommand CancelEditDescriptionCommand { get; private set; }
 
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
@@ -36,6 +41,10 @@ namespace JiraEX.ViewModel
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
             this.CancelEditSummaryCommand = new DelegateCommand(CancelEditSummary);
+
+            this.EditDescriptionCommand = new DelegateCommand(EnableEditDescription);
+            this.ConfirmEditDescriptionCommand = new DelegateCommand(ConfirmEditDescription);
+            this.CancelEditDescriptionCommand = new DelegateCommand(CancelEditDescription);
         }
 
         private void EnableEditSummary(object parameter)
@@ -55,6 +64,23 @@ namespace JiraEX.ViewModel
             this.IsEditingSummary = false;
         }
 
+        private void EnableEditDescription(object parameter)
+        {
+            this.IsEditingDescription = true;
+        }
+
+        private void ConfirmEditDescription(object parameter)
+        {
+            this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Issuetype.Description);
+                                                                          
+            this.IsEditingDescription = false;
+        }
+
+        private void CancelEditDescription(object parameter)
+        {
+            this.IsEditingDescription = false;
+        }
+
         public Issue Issue
         {
             get { return this._issue; }
@@ -72,6 +98,16 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingSummary = value;
                 OnPropertyChanged("IsEditingSummary");
+            }
+        }
+
+        public bool IsEditingDescription
+        {
+            get { return this._isEditingDescription; }
+            set
+            {
+                this._isEditingDescription = value;
+                OnPropertyChanged("IsEditingDescription");
             }
         }
 
