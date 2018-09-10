@@ -52,6 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Controls\EditableTextBlock.cs" />
     <Compile Include="Helper\UserSettingsHelper.cs" />
     <Compile Include="Main\JiraToolWindow.cs" />
     <Compile Include="Main\Guids.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\AfterSignInViewModel.cs" />
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
+    <Compile Include="ViewModel\IssueDetailViewModel.cs" />
     <Compile Include="ViewModel\IssueListViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
@@ -77,6 +79,9 @@
     </Compile>
     <Compile Include="View\BeforeSignInView.xaml.cs">
       <DependentUpon>BeforeSignInView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\IssueDetailView.xaml.cs">
+      <DependentUpon>IssueDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\IssueListView.xaml.cs">
       <DependentUpon>IssueListView.xaml</DependentUpon>
@@ -237,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BeforeSignInView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\IssueDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

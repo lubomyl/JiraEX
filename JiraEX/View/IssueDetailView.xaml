@@ -1,0 +1,194 @@
+﻿<UserControl x:Class="JiraEX.View.IssueDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Margin="6,9,9,5"
+                Orientation="Horizontal">
+            
+            <TextBlock Margin="0,-5,0,0"
+                 FontSize="14.7"
+                 FontWeight="SemiBold"
+                 Style="{StaticResource PlainText}"
+                 Text="{Binding Issue.Key, StringFormat={}Issue #{0}}"/>
+            <Separator Margin="5,-2,5,0"
+                 Foreground="#FFFFFF"
+                 Style="{StaticResource TitleVerticalSeparator}" />
+            <TextBlock Margin="0,-5,0,0"
+                 VerticalAlignment="Center"
+                 Foreground="#FF717171"
+                 Text="{Binding Issue.Fields.Project.Name}" />
+        </StackPanel>
+
+        <Separator Margin="0,0,0,2"
+               Style="{StaticResource PaneHorizontalSeparator}" />
+
+        <StackPanel Orientation="Vertical"
+                Margin="8 0 0 0">
+
+            <!-- Summary -->
+            <Grid Margin="0 0 0 10">
+                <TextBlock Text="{Binding Issue.Fields.Summary}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource FalseToVisibleConverter}}"
+                    Style="{StaticResource TitleText}">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding EditSummaryCommand}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+
+                <TextBox Text="{Binding Issue.Fields.Summary}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ConfirmEditSummaryCommand}" CommandParameter="{Binding ElementName=This}"
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
+                    Content="Save" 
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="ConfirmEditSummary" Width="75" Margin="0 0 5 10"/>
+
+                <Button Command="{Binding CancelEditSummaryCommand}" CommandParameter="{Binding ElementName=This}"
+                        Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" x:Name="CancelEditSummary" Width="75" Margin="0 0 0 10"/>
+            </StackPanel>
+
+            <!-- Type, Status, Priority -->
+            <StackPanel Orientation="Horizontal">
+                <Border Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
+                </Border>
+                
+                <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
+                </Border>
+
+                <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Priority.Name, Mode=OneWay}" />
+                </Border>
+
+            </StackPanel>
+            
+            <!-- Created, Updated -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Opacity="0.5">Created</Label>
+                <TextBlock Grid.Row="0" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Opacity="0.5">Updated</Label>
+                <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
+            </Grid>
+        </StackPanel>
+        <Separator Margin="0,5,0,0"
+               Style="{StaticResource PaneHorizontalSeparator}" />
+
+        <StackPanel Orientation="Vertical"
+                Margin="8 0 8 0">
+
+            <!-- Description -->
+            <Label>Description:</Label>
+            <Grid Margin="0 0 0 10">
+                <TextBlock Text="{Binding Issue.Fields.Description}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource FalseToVisibleConverter}}"
+                    Style="{StaticResource PlainText}">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding EditDescriptionCommand}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+
+                <TextBox Text="{Binding Issue.Fields.Description}" 
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ConfirmEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
+                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                    Content="Save" 
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
+
+                <Button Command="{Binding CancelEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
+            </StackPanel>
+
+            <!-- Assignee -->
+            <StackPanel Orientation="Horizontal">
+                <Label>Assignee:</Label>
+                <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"/>
+            </StackPanel>
+
+            <!-- Sprint -->
+            <StackPanel Orientation="Horizontal">
+                <Label>Sprint:</Label>
+                <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
+                           Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"/>
+            </StackPanel>
+
+            <!-- Labels -->
+            <StackPanel Orientation="Horizontal">
+                <Label>Labels:</Label>
+
+                <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                    
+            </StackPanel>
+            
+        </StackPanel>
+    </StackPanel>
+</UserControl>

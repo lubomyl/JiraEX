@@ -13,7 +13,7 @@ namespace JiraRESTClient.Service.Implementation
     public class UserService : IUserService
     {
 
-        private IBaseService<IToken> _baseService;
+        private JiraService _baseService;
 
         public UserService()
         {
@@ -28,7 +28,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = "myself";
 
-                return this._baseService.Get<User>(resource);
+                return this._baseService.GetResource<User>(resource);
             });
         }
 
