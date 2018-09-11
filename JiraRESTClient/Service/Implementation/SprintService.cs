@@ -8,6 +8,11 @@ using AtlassianConnector.Base.Implementation.DevDefined;
 
 namespace JiraRESTClient.Service.Implementation
 {
+
+    /// <summary>
+    /// Concrete implementation of ISprintService utilizing <see cref="BaseService"/> as <see cref="IBaseService{T}"/>.
+    /// <see cref="ISprintService"/>
+    /// </summary>
     public class SprintService : ISprintService
     {
 
@@ -18,6 +23,9 @@ namespace JiraRESTClient.Service.Implementation
             this._baseService = BaseService.JiraInstance;
         }
 
+        /// <summary>
+        /// <see cref="ISprintService.GetAllSprintsOfBoardtAsync(int)"/>
+        /// </summary>
         public Task<SprintList> GetAllSprintsOfBoardtAsync(int boardId)
         {
             return Task.Run(() => {

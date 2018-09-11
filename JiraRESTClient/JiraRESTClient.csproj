@@ -70,6 +70,8 @@
     <Compile Include="Model\Sprint.cs" />
     <Compile Include="Model\SprintList.cs" />
     <Compile Include="Model\Status.cs" />
+    <Compile Include="Model\Transition.cs" />
+    <Compile Include="Model\TransitionList.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\IBoardService.cs" />
@@ -80,12 +82,14 @@
     <Compile Include="Service\Implementation\PriorityService.cs" />
     <Compile Include="Service\Implementation\ProjectService.cs" />
     <Compile Include="Service\Implementation\SprintService.cs" />
+    <Compile Include="Service\Implementation\TransitionService.cs" />
     <Compile Include="Service\Implementation\UserService.cs" />
     <Compile Include="Service\IOAuthService.cs" />
     <Compile Include="Service\IPriorityService.cs" />
     <Compile Include="Service\IProjectService.cs" />
     <Compile Include="Service\ISprintService.cs" />
     <Compile Include="Service\IUserService.cs" />
+    <Compile Include="Service\ITransitionService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
