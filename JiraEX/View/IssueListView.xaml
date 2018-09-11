@@ -19,43 +19,41 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="20" x:Name="This">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top"
+                   Margin="8">
 
-        <ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
+            <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
                   DisplayMemberPath="Name"
                   SelectedValuePath="Id"
                   SelectedValue="{Binding Path=Name}"
                   SelectedItem="{Binding Path=SelectedSprint}">
-        </ComboBox>
-
-        <Label Grid.Column="0" Grid.Row="1">Issues list:</Label>
-
-        <ItemsControl Grid.Column="0" Grid.Row="2" Name="icProjectsList" ItemsSource="{Binding IssueList}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                            <Hyperlink Command="{Binding Path=DataContext.IssueSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                                       CommandParameter="{Binding}">
+            </ComboBox>
+        </DockPanel>
+        
+        <Grid>
+            <ListBox Grid.Column="0" Grid.Row="2" ItemsSource="{Binding IssueList}"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="IssueSelected_MouseDoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
                                 <TextBlock Text="{Binding Id}"/>
                                 <TextBlock Text="{Binding Key}"/>
-                            </Hyperlink>
-                        </TextBlock>
-                        <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-    </Grid>
-
+                            </TextBlock>
+                            <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </DockPanel>
 </UserControl>
     

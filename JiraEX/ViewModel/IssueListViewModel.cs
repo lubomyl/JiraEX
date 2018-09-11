@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace JiraEX.ViewModel
 {
@@ -30,8 +31,6 @@ namespace JiraEX.ViewModel
         private Sprint _selectedSprint;
         private Sprint _defaultSprintSelected;
 
-        public DelegateCommand IssueSelectedCommand { get; private set; }
-
         public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
             this._issueService = new IssueService();
@@ -46,7 +45,6 @@ namespace JiraEX.ViewModel
 
             this._defaultSprintSelected = new Sprint(0, "All sprints");
 
-            this.IssueSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
             GetIssuesAsync();
@@ -101,10 +99,8 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void OnItemSelected(object sender)
+        public void OnItemSelected(Issue issue)
         {
-            Issue issue = sender as Issue;
-
             this._parent.ShowIssueDetail(issue);
         }
 
