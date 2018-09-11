@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class EditablePropertiesList
+    public class PriorityEditableProperty
     {
 
-        public List<Property> Fields { get; set; }
+        public string Key { get; set; }
 
     }
 }

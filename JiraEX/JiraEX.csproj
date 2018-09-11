@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
-    <Compile Include="Controls\EditableTextBlock.cs" />
+    <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Helper\UserSettingsHelper.cs" />
     <Compile Include="Main\JiraToolWindow.cs" />
     <Compile Include="Main\Guids.cs" />

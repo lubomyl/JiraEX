@@ -37,6 +37,7 @@ namespace JiraEX.ViewModel
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
+        private EditablePropertiesFields _editablePropertiesFields;
 
         public DelegateCommand EditSummaryCommand { get; private set; }
         public DelegateCommand ConfirmEditSummaryCommand { get; private set; }
@@ -60,13 +61,14 @@ namespace JiraEX.ViewModel
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
 
-            this._issue = issue;
+            this.Issue = issue;
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
+            GetEditablePropertiesAsync();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -121,6 +123,22 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetEditablePropertiesAsync()
+        {
+            System.Threading.Tasks.Task<EditableProperties> editablePropertiesTask = this._issueService.GetAllEditablePropertiesAsync(this._issue.Key);
+
+            var editableProperties = await editablePropertiesTask as EditableProperties;
+
+            this._editablePropertiesFields = editableProperties.Fields;
+
+            CheckEditableProperties();
+        }
+
+        private void CheckEditableProperties()
+        {
+            this.IsPriorityEditable = IsPropertyEditable("priority");
+        }
+
         private async void UpdatePriorityAsync()
         {
             await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "priority", this.SelectedPriority);
@@ -166,7 +184,7 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmEditDescription(object parameter)
         {
-            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Issuetype.Description);
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Description);
 
             UpdateIssueAsync();
 
@@ -248,6 +266,18 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private bool IsPropertyEditable(string propertyName)
+        {
+            bool ret = false;
+
+            if (propertyName.Equals("priority"))
+            {
+                ret = this._editablePropertiesFields.Priority != null;
+            }
+
+            return ret;
+        }
+
         public ObservableCollection<Priority> PriorityList
         {
             get { return this._priorityList; }
@@ -306,7 +336,7 @@ namespace JiraEX.ViewModel
             set
             {
                 this._isPriorityEditable = value;
-                OnPropertyChanged("IsPriorityNull");
+                OnPropertyChanged("IsPriorityEditable");
             }
         }
     }
