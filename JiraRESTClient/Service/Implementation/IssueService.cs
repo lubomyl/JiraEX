@@ -68,7 +68,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<Issue> GetIssueByIssueKey(string issueKey)
+        public Task<Issue> GetIssueByIssueKeyAsync(string issueKey)
         {
             return Task.Run(() => {
                 var resource = $"issue/{issueKey}";

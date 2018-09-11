@@ -84,11 +84,17 @@ namespace JiraEX.ViewModel
             }
         }
 
+
         private async void UpdatePriorityAsync()
         {
             await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "priority", this.SelectedPriority);
 
-            this._issue.Fields.Priority = this.SelectedPriority;
+            UpdateIssueAsync();
+        }
+
+        private async void UpdateIssueAsync()
+        {
+            this.Issue = await  this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
         }
 
         private void EnableEditSummary(object parameter)
@@ -99,6 +105,8 @@ namespace JiraEX.ViewModel
         private async void ConfirmEditSummary(object parameter)
         {
             await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "summary", this._issue.Fields.Summary);
+
+            UpdateIssueAsync();
 
             this.IsEditingSummary = false;
         }
@@ -116,7 +124,9 @@ namespace JiraEX.ViewModel
         private async void ConfirmEditDescription(object parameter)
         {
             await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Issuetype.Description);
-                                                                          
+
+            UpdateIssueAsync();
+
             this.IsEditingDescription = false;
         }
 
