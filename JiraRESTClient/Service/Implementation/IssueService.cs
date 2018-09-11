@@ -2,6 +2,7 @@
 using AtlassianConnector.Service;
 using DevDefined.OAuth.Framework;
 using JiraRESTClient.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,15 +55,16 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public void UpdateIssuePropertyAsync(string issueKey, string propertyName, string newSummary)
+        public Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue)
         {
+            return Task.Run(() => {
+                newValue = JsonConvert.SerializeObject(newValue);
 
-            string updateString = $"{{\"update\":{{\"{propertyName}\":[{{\"set\":\"{newSummary}\"}}]}}}}";
+                string updateString = $"{{\"update\":{{\"{propertyName}\":[{{\"set\":{newValue}}}]}}}}";
 
-            Task.Run(() => {
                 var resource = $"issue/{issueKey}";
 
-                this._baseService.PutResource<Issue>(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
     }

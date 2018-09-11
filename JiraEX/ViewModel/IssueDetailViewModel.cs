@@ -1,4 +1,6 @@
 ﻿using ConfluenceEX.Command;
+using ConfluenceEX.Helper;
+using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -6,6 +8,7 @@ using JiraRESTClient.Service.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +24,11 @@ namespace JiraEX.ViewModel
         private JiraToolWindowNavigatorViewModel _parent;
 
         private IIssueService _issueService;
+        private IPriorityService _priorityService;
 
         private Issue _issue;
+
+        private Priority _selectedPriority;
 
         private ObservableCollection<Priority> _priorityList;
 
@@ -41,8 +47,12 @@ namespace JiraEX.ViewModel
             this._parent = parent;
 
             this._issueService = new IssueService();
+            this._priorityService = new PriorityService();
 
             this._issue = issue;
+            this._priorityList = new ObservableCollection<Priority>();
+
+            GetPrioritiesAsync();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -55,14 +65,40 @@ namespace JiraEX.ViewModel
             this.EditPriorityCommand = new DelegateCommand(EnableEditPriority);
         }
 
+        private async void GetPrioritiesAsync()
+        {
+            System.Threading.Tasks.Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
+
+            var priorityList = await priorityTask as PriorityList;
+
+            this.PriorityList.Clear();
+
+            foreach (Priority p in priorityList)
+            {
+                this.PriorityList.Add(p);
+
+                if(p.Id == this._issue.Fields.Priority.Id)
+                {
+                    this.SelectedPriority = p;
+                }
+            }
+        }
+
+        private async void UpdatePriorityAsync()
+        {
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "priority", this.SelectedPriority);
+
+            this._issue.Fields.Priority = this.SelectedPriority;
+        }
+
         private void EnableEditSummary(object parameter)
         {
             this.IsEditingSummary = true;
         }
 
-        private void ConfirmEditSummary(object parameter)
+        private async void ConfirmEditSummary(object parameter)
         {
-            this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "summary", this._issue.Fields.Summary);
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "summary", this._issue.Fields.Summary);
 
             this.IsEditingSummary = false;
         }
@@ -77,9 +113,9 @@ namespace JiraEX.ViewModel
             this.IsEditingDescription = true;
         }
 
-        private void ConfirmEditDescription(object parameter)
+        private async void ConfirmEditDescription(object parameter)
         {
-            this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Issuetype.Description);
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "description", this._issue.Fields.Issuetype.Description);
                                                                           
             this.IsEditingDescription = false;
         }
@@ -144,5 +180,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public Priority SelectedPriority
+        {
+            get { return this._selectedPriority; }
+            set
+            {
+                this._selectedPriority = value;
+                OnPropertyChanged("SelectedPriority");
+                this.UpdatePriorityAsync();
+                this.IsEditingPriority = false;
+            }
+        }
     }
 }
