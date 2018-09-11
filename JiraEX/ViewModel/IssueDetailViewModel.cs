@@ -25,12 +25,15 @@ namespace JiraEX.ViewModel
 
         private IIssueService _issueService;
         private IPriorityService _priorityService;
+        private ITransitionService _transitionService;
 
         private Issue _issue;
 
         private Priority _selectedPriority;
+        private Transition _selectedTransition;
 
         private ObservableCollection<Priority> _priorityList;
+        private ObservableCollection<Transition> _transitionList;
 
         public DelegateCommand EditSummaryCommand { get; private set; }
         public DelegateCommand ConfirmEditSummaryCommand { get; private set; }
@@ -52,8 +55,10 @@ namespace JiraEX.ViewModel
 
             this._issue = issue;
             this._priorityList = new ObservableCollection<Priority>();
+            this._transitionList = new ObservableCollection<Transition>();
 
             GetPrioritiesAsync();
+            GetTransitionsAsync();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -86,6 +91,24 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetTransitionsAsync()
+        {
+            System.Threading.Tasks.Task<TransitionList> transitionTask = this._transitionService.GetAllTransitionsForIssueByIssueKey(this._issue.Key);
+
+            var transitionList = await transitionTask as TransitionList;
+
+            this.TransitionList.Clear();
+
+            foreach (Transition t in transitionList.Transitions)
+            {
+                this.TransitionList.Add(t);
+
+                if (t.Name == this._issue.Fields.Status.Name)
+                {
+                    this.SelectedTransition = t;
+                }
+            }
+        }
 
         private async void UpdatePriorityAsync()
         {
@@ -97,6 +120,13 @@ namespace JiraEX.ViewModel
         private async void UpdateIssueAsync()
         {
             this.Issue = await  this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
+        }
+
+        private async void DoTransitionAsync()
+        {
+            await this._transitionService.DoTransitionAsync(this._issue.Key, this.SelectedTransition);
+
+            UpdateIssueAsync();
         }
 
         private void EnableEditSummary(object parameter)
@@ -206,6 +236,28 @@ namespace JiraEX.ViewModel
                 OnPropertyChanged("SelectedPriority");
                 this.UpdatePriorityAsync();
                 this.IsEditingPriority = false;
+            }
+        }
+
+        public ObservableCollection<Transition> TransitionList
+        {
+            get { return this._transitionList; }
+            set
+            {
+                this._transitionList = value;
+                OnPropertyChanged("TransitionList");
+            }
+        }
+
+        public Transition SelectedTransition
+        {
+            get { return this._selectedTransition; }
+            set
+            {
+                this._selectedTransition = value;
+                OnPropertyChanged("SelectedTransition");
+                this.DoTransitionAsync();
+                this.IsEditingTransition = false;
             }
         }
     }

@@ -19,5 +19,7 @@ namespace JiraRESTClient.Service
         /// </summary>
         /// <returns>Task containing deserialized <see cref="TransitionList"/> model class object.</returns>
         Task<TransitionList> GetAllTransitionsForIssueByIssueKey(string issueKey);
+
+        Task DoTransitionAsync(string issueKey, Transition selectedTransition);
     }
 }
