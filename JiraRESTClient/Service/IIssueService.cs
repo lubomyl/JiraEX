@@ -28,5 +28,7 @@ namespace JiraRESTClient.Service
         Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue);
 
         Task<Issue> GetIssueByIssueKeyAsync(string issueKey);
+
+        Task<EditablePropertiesList> GetAllEditablePropertiesAsync(string issueKey);
     }
 }

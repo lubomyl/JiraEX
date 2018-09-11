@@ -110,7 +110,7 @@
                     </ComboBox>
                 </Grid>
 
-                <Grid>
+                <Grid Visibility="{Binding IsPriorityNull, Converter={StaticResource FalseToVisibleConverter}}">
                     <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="{Binding SelectedPriority.StatusColor, Mode=OneWay}"
                                     Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriority.Name, Mode=OneWay}" Text="{Binding SelectedPriority.Name, Mode=OneWay}">

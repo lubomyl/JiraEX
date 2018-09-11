@@ -22,6 +22,8 @@ namespace JiraEX.ViewModel
         private bool _isEditingPriority = false;
         private bool _isEditingTransition = false;
 
+        private bool _isPriorityEditable = false;
+
         private JiraToolWindowNavigatorViewModel _parent;
 
         private IIssueService _issueService;
@@ -59,6 +61,7 @@ namespace JiraEX.ViewModel
             this._transitionService = new TransitionService();
 
             this._issue = issue;
+
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
 
@@ -260,9 +263,13 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
+                if(this._selectedPriority != null)
+                {
+                    this.UpdatePriorityAsync();
+                }
+
                 this._selectedPriority = value;
                 OnPropertyChanged("SelectedPriority");
-                this.UpdatePriorityAsync();
                 this.IsEditingPriority = false;
             }
         }
@@ -282,10 +289,24 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
+                if(this._selectedTransition != null)
+                {
+                    this.DoTransitionAsync();
+                }
+
                 this._selectedTransition = value;
                 OnPropertyChanged("SelectedTransition");
-                this.DoTransitionAsync();
                 this.IsEditingTransition = false;
+            }
+        }
+
+        public bool IsPriorityEditable
+        {
+            get { return this._isPriorityEditable; }
+            set
+            {
+                this._isPriorityEditable = value;
+                OnPropertyChanged("IsPriorityNull");
             }
         }
     }

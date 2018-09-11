@@ -76,5 +76,14 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetResource<Issue>(resource);
             });
         }
+
+        public Task<EditablePropertiesList> GetAllEditablePropertiesAsync(string issueKey)
+        {
+            return Task.Run(() => {
+                var resource = $"issue/{issueKey}/editmeta";
+
+                return this._baseService.GetResource<EditablePropertiesList>(resource);
+            });
+        }
     }
 }
