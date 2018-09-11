@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,8 @@ namespace JiraEX.ViewModel
 
             var issueList = await issueTask as IssueList;
 
+            Debug.WriteLine("ISSUES LIST: " + issueTask.IsCompleted);
+
             this.IssueList.Clear();
 
             foreach (Issue i in issueList.Issues)
@@ -69,11 +72,11 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void GetIssuesBySprintAsync()
+        private void GetIssuesBySprintAsync()
         {
             System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
 
-            var issueList = await issueTask as IssueList;
+            var issueList = issueTask.Result as IssueList;
 
             this.IssueList.Clear();
 
@@ -83,11 +86,11 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void GetSprintsAsync()
+        private void GetSprintsAsync()
         {
             System.Threading.Tasks.Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
 
-            var sprintList = await sprintTask as SprintList;
+            var sprintList = sprintTask.Result as SprintList;
 
             this.SprintList.Add(this._defaultSprintSelected);
             this.SelectedSprint = this.SprintList[0];

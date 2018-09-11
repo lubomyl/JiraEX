@@ -14,7 +14,7 @@ namespace JiraRESTClient.Service.Implementation
 
     /// <summary>
     /// Concrete implementation of IOAuthService utilizing <see cref="BaseService"/> as <see cref="IBaseService{T}"/>.
-    /// <see cref="IContentService"/>
+    /// <see cref="IOAuthService"/>
     /// </summary>
     public class OAuthService : IOAuthService
     {

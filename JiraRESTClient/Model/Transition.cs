@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class Priority
+    public class Transition
     {
 
         [JsonProperty("id")]
         public string Id { get; set; }
-
         public string Name { get; set; }
 
     }

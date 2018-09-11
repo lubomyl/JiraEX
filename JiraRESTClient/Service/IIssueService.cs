@@ -1,4 +1,5 @@
-﻿using JiraRESTClient.Model;
+﻿using DevDefined.OAuth.Framework;
+using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace JiraRESTClient.Service
 
         Task<IssueList> GetAllIssuesOfBoardAsync(int boardId);
 
-        void UpdateIssuePropertyAsync(string issueKey, string propertyName, string newSummary);
+        Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue);
+
+        Task<Issue> GetIssueByIssueKeyAsync(string issueKey);
     }
 }
