@@ -67,5 +67,14 @@ namespace JiraRESTClient.Service.Implementation
                 this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
+
+        public Task<Issue> GetIssueByIssueKey(string issueKey)
+        {
+            return Task.Run(() => {
+                var resource = $"issue/{issueKey}";
+
+                return this._baseService.GetResource<Issue>(resource);
+            });
+        }
     }
 }
