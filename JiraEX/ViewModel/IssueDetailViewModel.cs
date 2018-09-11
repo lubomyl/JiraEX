@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueDetailViewModel : ViewModelBase
+    public class IssueDetailViewModel : ViewModelBase, ITitleable
     {
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
@@ -83,6 +83,8 @@ namespace JiraEX.ViewModel
 
             this.EditTransitionCommand = new DelegateCommand(EnableEditTransition);
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
+
+            SetPanelTitles();
         }
 
         private async void GetPrioritiesAsync()
@@ -216,14 +218,9 @@ namespace JiraEX.ViewModel
             this.IsEditingTransition = false;
         }
 
-        public Issue Issue
+        public void SetPanelTitles()
         {
-            get { return this._issue; }
-            set
-            {
-                this._issue = value;
-                OnPropertyChanged("Issue");
-            }
+            this._parent.SetPanelTitles("Issue " + this.Issue.Key, Issue.Fields.Project.Name);
         }
 
         public bool IsEditingSummary
@@ -276,6 +273,16 @@ namespace JiraEX.ViewModel
             }
 
             return ret;
+        }
+
+        public Issue Issue
+        {
+            get { return this._issue; }
+            set
+            {
+                this._issue = value;
+                OnPropertyChanged("Issue");
+            }
         }
 
         public ObservableCollection<Priority> PriorityList

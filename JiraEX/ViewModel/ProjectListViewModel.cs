@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class ProjectListViewModel : ViewModelBase
+    public class ProjectListViewModel : ViewModelBase, ITitleable
     {
         private IProjectService _projectService;
         private IBoardService _boardService;
@@ -43,6 +43,8 @@ namespace JiraEX.ViewModel
             GetBoardsAsync();
 
             this.BoardProjectList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
         }
 
         /*private async void GetProjectsAsync()
@@ -78,6 +80,11 @@ namespace JiraEX.ViewModel
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", "Projects");
         }
 
         public ObservableCollection<BoardProject> BoardProjectList

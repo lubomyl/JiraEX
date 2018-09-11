@@ -16,7 +16,7 @@ using System.Windows.Controls;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueListViewModel : ViewModelBase
+    public class IssueListViewModel : ViewModelBase, ITitleable
     {
         private IIssueService _issueService;
         private ISprintService _sprintService;
@@ -52,6 +52,8 @@ namespace JiraEX.ViewModel
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
             this.SprintList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
         }
 
         private async void GetIssuesAsync()
@@ -106,6 +108,11 @@ namespace JiraEX.ViewModel
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", this._boardProject.Name);
         }
 
         public ObservableCollection<Issue> IssueList

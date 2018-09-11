@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace JiraEX.ViewModel
 {
-    public class BeforeSignInViewModel : ViewModelBase
+    public class BeforeSignInViewModel : ViewModelBase, ITitleable
     {
 
         private IOAuthService _oAuthService;
@@ -39,6 +39,8 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
+
+            SetPanelTitles();
         }
 
         private async void SignInOAuth(object parameter)
@@ -87,6 +89,11 @@ namespace JiraEX.ViewModel
             }
 
             return ret;
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", "Sign-in");
         }
 
         #region BeforeSignInViewModel Members   

@@ -21,20 +21,20 @@
 
     <DockPanel>
         <DockPanel DockPanel.Dock="Top"
-                   Margin="8">
+                       Margin="8">
 
             <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="Id"
-                  SelectedValue="{Binding Path=Name}"
-                  SelectedItem="{Binding Path=SelectedSprint}">
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding Path=Name}"
+                      SelectedItem="{Binding Path=SelectedSprint}">
             </ComboBox>
         </DockPanel>
-        
+
         <Grid>
             <ListBox Grid.Column="0" Grid.Row="2" ItemsSource="{Binding IssueList}"
-                     BorderThickness="0"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -45,9 +45,9 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                                <TextBlock Text="{Binding Id}"/>
-                                <TextBlock Text="{Binding Key}"/>
-                            </TextBlock>
+                                    <TextBlock Text="{Binding Id}"/>
+                                    <TextBlock Text="{Binding Key}"/>
+                                </TextBlock>
                             <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
                         </StackPanel>
                     </DataTemplate>

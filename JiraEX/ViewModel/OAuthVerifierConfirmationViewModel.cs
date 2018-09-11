@@ -16,7 +16,7 @@ using System.Windows.Threading;
 
 namespace JiraEX.ViewModel
 {
-    public class OAuthVerifierConfirmationViewModel : ViewModelBase
+    public class OAuthVerifierConfirmationViewModel : ViewModelBase, ITitleable
     {
 
         private const int REQUEST_TOKEN_EXPIRATION_TIME_SECONDS = 600;
@@ -50,6 +50,8 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignInCommand = new DelegateCommand(SignIn);
+
+            SetPanelTitles();
         }
 
         private async void SignIn(object parameter)
@@ -108,6 +110,11 @@ namespace JiraEX.ViewModel
             this.InitializeRequestTokenExpireTimeCountdown(_time);
 
             _timer.Start();
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", "OAuth");
         }
 
         public string ErrorMessage
