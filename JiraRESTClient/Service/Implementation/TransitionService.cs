@@ -46,7 +46,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}/transitions";
 
-                return this._baseService.PostResource(resource, Encoding.UTF8.GetBytes(transitionString));
+                this._baseService.PostResource(resource, Encoding.UTF8.GetBytes(transitionString));
             });
         }
     }

@@ -20,6 +20,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
         private bool _isEditingPriority = false;
+        private bool _isEditingTransition = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -46,12 +47,16 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditPriorityCommand { get; private set; }
         public DelegateCommand CancelEditPriorityCommand { get; private set; }
 
+        public DelegateCommand EditTransitionCommand { get; private set; }
+        public DelegateCommand CancelEditTransitionCommand { get; private set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
 
             this._issueService = new IssueService();
             this._priorityService = new PriorityService();
+            this._transitionService = new TransitionService();
 
             this._issue = issue;
             this._priorityList = new ObservableCollection<Priority>();
@@ -70,6 +75,9 @@ namespace JiraEX.ViewModel
 
             this.EditPriorityCommand = new DelegateCommand(EnableEditPriority);
             this.CancelEditPriorityCommand = new DelegateCommand(CancelEditPriority);
+
+            this.EditTransitionCommand = new DelegateCommand(EnableEditTransition);
+            this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
         }
 
         private async void GetPrioritiesAsync()
@@ -177,6 +185,16 @@ namespace JiraEX.ViewModel
             this.IsEditingPriority = false;
         }
 
+        private void EnableEditTransition(object parameter)
+        {
+            this.IsEditingTransition = true;
+        }
+
+        private void CancelEditTransition(object parameter)
+        {
+            this.IsEditingTransition = false;
+        }
+
         public Issue Issue
         {
             get { return this._issue; }
@@ -214,6 +232,16 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingPriority = value;
                 OnPropertyChanged("IsEditingPriority");
+            }
+        }
+
+        public bool IsEditingTransition
+        {
+            get { return this._isEditingTransition; }
+            set
+            {
+                this._isEditingTransition = value;
+                OnPropertyChanged("IsEditingTransition");
             }
         }
 

@@ -84,10 +84,30 @@
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
                 </Border>
-                
-                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Status.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Status.Name, Mode=OneWay}" />
-                </Border>
+
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedTransition.Name, Mode=OneWay}" Text="{Binding SelectedTransition.Name, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditTransitionCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+
+                    <ComboBox ItemsSource="{Binding TransitionList}"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedTransition}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
 
                 <Grid>
                     <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
