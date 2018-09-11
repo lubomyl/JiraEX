@@ -41,6 +41,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditDescriptionCommand { get; private set; }
 
         public DelegateCommand EditPriorityCommand { get; private set; }
+        public DelegateCommand CancelEditPriorityCommand { get; private set; }
 
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
@@ -63,6 +64,7 @@ namespace JiraEX.ViewModel
             this.CancelEditDescriptionCommand = new DelegateCommand(CancelEditDescription);
 
             this.EditPriorityCommand = new DelegateCommand(EnableEditPriority);
+            this.CancelEditPriorityCommand = new DelegateCommand(CancelEditPriority);
         }
 
         private async void GetPrioritiesAsync()
@@ -138,6 +140,11 @@ namespace JiraEX.ViewModel
         private void EnableEditPriority(object parameter)
         {
             this.IsEditingPriority = true;
+        }
+
+        private void CancelEditPriority(object parameter)
+        {
+            this.IsEditingPriority = false;
         }
 
         public Issue Issue

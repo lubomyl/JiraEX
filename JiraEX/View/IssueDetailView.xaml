@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:JiraEX.View"
              xmlns:controls="clr-namespace:JiraEX.Controls"
              xmlns:vsui="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{DynamicResource ToolWindowBackgroundBrushKey}">
@@ -99,11 +100,16 @@
                     </Border>
 
                     <ComboBox ItemsSource="{Binding PriorityList}"
-                                  DisplayMemberPath="Name"
-                                  SelectedValuePath="Id"
-                                  Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
-                                  SelectedValue="{Binding Path=Name}"
-                                  SelectedItem="{Binding SelectedPriority}">
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedPriority}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
             </StackPanel>
