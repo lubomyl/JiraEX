@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,6 +86,10 @@ namespace JiraEX.ViewModel
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
             SetPanelTitles();
+
+            /*FileInfo file = new FileInfo(@"C:\Users\RODINA-PC\Documents\debug.log");
+
+            this._issueService.PostAttachmentToIssueAsync(file, this._issue.Key);*/
         }
 
         private async void GetPrioritiesAsync()
@@ -150,7 +155,7 @@ namespace JiraEX.ViewModel
 
         private async void UpdateIssueAsync()
         {
-            this.Issue = await  this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
+            this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
         }
 
         private async void DoTransitionAsync()
@@ -300,12 +305,13 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
-                if(this._selectedPriority != null)
+                this._selectedPriority = value;
+
+                if (this._selectedPriority != null)
                 {
                     this.UpdatePriorityAsync();
                 }
-
-                this._selectedPriority = value;
+  
                 OnPropertyChanged("SelectedPriority");
                 this.IsEditingPriority = false;
             }
@@ -326,12 +332,13 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
-                if(this._selectedTransition != null)
+                this._selectedTransition = value;
+
+                if (this._selectedTransition != null)
                 {
                     this.DoTransitionAsync();
                 }
 
-                this._selectedTransition = value;
                 OnPropertyChanged("SelectedTransition");
                 this.IsEditingTransition = false;
             }

@@ -5,6 +5,7 @@ using JiraRESTClient.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +84,15 @@ namespace JiraRESTClient.Service.Implementation
                 var resource = $"issue/{issueKey}/editmeta";
 
                 return this._baseService.GetResource<EditableProperties>(resource);
+            });
+        }
+
+        public Task PostAttachmentToIssueAsync(FileInfo attachment, string issueKey)
+        {
+            return Task.Run(() => {
+                var resource = $"issue/{issueKey}/attachments";
+
+                this._baseService.PostResourceFile(resource, attachment);
             });
         }
     }
