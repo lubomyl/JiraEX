@@ -127,21 +127,31 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Opacity="0.5">Created</Label>
-            <TextBlock Grid.Row="0" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelFaded}">Created</Label>
+            <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource PlainTextFaded}"
                            Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Opacity="0.5">Updated</Label>
-            <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelFaded}">Updated</Label>
+            <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainTextFaded}"
                            Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
         </Grid>
 
-        <TextBlock Style="{StaticResource PlainText}">
-                <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
-                            CommandParameter="{Binding}">
-                    Attachment...
-                </Hyperlink>
-        </TextBlock>
+        <!-- Add attachment, Create sub-task-->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
+                    <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
+                                CommandParameter="{Binding}">
+                        Attachment...
+                    </Hyperlink>
+            </TextBlock>
+
+            <TextBlock Style="{StaticResource PlainText}">
+                    <Hyperlink Command="{Binding CeateSubTaskCommand}" 
+                                CommandParameter="{Binding}">
+                        Sub-task...
+                    </Hyperlink>
+            </TextBlock>
+        </StackPanel>
 
         <Separator Margin="0,5,0,0"
                Style="{StaticResource PaneHorizontalSeparator}" />
@@ -150,7 +160,7 @@
                 Margin="8 0 8 0">
 
             <!-- Description -->
-            <Label>Description:</Label>
+            <Label Style="{StaticResource LabelFaded}">Description:</Label>
             <Grid Margin="0 0 0 10">
                 <TextBlock
                     Text="{Binding Issue.Fields.Description}"
@@ -185,21 +195,21 @@
 
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">
-                <Label>Assignee:</Label>
+                <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
                 <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"/>
             </StackPanel>
 
             <!-- Sprint -->
             <StackPanel Orientation="Horizontal">
-                <Label>Sprint:</Label>
+                <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
                 <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"/>
             </StackPanel>
 
             <!-- Labels -->
             <StackPanel Orientation="Horizontal">
-                <Label>Labels:</Label>
+                <Label Style="{StaticResource LabelFaded}">Labels:</Label>
 
                 <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}">
                         <ItemsControl.ItemsPanel>
@@ -210,7 +220,7 @@
                         <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" />
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" Style="{StaticResource PlainText}"/>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -219,26 +229,40 @@
             </StackPanel>
             
             <!-- Attachments -->
-            <Label>Attachments:</Label>
-            
-            <ItemsControl ItemsSource="{Binding AttachmentsList}">
-                <ItemsControl.ItemTemplate>
+            <Label Style="{StaticResource LabelFaded}">Attachments:</Label>
+
+            <ListBox ItemsSource="{Binding AttachmentsList}"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                     BorderThickness="0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                                    <Hyperlink Command="{Binding Path=DataContext.DownloadAtatchmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                                               CommandParameter="{Binding}">
-                                        <TextBlock Text="{Binding Filename}"/>
-                                    </Hyperlink>
-                                </TextBlock>
-                                <TextBlock Text="{Binding Size}" Style="{StaticResource PlainText}"/>
-                            </StackPanel>
-                        </Grid>
+                            <Border Width="100" Height="150" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
+                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                                <DockPanel LastChildFill="False">
+                                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Text="{Binding Filename}" TextWrapping="Wrap" />
+                                    
+                                    <Button DockPanel.Dock="Bottom" Command="{Binding DeleteAttachmentCommand}" CommandParameter="{Binding ElementName=This}" Margin="0 5 0 0"
+                                        Content="Delete" 
+                                        Height="25" Width="75"/>
 
+                                    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Size, StringFormat=Bytes {0}}" Style="{StaticResource PlainText}"/>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
         </StackPanel>
     </StackPanel>

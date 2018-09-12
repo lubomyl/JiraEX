@@ -115,6 +115,11 @@
         <Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style x:Key="PlainTextFaded" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
+        <Setter Property="TextBlock.Opacity" Value="0.5"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
     <Style x:Key="ShadedText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.Background" Value="{StaticResource ItemSelectedNotFocusedBrushKey}" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ItemSelectedTextNotFocusedBrushKey}" />
@@ -127,7 +132,14 @@
         <Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
 
-	<!-- General controls -->
+    <!-- Labels styles -->
+    <Style x:Key="LabelFaded" TargetType="{x:Type Label}">
+        <Setter Property="Label.Foreground" Value="{StaticResource ItemSelectedTextNotFocusedBrushKey}" />
+        <Setter Property="TextBlock.Opacity" Value="0.5"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- General controls -->
 	<Style x:Key="{x:Type Border}" TargetType="{x:Type Border}">
 		<Setter Property="Border.Background" Value="{StaticResource ToolWindowBackgroundBrushKey}" />
 		<Setter Property="Control.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
