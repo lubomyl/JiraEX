@@ -16,30 +16,33 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <StackPanel Orientation="Vertical">
-        <StackPanel Margin="6,9,9,5"
-                Orientation="Horizontal">
 
-            <TextBlock Margin="0,-5,0,0"
-                 FontSize="14.7"
-                 FontWeight="SemiBold"
-                 Style="{StaticResource PlainText}"
-                 Text="{Binding Title}"/>
-            <Separator Margin="5,-2,5,0"
-                 Foreground="#FFFFFF"
-                 Style="{StaticResource TitleVerticalSeparator}" />
-            <TextBlock Margin="0,-5,0,0"
-                 VerticalAlignment="Center"
-                 Foreground="#FF717171"
-                 Text="{Binding Subtitle}" />
+    <DockPanel>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <StackPanel Margin="6,9,9,5"
+                    Orientation="Horizontal">
+
+                <TextBlock Margin="0,-5,0,0"
+                     FontSize="14.7"
+                     FontWeight="SemiBold"
+                     Style="{StaticResource PlainText}"
+                     Text="{Binding Title}"/>
+                <Separator Margin="5,-2,5,0"
+                     Foreground="#FFFFFF"
+                     Style="{StaticResource TitleVerticalSeparator}" />
+                <TextBlock Margin="0,-5,0,0"
+                     VerticalAlignment="Center"
+                     Foreground="#FF717171"
+                     Text="{Binding Subtitle}" />
+            </StackPanel>
+
+            <Separator Margin="0,0,0,2"
+                   Style="{StaticResource PaneHorizontalSeparator}" />
         </StackPanel>
-
-        <Separator Margin="0,0,0,2"
-               Style="{StaticResource PaneHorizontalSeparator}" />
-
+    
         <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
+    </DockPanel>
 
-    </StackPanel>
+
 
 </UserControl>

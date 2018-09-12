@@ -43,12 +43,15 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                                    <TextBlock Text="{Binding Id}"/>
-                                    <TextBlock Text="{Binding Key}"/>
-                                </TextBlock>
-                            <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
+                        <StackPanel Orientation="Vertical" Margin="8 2 8 2">
+                            <Grid>
+                                <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
+                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource PlainText}"/>
+                                    <TextBlock DockPanel.Dock="Right"  Text="{Binding Fields.Status.Name}" Style="{StaticResource PlainText}"/>
+                                </DockPanel>
+                            </Grid>
+
+                            <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
