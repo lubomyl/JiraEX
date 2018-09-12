@@ -39,25 +39,12 @@ namespace JiraEX.ViewModel
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
-            //GetProjectsAsync();
             GetBoardsAsync();
 
             this.BoardProjectList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
         }
-
-        /*private async void GetProjectsAsync()
-        {
-            System.Threading.Tasks.Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
-
-            var projectList = await projectTask as ProjectList;
-
-            foreach (Project p in projectList)
-            {
-                this.BoardList.Add(p);
-            }
-        }*/
 
         private async void GetBoardsAsync()
         {
@@ -71,7 +58,7 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void OnItemSelected(object sender)
+        public void OnItemSelected(object sender)
         {
             BoardProject boardProject = sender as BoardProject;
 

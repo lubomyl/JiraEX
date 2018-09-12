@@ -247,7 +247,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Border Width="100" Height="150" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
+                            <Border Width="100" Height="120" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
                                     Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
                                 <DockPanel LastChildFill="False">
                                     <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Text="{Binding Filename}" TextWrapping="Wrap" />
