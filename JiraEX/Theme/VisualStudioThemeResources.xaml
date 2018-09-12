@@ -122,7 +122,7 @@
 	</Style>
 	<Style x:Key="TitleText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.FontWeight" Value="Bold" />
-		<Setter Property="TextBlock.FontSize" Value="13" />
+		<Setter Property="TextBlock.FontSize" Value="12" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
         <Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
@@ -1368,7 +1368,7 @@
     <!-- Horizontal separator -->
     <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
         <Setter Property="Background" Value="#FF2D2D30" />
-        <Setter Property="Height" Value="2" />
+        <Setter Property="Height" Value="1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
