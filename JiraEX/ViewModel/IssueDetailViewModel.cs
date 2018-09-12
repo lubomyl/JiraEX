@@ -63,19 +63,26 @@ namespace JiraEX.ViewModel
         {
             this._parent = parent;
 
-            this._issueService = new IssueService();
-            this._priorityService = new PriorityService();
-            this._transitionService = new TransitionService();
+            Initialize();
 
             this.Issue = issue;
-
-            this._priorityList = new ObservableCollection<Priority>();
-            this._transitionList = new ObservableCollection<Transition>();
-            this._attachmentsList = new ObservableCollection<Attachment>();
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
+
+            SetPanelTitles();
+        }
+
+        private void Initialize()
+        {
+            this._issueService = new IssueService();
+            this._priorityService = new PriorityService();
+            this._transitionService = new TransitionService();
+
+            this._priorityList = new ObservableCollection<Priority>();
+            this._transitionList = new ObservableCollection<Transition>();
+            this._attachmentsList = new ObservableCollection<Attachment>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -92,8 +99,6 @@ namespace JiraEX.ViewModel
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
             this.SelectFileToUploadCommand = new DelegateCommand(UploadAttachmentFromFileBrowser);
-
-            SetPanelTitles();
         }
 
         private async void UploadAttachmentFromFileBrowser(object sender)
