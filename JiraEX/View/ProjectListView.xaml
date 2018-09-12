@@ -19,33 +19,33 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Label Grid.Column="0" Grid.Row="0">Projects list:</Label>
-
-        <ItemsControl Grid.Column="0" Grid.Row="1" Name="icProjectsList" ItemsSource="{Binding BoardProjectList}">
-            <ItemsControl.ItemTemplate>
+    <Grid>
+        <ListBox ItemsSource="{Binding BoardProjectList}"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <!-- <EventSetter Event="MouseDoubleClick" Handler="ProjectSelected_MouseDoubleClick"/> -->
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,0,0,5">
-                        <TextBlock Style="{StaticResource PlainText}">
-                            <Hyperlink Command="{Binding Path=DataContext.ProjectSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                                       CommandParameter="{Binding}">
-                                <TextBlock Text="{Binding Location.ProjectKey}"/>
-                                <TextBlock Text="{Binding Location.ProjectName}"/>
-                            </Hyperlink>
-                        </TextBlock>
-                    </Grid>
+                    <StackPanel Orientation="Vertical" Margin="8 0 8 0">
+                        <Grid Margin="0 0 0 5">
+                            <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Location.ProjectKey}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Location.ProjectName}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                                
+                                <Border DockPanel.Dock="Right" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" ToolTip="{Binding Location.ProjectTypeKey, Mode=OneWay}" Text="{Binding Location.ProjectTypeKey, Mode=OneWay}" />
+                                </Border>
+                            </DockPanel>
+                        </Grid>
+                    </StackPanel>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 
 </UserControl>
