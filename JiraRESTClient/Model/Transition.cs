@@ -14,5 +14,7 @@ namespace JiraRESTClient.Model
         public string Id { get; set; }
         public string Name { get; set; }
 
+        [JsonProperty("to.statusCategory.colorName")]
+        public string ColorName { get; set; }
     }
 }

@@ -33,5 +33,13 @@ namespace JiraEX.View
             this._viewModel = new IssueListViewModel(parent, boardProject);
             this.DataContext = this._viewModel;
         }
+
+        void IssueSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {   
+            ListBoxItem listBoxItem = sender as ListBoxItem;
+            Issue issue = listBoxItem.Content as Issue;
+
+            this._viewModel.OnItemSelected(issue);
+        }
     }
 }

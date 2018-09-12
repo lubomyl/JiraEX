@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class AfterSignInViewModel : ViewModelBase
+    public class AfterSignInViewModel : ViewModelBase, ITitleable
     {
 
         private JiraToolWindowNavigatorViewModel _parent;
@@ -43,6 +43,8 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignOutCommand = new DelegateCommand(SignOut);
+
+            SetPanelTitles();
         }
 
         private async void GetAuthenticatedUserAsync()
@@ -66,6 +68,11 @@ namespace JiraEX.ViewModel
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
             this._parent.ShowBeforeSignIn();
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", UserSettingsHelper.ReadFromUserSettings("JiraBaseUrl"));
         }
 
         public User AuthenticatedUser

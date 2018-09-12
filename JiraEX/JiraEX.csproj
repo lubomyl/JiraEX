@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
-    <Compile Include="Controls\EditableTextBlock.cs" />
+    <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Helper\UserSettingsHelper.cs" />
     <Compile Include="Main\JiraToolWindow.cs" />
     <Compile Include="Main\Guids.cs" />
@@ -70,6 +70,7 @@
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
     <Compile Include="ViewModel\IssueDetailViewModel.cs" />
     <Compile Include="ViewModel\IssueListViewModel.cs" />
+    <Compile Include="ViewModel\ITitleable.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />

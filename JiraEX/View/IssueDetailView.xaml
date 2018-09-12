@@ -23,29 +23,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel Orientation="Vertical">
-        <StackPanel Margin="6,9,9,5"
-                Orientation="Horizontal">
-            
-            <TextBlock Margin="0,-5,0,0"
-                 FontSize="14.7"
-                 FontWeight="SemiBold"
-                 Style="{StaticResource PlainText}"
-                 Text="{Binding Issue.Key, StringFormat={}Issue #{0}}"/>
-            <Separator Margin="5,-2,5,0"
-                 Foreground="#FFFFFF"
-                 Style="{StaticResource TitleVerticalSeparator}" />
-            <TextBlock Margin="0,-5,0,0"
-                 VerticalAlignment="Center"
-                 Foreground="#FF717171"
-                 Text="{Binding Issue.Fields.Project.Name}" />
-        </StackPanel>
-
-        <Separator Margin="0,0,0,2"
-               Style="{StaticResource PaneHorizontalSeparator}" />
-
-        <StackPanel Orientation="Vertical"
-                Margin="8 0 0 0">
+    <StackPanel Orientation="Vertical"
+                Margin="8 0 8 0">
 
             <!-- Summary -->
             <Grid Margin="0 0 0 10">
@@ -96,6 +75,7 @@
                     </Border>
 
                     <ComboBox ItemsSource="{Binding TransitionList}"
+                            Margin="0 0 5 0"
                             DisplayMemberPath="Name"
                             SelectedValuePath="Id"
                             Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
@@ -109,8 +89,8 @@
                     </ComboBox>
                 </Grid>
 
-                <Grid>
-                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+                <Grid Visibility="{Binding IsPriorityEditable, Converter={StaticResource TrueToVisibleConverter}}">
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="{Binding SelectedPriority.StatusColor, Mode=OneWay}"
                                     Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriority.Name, Mode=OneWay}" Text="{Binding SelectedPriority.Name, Mode=OneWay}">
                             <TextBlock.InputBindings>
@@ -120,6 +100,7 @@
                     </Border>
 
                     <ComboBox ItemsSource="{Binding PriorityList}"
+                            Margin="0 0 5 0"
                             DisplayMemberPath="Name"
                             SelectedValuePath="Id"
                             Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
@@ -135,26 +116,43 @@
             </StackPanel>
             
             <!-- Created, Updated -->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
 
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Opacity="0.5">Created</Label>
-                <TextBlock Grid.Row="0" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelFaded}">Created</Label>
+            <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource PlainTextFaded}"
                            Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
 
-                <Label Grid.Row="1" Grid.Column="0" Opacity="0.5">Updated</Label>
-                <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
+            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelFaded}">Updated</Label>
+            <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainTextFaded}"
                            Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
-            </Grid>
+        </Grid>
+
+        <!-- Add attachment, Create sub-task-->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
+                    <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
+                                CommandParameter="{Binding}">
+                        Attachment...
+                    </Hyperlink>
+            </TextBlock>
+
+            <TextBlock Style="{StaticResource PlainText}">
+                    <Hyperlink Command="{Binding CeateSubTaskCommand}" 
+                                CommandParameter="{Binding}">
+                        Sub-task...
+                    </Hyperlink>
+            </TextBlock>
         </StackPanel>
+
         <Separator Margin="0,5,0,0"
                Style="{StaticResource PaneHorizontalSeparator}" />
 
@@ -162,7 +160,7 @@
                 Margin="8 0 8 0">
 
             <!-- Description -->
-            <Label>Description:</Label>
+            <Label Style="{StaticResource LabelFaded}">Description:</Label>
             <Grid Margin="0 0 0 10">
                 <TextBlock
                     Text="{Binding Issue.Fields.Description}"
@@ -197,21 +195,21 @@
 
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">
-                <Label>Assignee:</Label>
+                <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
                 <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"/>
             </StackPanel>
 
             <!-- Sprint -->
             <StackPanel Orientation="Horizontal">
-                <Label>Sprint:</Label>
+                <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
                 <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"/>
             </StackPanel>
 
             <!-- Labels -->
             <StackPanel Orientation="Horizontal">
-                <Label>Labels:</Label>
+                <Label Style="{StaticResource LabelFaded}">Labels:</Label>
 
                 <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}">
                         <ItemsControl.ItemsPanel>
@@ -222,7 +220,7 @@
                         <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" />
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" Style="{StaticResource PlainText}"/>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -230,6 +228,42 @@
                     
             </StackPanel>
             
+            <!-- Attachments -->
+            <Label Style="{StaticResource LabelFaded}">Attachments:</Label>
+
+            <ListBox ItemsSource="{Binding AttachmentsList}"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                     BorderThickness="0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Border Width="100" Height="120" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
+                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                                <DockPanel LastChildFill="False">
+                                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Text="{Binding Filename}" TextWrapping="Wrap" />
+                                    
+                                    <Button DockPanel.Dock="Bottom" Command="{Binding DeleteAttachmentCommand}" CommandParameter="{Binding ElementName=This}" Margin="0 5 0 0"
+                                        Content="Delete" 
+                                        Height="25" Width="75"/>
+
+                                    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Size, StringFormat=Bytes {0}}" Style="{StaticResource PlainText}"/>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
         </StackPanel>
     </StackPanel>
 </UserControl>

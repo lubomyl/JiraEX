@@ -12,6 +12,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace JiraEX.ViewModel.Navigation
 {
@@ -31,6 +32,9 @@ namespace JiraEX.ViewModel.Navigation
         private IssueDetailView _issueDetailView;
 
         private OleMenuCommandService _service;
+
+        private string _title;
+        private string _subtitle;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
@@ -66,8 +70,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowBeforeSignIn()
         {
-            _parent.Caption = "Jira - Sign-in";
-
             if (this._beforeSignInView == null)
             {
                 this._beforeSignInView = new BeforeSignInView(this);
@@ -82,8 +84,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowAfterSignIn()
         {
-            _parent.Caption = "Jira - Signed-in";
-
             if (this._afterSignInView == null)
             {
                 this._afterSignInView = new AfterSignInView(this);
@@ -98,8 +98,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
-            _parent.Caption = "Jira - Confirm OAuth Verification Code";
-
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
 
             SelectedView = this._oAuthVerifierConfirmationView;
@@ -107,8 +105,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowProjects(object sender, EventArgs e)
         {
-            _parent.Caption = "Jira - Projects";
-
             if (this._projectListView == null)
             {
                 this._projectListView = new ProjectListView(this);
@@ -123,8 +119,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfProject(BoardProject boardProject)
         {
-            this._parent.Caption = "Jira - " + boardProject.Name + " issues";
-
             this._issueListView = new IssueListView(this, boardProject);
 
             SelectedView = this._issueListView;
@@ -132,8 +126,6 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssueDetail(Issue issue)
         {
-            this._parent.Caption = "Jira - issue";
-
             this._issueDetailView = new IssueDetailView(this, issue);
 
             SelectedView = this._issueDetailView;
@@ -154,13 +146,42 @@ namespace JiraEX.ViewModel.Navigation
             }
         }
 
+        public void SetPanelTitles(string title, string subtitle)
+        {
+            this.Title = title;
+            this.Subtitle = subtitle;
+        }
+
         public object SelectedView
         {
             get { return _selectedView; }
             set
             {
                 this._selectedView = value;
+                var selView = ((UserControl)this._selectedView).DataContext as ITitleable;
+                selView.SetPanelTitles();
+
                 OnPropertyChanged("SelectedView");
+            }
+        }
+
+        public string Title
+        {
+            get { return this._title; }
+            set
+            {
+                this._title = value;
+                OnPropertyChanged("Title");
+            }
+        }
+
+        public string Subtitle
+        {
+            get { return this._subtitle; }
+            set
+            {
+                this._subtitle = value;
+                OnPropertyChanged("Subtitle");
             }
         }
     }

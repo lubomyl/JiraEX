@@ -12,10 +12,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueListViewModel : ViewModelBase
+    public class IssueListViewModel : ViewModelBase, ITitleable
     {
         private IIssueService _issueService;
         private ISprintService _sprintService;
@@ -29,8 +30,6 @@ namespace JiraEX.ViewModel
 
         private Sprint _selectedSprint;
         private Sprint _defaultSprintSelected;
-
-        public DelegateCommand IssueSelectedCommand { get; private set; }
 
         public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
@@ -46,7 +45,6 @@ namespace JiraEX.ViewModel
 
             this._defaultSprintSelected = new Sprint(0, "All sprints");
 
-            this.IssueSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
             GetIssuesAsync();
@@ -54,6 +52,8 @@ namespace JiraEX.ViewModel
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
             this.SprintList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
         }
 
         private async void GetIssuesAsync()
@@ -101,15 +101,18 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void OnItemSelected(object sender)
+        public void OnItemSelected(Issue issue)
         {
-            Issue issue = sender as Issue;
-
             this._parent.ShowIssueDetail(issue);
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", this._boardProject.Name);
         }
 
         public ObservableCollection<Issue> IssueList

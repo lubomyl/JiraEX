@@ -19,43 +19,51 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="20" x:Name="This">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top"
+                       Margin="8">
 
-        <ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="Id"
-                  SelectedValue="{Binding Path=Name}"
-                  SelectedItem="{Binding Path=SelectedSprint}">
-        </ComboBox>
+            <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding Path=Name}"
+                      SelectedItem="{Binding Path=SelectedSprint}">
+            </ComboBox>
+        </DockPanel>
 
-        <Label Grid.Column="0" Grid.Row="1">Issues list:</Label>
+        <Grid>
+            <ListBox ItemsSource="{Binding IssueList}"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="IssueSelected_MouseDoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Margin="8 0 8 0">
+                                <Grid Margin="0 0 0 5">
+                                    <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5"/>
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
+                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
+                                            </Border>
+                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Priority.Name, Mode=OneWay}" Text="{Binding Fields.Priority.Name, Mode=OneWay}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Grid>
 
-        <ItemsControl Grid.Column="0" Grid.Row="2" Name="icProjectsList" ItemsSource="{Binding IssueList}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                            <Hyperlink Command="{Binding Path=DataContext.IssueSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                                       CommandParameter="{Binding}">
-                                <TextBlock Text="{Binding Id}"/>
-                                <TextBlock Text="{Binding Key}"/>
-                            </Hyperlink>
-                        </TextBlock>
-                        <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" MaxWidth="200" TextTrimming="WordEllipsis" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-    </Grid>
-
+                                <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </DockPanel>
 </UserControl>
     

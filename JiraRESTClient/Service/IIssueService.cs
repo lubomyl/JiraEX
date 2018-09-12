@@ -2,6 +2,7 @@
 using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +29,9 @@ namespace JiraRESTClient.Service
         Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue);
 
         Task<Issue> GetIssueByIssueKeyAsync(string issueKey);
+
+        Task<EditableProperties> GetAllEditablePropertiesAsync(string issueKey);
+
+        Task PostAttachmentToIssueAsync(FileInfo attachment, string issueKey);
     }
 }

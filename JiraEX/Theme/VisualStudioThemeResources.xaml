@@ -115,6 +115,11 @@
         <Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style x:Key="PlainTextFaded" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
+        <Setter Property="TextBlock.Opacity" Value="0.5"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
     <Style x:Key="ShadedText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.Background" Value="{StaticResource ItemSelectedNotFocusedBrushKey}" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ItemSelectedTextNotFocusedBrushKey}" />
@@ -122,12 +127,19 @@
 	</Style>
 	<Style x:Key="TitleText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.FontWeight" Value="Bold" />
-		<Setter Property="TextBlock.FontSize" Value="13" />
+		<Setter Property="TextBlock.FontSize" Value="12" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
         <Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
 
-	<!-- General controls -->
+    <!-- Labels styles -->
+    <Style x:Key="LabelFaded" TargetType="{x:Type Label}">
+        <Setter Property="Label.Foreground" Value="{StaticResource ItemSelectedTextNotFocusedBrushKey}" />
+        <Setter Property="TextBlock.Opacity" Value="0.5"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- General controls -->
 	<Style x:Key="{x:Type Border}" TargetType="{x:Type Border}">
 		<Setter Property="Border.Background" Value="{StaticResource ToolWindowBackgroundBrushKey}" />
 		<Setter Property="Control.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
@@ -1368,7 +1380,7 @@
     <!-- Horizontal separator -->
     <Style x:Key="PaneHorizontalSeparator" TargetType="{x:Type Separator}">
         <Setter Property="Background" Value="#FF2D2D30" />
-        <Setter Property="Height" Value="2" />
+        <Setter Property="Height" Value="1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>

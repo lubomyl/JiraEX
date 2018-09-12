@@ -1,5 +1,6 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,14 @@ namespace JiraEX.View
 
             this._viewModel = new ProjectListViewModel(parent);
             this.DataContext = this._viewModel;
+        }
+
+        void ProjectSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem listBoxItem = sender as ListBoxItem;
+            BoardProject project = listBoxItem.Content as BoardProject;
+
+            this._viewModel.OnItemSelected(project);
         }
     }
 }

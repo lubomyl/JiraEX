@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class ProjectListViewModel : ViewModelBase
+    public class ProjectListViewModel : ViewModelBase, ITitleable
     {
         private IProjectService _projectService;
         private IBoardService _boardService;
@@ -39,23 +39,12 @@ namespace JiraEX.ViewModel
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
-            //GetProjectsAsync();
             GetBoardsAsync();
 
             this.BoardProjectList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
         }
-
-        /*private async void GetProjectsAsync()
-        {
-            System.Threading.Tasks.Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
-
-            var projectList = await projectTask as ProjectList;
-
-            foreach (Project p in projectList)
-            {
-                this.BoardList.Add(p);
-            }
-        }*/
 
         private async void GetBoardsAsync()
         {
@@ -69,7 +58,7 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void OnItemSelected(object sender)
+        public void OnItemSelected(object sender)
         {
             BoardProject boardProject = sender as BoardProject;
 
@@ -78,6 +67,11 @@ namespace JiraEX.ViewModel
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+        }
+
+        public void SetPanelTitles()
+        {
+            this._parent.SetPanelTitles("JiraEX", "Projects");
         }
 
         public ObservableCollection<BoardProject> BoardProjectList
