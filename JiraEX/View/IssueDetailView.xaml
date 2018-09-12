@@ -135,7 +135,14 @@
             <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
         </Grid>
-        
+
+        <TextBlock Style="{StaticResource PlainText}">
+                <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
+                            CommandParameter="{Binding}">
+                    Attachment...
+                </Hyperlink>
+        </TextBlock>
+
         <Separator Margin="0,5,0,0"
                Style="{StaticResource PaneHorizontalSeparator}" />
 

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JiraEX.ViewModel
 {
@@ -54,6 +55,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditTransitionCommand { get; private set; }
         public DelegateCommand CancelEditTransitionCommand { get; private set; }
 
+        public DelegateCommand SelectFileToUploadCommand { get; private set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
@@ -85,11 +88,25 @@ namespace JiraEX.ViewModel
             this.EditTransitionCommand = new DelegateCommand(EnableEditTransition);
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
+            this.SelectFileToUploadCommand = new DelegateCommand(UploadFromFileBrowser);
+
             SetPanelTitles();
 
             /*FileInfo file = new FileInfo(@"C:\Users\RODINA-PC\Documents\debug.log");
 
             this._issueService.PostAttachmentToIssueAsync(file, this._issue.Key);*/
+        }
+
+        private void UploadFromFileBrowser(object sender)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Title = "Select attachment";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string sSelectedPath = fileDialog.FileName;
+                this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+            }
         }
 
         private async void GetPrioritiesAsync()
