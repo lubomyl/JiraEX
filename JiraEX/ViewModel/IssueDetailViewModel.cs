@@ -39,6 +39,8 @@ namespace JiraEX.ViewModel
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
+        private ObservableCollection<Attachment> _attachmentsList;
+
         private EditablePropertiesFields _editablePropertiesFields;
 
         public DelegateCommand EditSummaryCommand { get; private set; }
@@ -69,6 +71,7 @@ namespace JiraEX.ViewModel
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
+            this._attachmentsList = new ObservableCollection<Attachment>();
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
@@ -88,16 +91,12 @@ namespace JiraEX.ViewModel
             this.EditTransitionCommand = new DelegateCommand(EnableEditTransition);
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
-            this.SelectFileToUploadCommand = new DelegateCommand(UploadFromFileBrowser);
+            this.SelectFileToUploadCommand = new DelegateCommand(UploadAttachmentFromFileBrowser);
 
             SetPanelTitles();
-
-            /*FileInfo file = new FileInfo(@"C:\Users\RODINA-PC\Documents\debug.log");
-
-            this._issueService.PostAttachmentToIssueAsync(file, this._issue.Key);*/
         }
 
-        private void UploadFromFileBrowser(object sender)
+        private async void UploadAttachmentFromFileBrowser(object sender)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Title = "Select attachment";
@@ -105,8 +104,10 @@ namespace JiraEX.ViewModel
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 string sSelectedPath = fileDialog.FileName;
-                this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+                await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
             }
+
+            UpdateIssueAsync();
         }
 
         private async void GetPrioritiesAsync()
@@ -173,6 +174,18 @@ namespace JiraEX.ViewModel
         private async void UpdateIssueAsync()
         {
             this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
+
+            UpdateAttachments();
+        }
+
+        private void UpdateAttachments()
+        {
+            this.AttachmentsList.Clear();
+
+            foreach (Attachment a in this.Issue.Fields.Attachment)
+            {
+                this.AttachmentsList.Add(a);
+            }
         }
 
         private async void DoTransitionAsync()
@@ -314,6 +327,16 @@ namespace JiraEX.ViewModel
             {
                 this._priorityList = value;
                 OnPropertyChanged("PriorityList");
+            }
+        }
+
+        public ObservableCollection<Attachment> AttachmentsList
+        {
+            get { return this._attachmentsList; }
+            set
+            {
+                this._attachmentsList = value;
+                OnPropertyChanged("AttachmentsList");
             }
         }
 

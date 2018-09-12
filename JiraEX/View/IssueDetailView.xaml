@@ -218,6 +218,28 @@
                     
             </StackPanel>
             
+            <!-- Attachments -->
+            <Label>Attachments:</Label>
+            
+            <ItemsControl ItemsSource="{Binding AttachmentsList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
+                                    <Hyperlink Command="{Binding Path=DataContext.DownloadAtatchmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                                               CommandParameter="{Binding}">
+                                        <TextBlock Text="{Binding Filename}"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Size}" Style="{StaticResource PlainText}"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
         </StackPanel>
     </StackPanel>
 </UserControl>
