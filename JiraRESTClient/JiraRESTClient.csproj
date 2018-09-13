@@ -68,6 +68,8 @@
     <Compile Include="Model\PriorityEditableProperty.cs" />
     <Compile Include="Model\PriorityList.cs" />
     <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ProjectCreatableList.cs" />
+    <Compile Include="Model\ProjectCreatable.cs" />
     <Compile Include="Model\ProjectList.cs" />
     <Compile Include="Model\EditablePropertiesFields.cs" />
     <Compile Include="Model\Resolution.cs" />

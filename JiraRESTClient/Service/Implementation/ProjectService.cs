@@ -37,5 +37,13 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<ProjectCreatableList> GetAllProjectsCreatableIssueTypesAsync()
+        {
+            return Task.Run(() => {
+                var resource = "issue/createmeta";
+
+                return this._baseService.GetResource<ProjectCreatableList>(resource);
+            });
+        }
     }
 }

@@ -9,9 +9,10 @@ namespace JiraRESTClient.Model
     public class BoardProject
     {
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public Location Location { get; set; }
+        public List<IssueType> CreatableIssueTypesList { get; set; }
 
     }
 }

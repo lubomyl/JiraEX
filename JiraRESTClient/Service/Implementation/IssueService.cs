@@ -38,7 +38,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(int boardId, int sprintId)
+        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, int sprintId)
         {
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/{sprintId}/issue";
@@ -47,7 +47,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<IssueList> GetAllIssuesOfBoardAsync(int boardId)
+        public Task<IssueList> GetAllIssuesOfBoardAsync(string boardId)
         {
             return Task.Run(() => {
                 var resource = $"board/{boardId}/issue";
@@ -93,6 +93,29 @@ namespace JiraRESTClient.Service.Implementation
                 var resource = $"issue/{issueKey}/attachments";
 
                 this._baseService.PostResourceFile(resource, attachment);
+            });
+        }
+
+        public Task<Issue> CreateIssueAsync(string projectId, string summary, string description, string issueTypeId)
+        {
+            return Task.Run(() => {
+                string createString = "{\"fields\":" +
+                                            "{" + 
+                                                "\"project\": { " +
+                                                    $"\"id\":\"{projectId}\"" +
+                                                "}," +
+                                                 $"\"summary\":\"{summary}\"," +
+                                                 $"\"description\":\"{description}\"," +
+                                                 "\"issuetype\": { " +
+                                                    $"\"id\":\"{issueTypeId}\"" +
+                                                 "}" +
+                                             "}" +
+                                       "}";
+
+
+                var resource = "issue";
+
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
             });
         }
     }

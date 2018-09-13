@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class IssueType
+    public class ProjectCreatable
     {
 
         public string Id { get; set; }
-        public string Description { get; set; }
+        public string Key { get; set; }
         public string Name { get; set; }
-        public bool Subtask { get; set; }
+        public List<IssueType> Issuetypes { get; set; }
 
     }
 }

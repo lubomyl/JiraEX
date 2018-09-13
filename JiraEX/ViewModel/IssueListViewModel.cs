@@ -31,6 +31,8 @@ namespace JiraEX.ViewModel
         private Sprint _selectedSprint;
         private Sprint _defaultSprintSelected;
 
+        public DelegateCommand CreateIssueCommand { get; private set; }
+
         public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
             this._issueService = new IssueService();
@@ -43,6 +45,8 @@ namespace JiraEX.ViewModel
             this.IssueList = new ObservableCollection<Issue>();
             this.SprintList = new ObservableCollection<Sprint>();
 
+            this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
+
             this._defaultSprintSelected = new Sprint(0, "All sprints");
 
             OleMenuCommandService service = JiraPackage.Mcs;
@@ -54,6 +58,11 @@ namespace JiraEX.ViewModel
             this.SprintList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
+        }
+
+        private void RedirectCreateIssue(object sender)
+        {
+            this._parent.CreateIssue(this._boardProject);
         }
 
         private async void GetIssuesAsync()

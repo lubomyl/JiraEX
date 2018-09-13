@@ -22,9 +22,9 @@ namespace JiraRESTClient.Service
         /// <param name="projectKey">Short string representing Jira Project.</param>
         Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey);
 
-        Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(int boardId, int sprintId);
+        Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, int sprintId);
 
-        Task<IssueList> GetAllIssuesOfBoardAsync(int boardId);
+        Task<IssueList> GetAllIssuesOfBoardAsync(string boardId);
 
         Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue);
 
@@ -33,5 +33,7 @@ namespace JiraRESTClient.Service
         Task<EditableProperties> GetAllEditablePropertiesAsync(string issueKey);
 
         Task PostAttachmentToIssueAsync(FileInfo attachment, string issueKey);
+
+        Task<Issue> CreateIssueAsync(string projectId, string summary, string description, string issueTypeId);
     }
 }

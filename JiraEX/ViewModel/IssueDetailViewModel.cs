@@ -77,6 +77,8 @@ namespace JiraEX.ViewModel
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
 
+            UpdateIssueAsync();
+
             SetPanelTitles();
         }
 

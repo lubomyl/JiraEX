@@ -8,7 +8,7 @@ namespace JiraRESTClient.Model
 {
     public class Location
     {
-
+        public string ProjectId { get; set; }
         public string ProjectName { get; set; }
         public string ProjectKey { get; set; }
         public string ProjectTypeKey { get; set; }

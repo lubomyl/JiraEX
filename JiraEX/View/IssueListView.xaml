@@ -20,16 +20,24 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top"
-                       Margin="8">
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <Grid Margin="8">
 
-            <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
-                      DisplayMemberPath="Name"
-                      SelectedValuePath="Id"
-                      SelectedValue="{Binding Path=Name}"
-                      SelectedItem="{Binding Path=SelectedSprint}">
-            </ComboBox>
-        </DockPanel>
+                <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding Path=Name}"
+                          SelectedItem="{Binding Path=SelectedSprint}">
+                </ComboBox>
+            </Grid>
+
+            <TextBlock Margin="8 0 0 0"  Style="{StaticResource PlainText}">
+                        <Hyperlink Command="{Binding CreateIssueCommand}" 
+                                    CommandParameter="{Binding}">
+                            Create issue
+                        </Hyperlink>
+            </TextBlock>
+        </StackPanel>
 
         <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
