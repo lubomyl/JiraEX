@@ -27,8 +27,8 @@
                 Margin="8">
 
         <!-- Type -->
-        <Grid>
-            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+        <Grid Margin="0 0 0 10">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF4B4D50"
                                     Visibility="{Binding IsEditingType, Converter={StaticResource FalseToVisibleConverter}}">
                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedType.Name, Mode=OneWay}" Text="{Binding SelectedType.Name, Mode=OneWay}">
                     <TextBlock.InputBindings>
@@ -37,13 +37,12 @@
                 </TextBlock>
             </Border>
 
-            <ComboBox ItemsSource="{Binding TypesList}"
-                            Margin="0 0 5 0"
-                            DisplayMemberPath="Name"
-                            SelectedValuePath="Id"
-                            Visibility="{Binding IsEditingType, Converter={StaticResource TrueToVisibleConverter}}"
-                            SelectedValue="{Binding Path=Name}"
-                            SelectedItem="{Binding SelectedType}">
+            <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding TypesList}"
+                                DisplayMemberPath="Name"
+                                SelectedValuePath="Id"
+                                Visibility="{Binding IsEditingType, Converter={StaticResource TrueToVisibleConverter}}"
+                                SelectedValue="{Binding Path=Name}"
+                                SelectedItem="{Binding SelectedType}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeave">
                         <i:InvokeCommandAction Command="{Binding CancelEditTypeCommand}"/>

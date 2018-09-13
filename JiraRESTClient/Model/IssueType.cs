@@ -9,7 +9,7 @@ namespace JiraRESTClient.Model
     public class IssueType
     {
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
         public bool Subtask { get; set; }

@@ -57,6 +57,8 @@ namespace JiraEX.ViewModel
 
             foreach (BoardProject b in boardList.Values)
             {
+
+                //Fetching Creatable IssueTypes for each project
                 foreach(ProjectCreatable p in this._projectCreatableList.Projects)
                 {
                     if (b.Location.ProjectId.Equals(p.Id))
@@ -64,6 +66,7 @@ namespace JiraEX.ViewModel
                         b.CreatableIssueTypesList = p.Issuetypes;
                     }
                 }
+                //end fetching
 
                 this.BoardProjectList.Add(b);
             }

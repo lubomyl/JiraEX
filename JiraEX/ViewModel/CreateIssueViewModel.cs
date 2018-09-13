@@ -25,9 +25,9 @@ namespace JiraEX.ViewModel
 
         private string _summary;
         private string _description;
-        private string _selectedType;
+        private IssueType _selectedType;
 
-        private ObservableCollection<Type> _typesList;
+        private ObservableCollection<IssueType> _typesList;
 
         public DelegateCommand CancelCreateIssueCommand { get; private set; }
         public DelegateCommand ConfirmCreateIssueCommand { get; private set; }
@@ -42,7 +42,17 @@ namespace JiraEX.ViewModel
 
             this._issueService = new IssueService();
 
-            this._typesList = new ObservableCollection<Type>();
+            this._typesList = new ObservableCollection<IssueType>();
+
+            foreach (IssueType it in project.CreatableIssueTypesList)
+            {
+                if (!it.Subtask)
+                {
+                    this.TypesList.Add(it);
+                }
+            }
+
+            this.SelectedType = this._typesList[0];
 
             this.CancelCreateIssueCommand = new DelegateCommand(CancelCreateIssue);
             this.ConfirmCreateIssueCommand = new DelegateCommand(ConfirmCreateIssue);
@@ -53,7 +63,7 @@ namespace JiraEX.ViewModel
 
         private void ConfirmCreateIssue(object sender)
         {
-            this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description);
+            this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
         }
 
         private void CancelCreateIssue(object sender)
@@ -96,7 +106,7 @@ namespace JiraEX.ViewModel
             }
         }
 
-        public string SelectedType
+        public IssueType SelectedType
         {
             get { return this._selectedType; }
             set
@@ -106,7 +116,7 @@ namespace JiraEX.ViewModel
             }
         }
 
-        public ObservableCollection<Type> TypesList
+        public ObservableCollection<IssueType> TypesList
         {
             get { return this._typesList; }
             set

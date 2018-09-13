@@ -34,6 +34,6 @@ namespace JiraRESTClient.Service
 
         Task PostAttachmentToIssueAsync(FileInfo attachment, string issueKey);
 
-        Task CreateIssueAsync(string projectId, string summary, string description);
+        Task CreateIssueAsync(string projectId, string summary, string description, string issueTypeId);
     }
 }
