@@ -251,8 +251,9 @@
                                     Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
                                 <DockPanel LastChildFill="False">
                                     <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Text="{Binding Filename}" TextWrapping="Wrap" />
-                                    
-                                    <Button DockPanel.Dock="Bottom" Command="{Binding DeleteAttachmentCommand}" CommandParameter="{Binding ElementName=This}" Margin="0 5 0 0"
+
+                                    <Button DockPanel.Dock="Bottom" Command="{Binding DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
+                                            CommandParameter="{Binding}" Margin="0 5 0 0"
                                         Content="Delete" 
                                         Height="25" Width="75"/>
 

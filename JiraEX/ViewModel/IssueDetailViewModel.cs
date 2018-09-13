@@ -31,6 +31,7 @@ namespace JiraEX.ViewModel
         private IIssueService _issueService;
         private IPriorityService _priorityService;
         private ITransitionService _transitionService;
+        private IAttachmentService _attachmentService;
 
         private Issue _issue;
 
@@ -59,6 +60,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SelectFileToUploadCommand { get; private set; }
 
+        public DelegateCommand DeleteAttachmentCommand { get; private set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
@@ -79,6 +82,7 @@ namespace JiraEX.ViewModel
             this._issueService = new IssueService();
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
+            this._attachmentService = new AttachmentService();
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
@@ -99,6 +103,17 @@ namespace JiraEX.ViewModel
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
             this.SelectFileToUploadCommand = new DelegateCommand(UploadAttachmentFromFileBrowser);
+
+            this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
+        }
+
+        private async void DeleteAttachment(object sender)
+        {
+            Attachment attachment = sender as Attachment;
+
+            await this._attachmentService.DeleteAttachmentByIdAsync(attachment.Id);
+
+            UpdateIssueAsync();
         }
 
         private async void UploadAttachmentFromFileBrowser(object sender)
