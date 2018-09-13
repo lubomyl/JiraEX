@@ -22,6 +22,7 @@ namespace JiraEX.ViewModel
         private JiraToolWindowNavigatorViewModel _parent;
 
         private ObservableCollection<BoardProject> _boardProjectList;
+        private ProjectCreatableList _projectCreatableList;
 
         public DelegateCommand ProjectSelectedCommand { get; private set; }
 
@@ -52,8 +53,18 @@ namespace JiraEX.ViewModel
 
             var boardList = await boardTask as BoardList;
 
+            this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
+
             foreach (BoardProject b in boardList.Values)
             {
+                foreach(ProjectCreatable p in this._projectCreatableList.Projects)
+                {
+                    if (b.Location.ProjectId.Equals(p.Id))
+                    {
+                        b.CreatableIssueTypesList = p.Issuetypes;
+                    }
+                }
+
                 this.BoardProjectList.Add(b);
             }
         }

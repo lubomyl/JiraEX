@@ -51,25 +51,6 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
-        private async void GetTypesAsync()
-        {
-            System.Threading.Tasks.Task<PriorityList> typesTask = this._priorityService.GetAllPrioritiesAsync();
-
-            var priorityList = await typesTask as PriorityList;
-
-            this.PriorityList.Clear();
-
-            foreach (Priority p in priorityList)
-            {
-                this.PriorityList.Add(p);
-
-                if (p.Id == this._issue.Fields.Priority.Id)
-                {
-                    this.SelectedPriority = p;
-                }
-            }
-        }
-
         private void ConfirmCreateIssue(object sender)
         {
             this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description);
