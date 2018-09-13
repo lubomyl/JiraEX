@@ -19,5 +19,7 @@ namespace JiraRESTClient.Service
         /// <returns>Task containing deserialized <see cref="ProjectList"/> model class object.</returns>
         Task<ProjectList> GetAllProjectsAsync();
 
+        Task
+
     }
 }

@@ -19,24 +19,26 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel Orientation="Vertical">
-        <Grid Margin="8">
+    <DockPanel>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <Grid Margin="8">
 
-            <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
-                      DisplayMemberPath="Name"
-                      SelectedValuePath="Id"
-                      SelectedValue="{Binding Path=Name}"
-                      SelectedItem="{Binding Path=SelectedSprint}">
-            </ComboBox>
-        </Grid>
+                <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding Path=Name}"
+                          SelectedItem="{Binding Path=SelectedSprint}">
+                </ComboBox>
+            </Grid>
 
-        <TextBlock Margin="8 0 0 0"  Style="{StaticResource PlainText}">
-                    <Hyperlink Command="{Binding CreateIssueCommand}" 
-                                CommandParameter="{Binding}">
-                        Create issue
-                    </Hyperlink>
-        </TextBlock>
-        
+            <TextBlock Margin="8 0 0 0"  Style="{StaticResource PlainText}">
+                        <Hyperlink Command="{Binding CreateIssueCommand}" 
+                                    CommandParameter="{Binding}">
+                            Create issue
+                        </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
         <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
                          BorderThickness="0"
@@ -70,6 +72,6 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
-    </StackPanel>
+    </DockPanel>
 </UserControl>
     

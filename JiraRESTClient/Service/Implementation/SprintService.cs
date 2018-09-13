@@ -24,9 +24,9 @@ namespace JiraRESTClient.Service.Implementation
         }
 
         /// <summary>
-        /// <see cref="ISprintService.GetAllSprintsOfBoardtAsync(int)"/>
+        /// <see cref="ISprintService.GetAllSprintsOfBoardtAsync(string)"/>
         /// </summary>
-        public Task<SprintList> GetAllSprintsOfBoardtAsync(int boardId)
+        public Task<SprintList> GetAllSprintsOfBoardtAsync(string boardId)
         {
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/";
