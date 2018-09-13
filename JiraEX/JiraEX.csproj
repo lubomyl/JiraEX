@@ -68,6 +68,7 @@
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\AfterSignInViewModel.cs" />
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
+    <Compile Include="ViewModel\CreateIssueViewModel.cs" />
     <Compile Include="ViewModel\IssueDetailViewModel.cs" />
     <Compile Include="ViewModel\IssueListViewModel.cs" />
     <Compile Include="ViewModel\ITitleable.cs" />
@@ -80,6 +81,9 @@
     </Compile>
     <Compile Include="View\BeforeSignInView.xaml.cs">
       <DependentUpon>BeforeSignInView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateIssueView.xaml.cs">
+      <DependentUpon>CreateIssueView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\IssueDetailView.xaml.cs">
       <DependentUpon>IssueDetailView.xaml</DependentUpon>
@@ -244,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BeforeSignInView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CreateIssueView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

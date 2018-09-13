@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="JiraEX.View.CreateIssueView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical"
+                Margin="8">
+
+        <!-- Summary -->
+        <TextBox Text="{Binding Issue.Fields.Summary}" 
+                TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                 Margin="0 0 0 10"/>
+
+        <!-- Description -->
+        <TextBox Text="{Binding Issue.Fields.Description}" 
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                MinHeight="200"
+                VerticalAlignment="Center"
+                Margin="0 0 0 10"/>
+
+
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Command="{Binding CancelCreateIssueCommand}" CommandParameter="{Binding ElementName=This}"
+                    Content="Cancel" 
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="ConfirmEditSummary" Margin="0 0 10 0"/>
+
+            <Button Command="{Binding ConfirmCreateSummaryCommand}" CommandParameter="{Binding ElementName=This}"
+                    Style="{StaticResource GitHubVsPrimaryActionButton}" 
+                    Content="Create issue" 
+                    Background="#FF3F404B"
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="CancelEditSummary" Margin="0 0 0 0"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

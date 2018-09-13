@@ -30,6 +30,7 @@ namespace JiraEX.ViewModel.Navigation
         private ProjectListView _projectListView;
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
+        private CreateIssueView _createIssueView;
 
         private OleMenuCommandService _service;
 
@@ -129,6 +130,13 @@ namespace JiraEX.ViewModel.Navigation
             this._issueDetailView = new IssueDetailView(this, issue);
 
             SelectedView = this._issueDetailView;
+        }
+
+        public void CreateIssue(BoardProject project)
+        {
+            this._createIssueView = new CreateIssueView(this, project);
+
+            SelectedView = this._createIssueView;
         }
 
         private void InitializeCommands(OleMenuCommandService service)
