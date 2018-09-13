@@ -379,11 +379,14 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
-                this._selectedPriority = value;
-
-                if (this._selectedPriority != null && this._isPriorityEditable)
+                if (this._selectedPriority != null)
                 {
+                    this._selectedPriority = value;
                     this.UpdatePriorityAsync();
+                }
+                else if (this._selectedPriority == null)
+                {
+                    this._selectedPriority = value;
                 }
   
                 OnPropertyChanged("SelectedPriority");
@@ -406,11 +409,14 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
-                this._selectedTransition = value;
-
                 if (this._selectedTransition != null)
                 {
+                    this._selectedTransition = value;
                     this.DoTransitionAsync();
+                }
+                else
+                {
+                    this._selectedTransition = value;
                 }
 
                 OnPropertyChanged("SelectedTransition");
