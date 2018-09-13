@@ -61,14 +61,18 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
-        private void ConfirmCreateIssue(object sender)
+        private async void ConfirmCreateIssue(object sender)
         {
-            this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+            Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+
+            Issue fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+
+            this._parent.ShowIssueDetail(fullyCreatedIssue);
         }
 
         private void CancelCreateIssue(object sender)
         {
-            throw new NotImplementedException();
+            this._parent.ShowIssuesOfProject(this._project);
         }
 
         private void EnableEditType(object parameter)

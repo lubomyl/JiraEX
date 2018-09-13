@@ -96,7 +96,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task CreateIssueAsync(string projectId, string summary, string description, string issueTypeId)
+        public Task<Issue> CreateIssueAsync(string projectId, string summary, string description, string issueTypeId)
         {
             return Task.Run(() => {
                 string createString = "{\"fields\":" +
@@ -115,7 +115,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issue";
 
-                this._baseService.PostResourceContent(resource, Encoding.UTF8.GetBytes(createString));
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
             });
         }
     }

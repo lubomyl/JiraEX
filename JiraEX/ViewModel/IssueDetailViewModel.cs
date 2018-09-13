@@ -76,7 +76,8 @@ namespace JiraEX.ViewModel
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
-            UpdateAttachments();
+
+            UpdateIssueAsync();
 
             SetPanelTitles();
         }
