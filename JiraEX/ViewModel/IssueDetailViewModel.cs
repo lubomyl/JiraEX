@@ -352,7 +352,7 @@ namespace JiraEX.ViewModel
             {
                 this._selectedPriority = value;
 
-                if (this._selectedPriority != null)
+                if (this._selectedPriority != null && this._isPriorityEditable)
                 {
                     this.UpdatePriorityAsync();
                 }
