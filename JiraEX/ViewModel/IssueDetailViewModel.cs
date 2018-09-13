@@ -5,12 +5,14 @@ using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,6 +41,7 @@ namespace JiraEX.ViewModel
         private Transition _selectedTransition;
 
         private ObservableCollection<Priority> _priorityList;
+
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentsList;
 
@@ -107,6 +110,17 @@ namespace JiraEX.ViewModel
             this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
         }
 
+        internal void DownloadAttachment(Attachment attachment)
+        {
+            using (var client = new WebClient())
+            {
+                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", 
+                    "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+                client.DownloadFileAsync(new System.Uri(attachment.Content), downloadFolderPath + "\\" + attachment.Filename);
+                Process.Start("shell:Downloads");
+            }
+        }
+
         private async void DeleteAttachment(object sender)
         {
             Attachment attachment = sender as Attachment;
@@ -118,7 +132,7 @@ namespace JiraEX.ViewModel
 
         private async void UploadAttachmentFromFileBrowser(object sender)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Title = "Select attachment";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
