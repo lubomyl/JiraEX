@@ -5,12 +5,14 @@ using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,6 +33,7 @@ namespace JiraEX.ViewModel
         private IIssueService _issueService;
         private IPriorityService _priorityService;
         private ITransitionService _transitionService;
+        private IAttachmentService _attachmentService;
 
         private Issue _issue;
 
@@ -38,6 +41,7 @@ namespace JiraEX.ViewModel
         private Transition _selectedTransition;
 
         private ObservableCollection<Priority> _priorityList;
+
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentsList;
 
@@ -59,6 +63,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SelectFileToUploadCommand { get; private set; }
 
+        public DelegateCommand DeleteAttachmentCommand { get; private set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
         {
             this._parent = parent;
@@ -79,6 +85,7 @@ namespace JiraEX.ViewModel
             this._issueService = new IssueService();
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
+            this._attachmentService = new AttachmentService();
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
@@ -99,11 +106,33 @@ namespace JiraEX.ViewModel
             this.CancelEditTransitionCommand = new DelegateCommand(CancelEditTransition);
 
             this.SelectFileToUploadCommand = new DelegateCommand(UploadAttachmentFromFileBrowser);
+
+            this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
+        }
+
+        internal void DownloadAttachment(Attachment attachment)
+        {
+            using (var client = new WebClient())
+            {
+                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", 
+                    "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+                client.DownloadFileAsync(new System.Uri(attachment.Content), downloadFolderPath + "\\" + attachment.Filename);
+                Process.Start("shell:Downloads");
+            }
+        }
+
+        private async void DeleteAttachment(object sender)
+        {
+            Attachment attachment = sender as Attachment;
+
+            await this._attachmentService.DeleteAttachmentByIdAsync(attachment.Id);
+
+            UpdateIssueAsync();
         }
 
         private async void UploadAttachmentFromFileBrowser(object sender)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Title = "Select attachment";
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
@@ -350,11 +379,14 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
-                this._selectedPriority = value;
-
                 if (this._selectedPriority != null)
                 {
+                    this._selectedPriority = value;
                     this.UpdatePriorityAsync();
+                }
+                else if (this._selectedPriority == null)
+                {
+                    this._selectedPriority = value;
                 }
   
                 OnPropertyChanged("SelectedPriority");
@@ -377,11 +409,14 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
-                this._selectedTransition = value;
-
                 if (this._selectedTransition != null)
                 {
+                    this._selectedTransition = value;
                     this.DoTransitionAsync();
+                }
+                else
+                {
+                    this._selectedTransition = value;
                 }
 
                 OnPropertyChanged("SelectedTransition");

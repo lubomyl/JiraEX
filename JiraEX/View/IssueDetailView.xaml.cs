@@ -33,5 +33,13 @@ namespace JiraEX.View
             this._viewModel = new IssueDetailViewModel(parent, issue);
             this.DataContext = this._viewModel;
         }
+
+        void AttachmentSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem listBoxItem = sender as ListBoxItem;
+            Attachment attachment = listBoxItem.Content as Attachment;
+
+            this._viewModel.DownloadAttachment(attachment);
+        }
     }
 }

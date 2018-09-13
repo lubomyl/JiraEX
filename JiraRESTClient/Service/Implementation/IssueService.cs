@@ -74,7 +74,7 @@ namespace JiraRESTClient.Service.Implementation
             return Task.Run(() => {
                 var resource = $"issue/{issueKey}";
 
-                return this._baseService.GetResource<Issue>(resource);
+                return this._baseService.GetAgileResource<Issue>(resource);
             });
         }
 
