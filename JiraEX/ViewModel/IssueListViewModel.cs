@@ -112,7 +112,7 @@ namespace JiraEX.ViewModel
 
         public void OnItemSelected(Issue issue)
         {
-            this._parent.ShowIssueDetail(issue);
+            this._parent.ShowIssueDetail(issue, this._boardProject);
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

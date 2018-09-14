@@ -33,5 +33,14 @@ namespace JiraEX.View
             this._viewModel = new CreateIssueViewModel(parent, project);
             this.DataContext = this._viewModel;
         }
+
+        //sub-task overload
+        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project)
+        {
+            InitializeComponent();
+
+            this._viewModel = new CreateIssueViewModel(parent, parentIssue, project);
+            this.DataContext = this._viewModel;
+        }
     }
 }

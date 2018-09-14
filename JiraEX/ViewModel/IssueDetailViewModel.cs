@@ -36,6 +36,7 @@ namespace JiraEX.ViewModel
         private IAttachmentService _attachmentService;
 
         private Issue _issue;
+        private BoardProject _project;
 
         private Priority _selectedPriority;
         private Transition _selectedTransition;
@@ -65,13 +66,16 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteAttachmentCommand { get; private set; }
 
-        public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue)
+        public DelegateCommand CreateSubTaskCommand { get; set; }
+
+        public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
 
             Initialize();
 
             this.Issue = issue;
+            this._project = project;
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
@@ -110,6 +114,13 @@ namespace JiraEX.ViewModel
             this.SelectFileToUploadCommand = new DelegateCommand(UploadAttachmentFromFileBrowser);
 
             this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
+
+            this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
+        }
+
+        private void CreateSubTask(object obj)
+        {
+            this._parent.CreateIssue(this._issue, this._project);
         }
 
         internal void DownloadAttachment(Attachment attachment)
