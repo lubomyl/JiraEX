@@ -118,5 +118,31 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
             });
         }
+
+        public Task<Issue> CreateSubTaskIssueAsync(string projectId, string summary, string description, string issueTypeId, string parentKey)
+        {
+            return Task.Run(() => {
+                string createString = "{\"fields\":" +
+                                            "{" +
+                                                "\"project\": { " +
+                                                    $"\"id\":\"{projectId}\"" +
+                                                "}," +
+                                                "\"parent\": { " +
+                                                    $"\"key\":\"{parentKey}\"" +
+                                                "}," +
+                                                 $"\"summary\":\"{summary}\"," +
+                                                 $"\"description\":\"{description}\"," +
+                                                 "\"issuetype\": { " +
+                                                    $"\"id\":\"{issueTypeId}\"" +
+                                                 "}" +
+                                             "}" +
+                                       "}";
+
+
+                var resource = "issue";
+
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+            });
+        }
     }
 }
