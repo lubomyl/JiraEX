@@ -83,9 +83,17 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmCreateIssue(object sender)
         {
-            Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+            Issue fullyCreatedIssue = null;
 
-            Issue fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+            if (this.IsCreatingSubTask) {
+            }
+            else
+            {
+                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+
+                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+
+            }
 
             this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
         }
@@ -97,7 +105,10 @@ namespace JiraEX.ViewModel
 
         private void EnableEditType(object parameter)
         {
-            this.IsEditingType = true;
+            if (!this.IsCreatingSubTask)
+            {
+                this.IsEditingType = true;
+            }
         }
 
         private void CancelEditType(object parameter)
@@ -167,6 +178,16 @@ namespace JiraEX.ViewModel
             {
                 this._isCreatingSubTask = value;
                 OnPropertyChanged("IsCreatingSubTask");
+            }
+        }
+
+        public Issue ParentIssue
+        {
+            get { return this._parentIssue; }
+            set
+            {
+                this._parentIssue = value;
+                OnPropertyChanged("ParentIssue");
             }
         }
     }

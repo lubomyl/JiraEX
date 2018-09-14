@@ -26,30 +26,37 @@
     <StackPanel Orientation="Vertical"
                 Margin="8">
 
-        <!-- Type -->
-        <Grid Margin="0 0 0 10">
-            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF4B4D50"
-                                    Visibility="{Binding IsEditingType, Converter={StaticResource FalseToVisibleConverter}}">
-                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedType.Name, Mode=OneWay}" Text="{Binding SelectedType.Name, Mode=OneWay}">
-                    <TextBlock.InputBindings>
-                        <MouseBinding Command="{Binding EditTypeCommand}" MouseAction="LeftClick" />
-                    </TextBlock.InputBindings>
-                </TextBlock>
-            </Border>
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+            <!-- Type -->
+            <Grid Margin="0 0 10 0">
+                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF4B4D50"
+                                        Visibility="{Binding IsEditingType, Converter={StaticResource FalseToVisibleConverter}}">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedType.Name, Mode=OneWay}" Text="{Binding SelectedType.Name, Mode=OneWay}">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding EditTypeCommand}" MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                </Border>
 
-            <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding TypesList}"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                Visibility="{Binding IsEditingType, Converter={StaticResource TrueToVisibleConverter}}"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedType}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseLeave">
-                        <i:InvokeCommandAction Command="{Binding CancelEditTypeCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
-        </Grid>
+                <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding TypesList}"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    Visibility="{Binding IsEditingType, Converter={StaticResource TrueToVisibleConverter}}"
+                                    SelectedValue="{Binding Path=Name}"
+                                    SelectedItem="{Binding SelectedType}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding CancelEditTypeCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </Grid>
+        
+            <!-- Parent issue -->
+            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF709946">
+                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding ParentIssue.Key, Mode=OneWay}" Text="{Binding ParentIssue.Key, Mode=OneWay}"/>
+            </Border>
+        </StackPanel>
 
         <!-- Summary -->
         <TextBox Text="{Binding Summary}" 
