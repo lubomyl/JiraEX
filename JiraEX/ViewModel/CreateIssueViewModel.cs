@@ -86,13 +86,15 @@ namespace JiraEX.ViewModel
             Issue fullyCreatedIssue = null;
 
             if (this.IsCreatingSubTask) {
+                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
+
+                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
             }
             else
             {
                 Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
 
                 fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
-
             }
 
             this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);

@@ -145,7 +145,8 @@
                     </Hyperlink>
             </TextBlock>
 
-            <TextBlock Style="{StaticResource PlainText}">
+            <TextBlock Style="{StaticResource PlainText}"
+                       Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
                     <Hyperlink Command="{Binding CreateSubTaskCommand}" 
                                 CommandParameter="{Binding}">
                         Sub-task...

@@ -27,6 +27,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingTransition = false;
 
         private bool _isPriorityEditable = false;
+        private bool _isSubTaskCreatable = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -80,10 +81,23 @@ namespace JiraEX.ViewModel
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
+            CheckSubTaskCreatable();
 
             UpdateIssueAsync();
 
             SetPanelTitles();
+        }
+
+        private void CheckSubTaskCreatable()
+        {
+            foreach(IssueType it in this._project.CreatableIssueTypesList)
+            {
+                if (it.Subtask)
+                {
+                    this.IsSubTaskCreatable = true;
+                    break;
+                }
+            }
         }
 
         private void Initialize()
@@ -444,6 +458,16 @@ namespace JiraEX.ViewModel
             {
                 this._isPriorityEditable = value;
                 OnPropertyChanged("IsPriorityEditable");
+            }
+        }
+
+        public bool IsSubTaskCreatable
+        {
+            get { return this._isSubTaskCreatable; }
+            set
+            {
+                this._isSubTaskCreatable = value;
+                OnPropertyChanged("IsSubTaskCreatable");
             }
         }
     }
