@@ -125,9 +125,9 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._issueListView;
         }
 
-        public void ShowIssueDetail(Issue issue)
+        public void ShowIssueDetail(Issue issue, BoardProject project)
         {
-            this._issueDetailView = new IssueDetailView(this, issue);
+            this._issueDetailView = new IssueDetailView(this, issue, project);
 
             SelectedView = this._issueDetailView;
         }
@@ -135,6 +135,14 @@ namespace JiraEX.ViewModel.Navigation
         public void CreateIssue(BoardProject project)
         {
             this._createIssueView = new CreateIssueView(this, project);
+
+            SelectedView = this._createIssueView;
+        }
+
+        //sub-task overload
+        public void CreateIssue(Issue parentIssue, BoardProject project)
+        {
+            this._createIssueView = new CreateIssueView(this, parentIssue, project);
 
             SelectedView = this._createIssueView;
         }

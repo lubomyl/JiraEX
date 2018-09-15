@@ -52,11 +52,11 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" Margin="8 0 8 0">
-                                <Grid Margin="0 0 0 5">
+                                <Grid Margin="0 3 0 3">
                                     <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
-                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5"/>
-                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
+                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5"/>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                            <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
                                                 <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
                                             </Border>
                                             <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">

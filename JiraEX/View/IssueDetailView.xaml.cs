@@ -26,11 +26,11 @@ namespace JiraEX.View
 
         private IssueDetailViewModel _viewModel;
 
-        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue)
+        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             InitializeComponent();
 
-            this._viewModel = new IssueDetailViewModel(parent, issue);
+            this._viewModel = new IssueDetailViewModel(parent, issue, project);
             this.DataContext = this._viewModel;
         }
 

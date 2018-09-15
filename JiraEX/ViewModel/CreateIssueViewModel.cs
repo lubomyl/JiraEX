@@ -18,16 +18,19 @@ namespace JiraEX.ViewModel
 
         private JiraToolWindowNavigatorViewModel _parent;
         private BoardProject _project;
+        private Issue _parentIssue;
 
         private IIssueService _issueService;
 
         private bool _isEditingType = false;
+        private bool _isCreatingSubTask = false;
 
         private string _summary;
         private string _description;
         private IssueType _selectedType;
 
         private ObservableCollection<IssueType> _typesList;
+        private IssueType _subTask; 
 
         public DelegateCommand CancelCreateIssueCommand { get; private set; }
         public DelegateCommand ConfirmCreateIssueCommand { get; private set; }
@@ -35,13 +38,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditTypeCommand { get; private set; }
         public DelegateCommand CancelEditTypeCommand { get; private set; }
 
-        public CreateIssueViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject project)
+        private CreateIssueViewModel(BoardProject project)
         {
-            this._parent = parent;
-            this._project = project;
-
-            this._issueService = new IssueService();
-
             this._typesList = new ObservableCollection<IssueType>();
 
             foreach (IssueType it in project.CreatableIssueTypesList)
@@ -49,10 +47,13 @@ namespace JiraEX.ViewModel
                 if (!it.Subtask)
                 {
                     this.TypesList.Add(it);
+                } else
+                {
+                    this._subTask = it;
                 }
             }
 
-            this.SelectedType = this._typesList[0];
+            this._issueService = new IssueService();
 
             this.CancelCreateIssueCommand = new DelegateCommand(CancelCreateIssue);
             this.ConfirmCreateIssueCommand = new DelegateCommand(ConfirmCreateIssue);
@@ -61,13 +62,42 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
+        public CreateIssueViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject project) : this(project)
+        {
+            this._parent = parent;
+            this._project = project;
+
+            this.SelectedType = this._typesList[0];
+        }
+
+        public CreateIssueViewModel(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project) : this(project)
+        {
+            this._parent = parent;
+            this._parentIssue = parentIssue;
+            this._project = project;
+
+            this.SelectedType = this._subTask;
+
+            this.IsCreatingSubTask = true;
+        }
+
         private async void ConfirmCreateIssue(object sender)
         {
-            Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+            Issue fullyCreatedIssue = null;
 
-            Issue fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+            if (this.IsCreatingSubTask) {
+                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
 
-            this._parent.ShowIssueDetail(fullyCreatedIssue);
+                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+            }
+            else
+            {
+                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+
+                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+            }
+
+            this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
         }
 
         private void CancelCreateIssue(object sender)
@@ -77,7 +107,10 @@ namespace JiraEX.ViewModel
 
         private void EnableEditType(object parameter)
         {
-            this.IsEditingType = true;
+            if (!this.IsCreatingSubTask)
+            {
+                this.IsEditingType = true;
+            }
         }
 
         private void CancelEditType(object parameter)
@@ -137,6 +170,26 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingType = value;
                 OnPropertyChanged("IsEditingType");
+            }
+        }
+
+        public bool IsCreatingSubTask
+        {
+            get { return this._isCreatingSubTask; }
+            set
+            {
+                this._isCreatingSubTask = value;
+                OnPropertyChanged("IsCreatingSubTask");
+            }
+        }
+
+        public Issue ParentIssue
+        {
+            get { return this._parentIssue; }
+            set
+            {
+                this._parentIssue = value;
+                OnPropertyChanged("ParentIssue");
             }
         }
     }
