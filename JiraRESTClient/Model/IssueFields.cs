@@ -30,5 +30,8 @@ namespace JiraRESTClient.Model
 
         public List<Attachment> Attachment { get; set; }
 
+        public Issue Parent { get; set; }
+        public List<Issue> Subtasks { get; set; }
+
     }
 }
