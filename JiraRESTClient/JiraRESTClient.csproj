@@ -59,6 +59,7 @@
     <Compile Include="Model\BoardList.cs" />
     <Compile Include="Model\BoardProject.cs" />
     <Compile Include="Model\EditableProperties.cs" />
+    <Compile Include="Model\FixVersion.cs" />
     <Compile Include="Model\IssueFields.cs" />
     <Compile Include="Model\Issue.cs" />
     <Compile Include="Model\IssueList.cs" />
