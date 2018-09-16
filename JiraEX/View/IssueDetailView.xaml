@@ -211,14 +211,14 @@
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
-                <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
+                <TextBlock Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"/>
             </StackPanel>
 
             <!-- Sprint -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
-                <TextBlock Opacity="0.5" Style="{StaticResource PlainText}"
+                <TextBlock Style="{StaticResource PlainText}"
                            Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"/>
             </StackPanel>
 
@@ -241,6 +241,27 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                     
+            </StackPanel>
+
+            <!-- FixVersions -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Fix versions:</Label>
+
+                <ItemsControl ItemsSource="{Binding Issue.Fields.FixVersions}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
             </StackPanel>
             
             <!-- Attachments -->
