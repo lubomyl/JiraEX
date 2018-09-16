@@ -69,6 +69,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateSubTaskCommand { get; set; }
 
+        public DelegateCommand ShowParentIssueCommand { get; set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
@@ -130,6 +132,15 @@ namespace JiraEX.ViewModel
             this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
 
             this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
+
+            this.ShowParentIssueCommand = new DelegateCommand(ShowParentIssue);
+        }
+
+        private async void ShowParentIssue(object obj)
+        {
+            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Fields.Parent.Key);
+
+            this._parent.ShowIssueDetail(completeIssue, this._project);
         }
 
         private void CreateSubTask(object obj)
@@ -468,6 +479,18 @@ namespace JiraEX.ViewModel
             {
                 this._isSubTaskCreatable = value;
                 OnPropertyChanged("IsSubTaskCreatable");
+            }
+        }
+
+        public bool IsSubTask
+        {
+            get
+            {
+                return this._issue.Fields.Issuetype.Subtask;
+            }
+            set
+            {
+                OnPropertyChanged("IsSubTask");
             }
         }
     }

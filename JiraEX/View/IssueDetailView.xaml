@@ -58,8 +58,21 @@
                     Height="25" x:Name="CancelEditSummary" Width="75" Margin="0 0 0 10"/>
         </StackPanel>
 
-        <!-- Type, Status, Priority -->
+        <!-- Parent, Type, Status, Priority -->
         <StackPanel Orientation="Horizontal">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+                    Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}">
+                <TextBlock>
+                    <Hyperlink Command="{Binding ShowParentIssueCommand}" 
+                                    CommandParameter="{Binding}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" Text="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" />
+                    </Hyperlink>
+                </TextBlock>
+            </Border>
+
+            <TextBlock Style="{StaticResource TitleText}" Text="/" Margin="0 0 5 0"
+                       Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
+
             <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
             </Border>
