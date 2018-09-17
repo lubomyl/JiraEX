@@ -215,7 +215,7 @@
                 <Grid>
                     <TextBlock Style="{StaticResource PlainText}"
                                Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"
-                               Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                               Visibility="{Binding IsEditingAssignee, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditAssigneeCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>

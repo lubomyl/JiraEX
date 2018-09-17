@@ -75,6 +75,9 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand ShowParentIssueCommand { get; set; }
 
+        public DelegateCommand EditAssigneeCommand { get; set; }
+        public DelegateCommand CancelEditAssigneeCommand { get; set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
@@ -141,6 +144,9 @@ namespace JiraEX.ViewModel
             this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
 
             this.ShowParentIssueCommand = new DelegateCommand(ShowParentIssue);
+
+            this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
+            this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
         }
 
         private async void ShowParentIssue(object obj)
@@ -351,6 +357,16 @@ namespace JiraEX.ViewModel
             this.IsEditingTransition = false;
         }
 
+        private void EnableEditAssignee(object parameter)
+        {
+            this.IsEditingAssignee = true;
+        }
+
+        private void CancelEditAssignee(object parameter)
+        {
+            this.IsEditingAssignee = false;
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("Issue " + this.Issue.Key, Issue.Fields.Project.Name);
@@ -401,7 +417,7 @@ namespace JiraEX.ViewModel
             get { return this._isEditingAssignee; }
             set {
                 this._isEditingAssignee = value;
-                OnPropertyChanged("IsEdtingAssignee");
+                OnPropertyChanged("IsEditingAssignee");
             }
         }
 
