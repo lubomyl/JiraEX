@@ -29,6 +29,8 @@ namespace JiraEX.ViewModel
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
+        private bool _isFixVersionsEditable = false;
+        private bool _isAffectsVersionsEditable = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -46,10 +48,11 @@ namespace JiraEX.ViewModel
         private User _selectedAssignee;
 
         private ObservableCollection<Priority> _priorityList;
-
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentsList;
         private ObservableCollection<User> _assigneeList;
+        private ObservableCollection<JiraRESTClient.Model.Version> _fixVersionsList;
+        private ObservableCollection<JiraRESTClient.Model.Version> _affectsVersionsList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -266,6 +269,38 @@ namespace JiraEX.ViewModel
         private void CheckEditableProperties()
         {
             this.IsPriorityEditable = IsPropertyEditable("priority");
+            this.IsAffectsVersionsEditable = IsPropertyEditable("versions");
+            this.IsFixVersionsEditable = IsPropertyEditable("fixVersions");
+
+            if (this.IsAffectsVersionsEditable)
+            {
+                FetchAffectsVersionsList();
+            }
+
+            if (this.IsFixVersionsEditable)
+            {
+                FetchFixVersionsList();
+            }
+        }
+
+        private void FetchAffectsVersionsList()
+        {
+            this.AffectsVersionsList.Clear();
+
+            foreach(JiraRESTClient.Model.Version v in this._editablePropertiesFields.AffectsVersions.AllowedValues)
+            {
+                this.AffectsVersionsList.Add(v);
+            }
+        }
+
+        private void FetchFixVersionsList()
+        {
+            this.FixVersionsList.Clear();
+
+            foreach (JiraRESTClient.Model.Version v in this._editablePropertiesFields.FixVersions.AllowedValues)
+            {
+                this.FixVersionsList.Add(v);
+            }
         }
 
         private async void UpdatePriorityAsync()
@@ -581,5 +616,46 @@ namespace JiraEX.ViewModel
                 OnPropertyChanged("IsSubTask");
             }
         }
+
+        public bool IsFixVersionsEditable
+        {
+            get { return this._isFixVersionsEditable; }
+            set
+            {
+                this._isFixVersionsEditable = value;
+                OnPropertyChanged("IsFixVersionsEditable");
+            }
+        }
+
+        public bool IsAffectsVersionsEditable
+        {
+            get { return this._isAffectsVersionsEditable; }
+            set
+            {
+                this._isAffectsVersionsEditable = value;
+                OnPropertyChanged("IsAffectsVersionsEditable");
+            }
+        }
+
+        public ObservableCollection<JiraRESTClient.Model.Version> FixVersionsList
+        {
+            get { return this._fixVersionsList; }
+            set
+            {
+                this._fixVersionsList = value;
+                OnPropertyChanged("FixVersionsList");
+            }
+        }
+
+        public ObservableCollection<JiraRESTClient.Model.Version> AffectsVersionsList
+        {
+            get { return this._affectsVersionsList; }
+            set
+            {
+                this._affectsVersionsList = value;
+                OnPropertyChanged("AffectsVersionsList");
+            }
+        }
+
     }
 }
