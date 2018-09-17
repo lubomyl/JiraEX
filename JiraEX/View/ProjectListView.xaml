@@ -26,6 +26,8 @@
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                    <Setter Property="BorderBrush" Value="#FF2D2D30"/>
                     <EventSetter Event="MouseDoubleClick" Handler="ProjectSelected_MouseDoubleClick"/>
                 </Style>
             </ListBox.ItemContainerStyle>

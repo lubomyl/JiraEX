@@ -2,7 +2,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vsst="clr-namespace:JiraEX.Theme"
-	xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
+	xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    xmlns:wpftoolkitx="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit">
 
 	<!-- Element brushes -->
 	<SolidColorBrush x:Key="ButtonBackgroundBrushKey" Color="{Binding Source={x:Static vsst:ThemeColors.Instance}, Path=ButtonBackgroundColor, Mode=OneWay}" />

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class PriorityEditableProperty
+    public class AffectsVersionsEditableProperty
     {
 
         public string Key { get; set; }
-        public List<Priority> AllowedValues { get; set; }
+
+        public List<Version> AllowedValues { get; set; }
 
     }
 }

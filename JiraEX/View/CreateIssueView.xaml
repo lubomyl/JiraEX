@@ -53,7 +53,8 @@
             </Grid>
         
             <!-- Parent issue -->
-            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF709946">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF709946"
+                    Visibility="{Binding IsCreatingSubTask, Converter={StaticResource TrueToVisibleConverter}}">
                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding ParentIssue.Key, Mode=OneWay}" Text="{Binding ParentIssue.Key, Mode=OneWay}"/>
             </Border>
         </StackPanel>

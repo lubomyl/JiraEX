@@ -25,9 +25,13 @@ namespace JiraEX.ViewModel
         private bool _isEditingDescription = false;
         private bool _isEditingPriority = false;
         private bool _isEditingTransition = false;
+        private bool _isEditingAssignee = false;
+        private bool _isEditingFixVersions = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
+        private bool _isFixVersionsEditable = false;
+        private bool _isAffectsVersionsEditable = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -35,17 +39,21 @@ namespace JiraEX.ViewModel
         private IPriorityService _priorityService;
         private ITransitionService _transitionService;
         private IAttachmentService _attachmentService;
+        private IUserService _userService;
 
         private Issue _issue;
         private BoardProject _project;
 
         private Priority _selectedPriority;
         private Transition _selectedTransition;
+        private User _selectedAssignee;
 
         private ObservableCollection<Priority> _priorityList;
-
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentsList;
+        private ObservableCollection<User> _assigneeList;
+        private ObservableCollection<JiraRESTClient.Model.Version> _fixVersionsList;
+        private ObservableCollection<JiraRESTClient.Model.Version> _affectsVersionsList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -69,6 +77,15 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateSubTaskCommand { get; set; }
 
+        public DelegateCommand ShowParentIssueCommand { get; set; }
+
+        public DelegateCommand EditAssigneeCommand { get; set; }
+        public DelegateCommand CancelEditAssigneeCommand { get; set; }
+
+        public DelegateCommand EditFixVersionsCommand { get; set; }
+        public DelegateCommand CancelEditFixVersionsCommand { get; set; }
+        public DelegateCommand CheckedFixVersionCommand { get; set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
@@ -82,6 +99,7 @@ namespace JiraEX.ViewModel
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
             CheckSubTaskCreatable();
+            GetAssigneesAsync();
 
             UpdateIssueAsync();
 
@@ -106,10 +124,14 @@ namespace JiraEX.ViewModel
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
             this._attachmentService = new AttachmentService();
+            this._userService = new UserService();
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
             this._attachmentsList = new ObservableCollection<Attachment>();
+            this._assigneeList = new ObservableCollection<User>();
+            this._fixVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
+            this._affectsVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -130,9 +152,39 @@ namespace JiraEX.ViewModel
             this.DeleteAttachmentCommand = new DelegateCommand(DeleteAttachment);
 
             this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
+
+            this.ShowParentIssueCommand = new DelegateCommand(ShowParentIssue);
+
+            this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
+            this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
+
+            this.EditFixVersionsCommand = new DelegateCommand(EnableEditFixVersions);
+            this.CancelEditFixVersionsCommand = new DelegateCommand(CancelEditFixVersions);
+            this.CheckedFixVersionCommand = new DelegateCommand(CheckedFixVersion);
         }
 
-        private void CreateSubTask(object obj)
+        private async void CheckedFixVersion(object sender)
+        {
+            JiraRESTClient.Model.Version version = sender as JiraRESTClient.Model.Version;
+
+            if (version.CheckedStatus) {
+                await this._issueService.AddIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
+            } else
+            {
+                await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
+            }
+
+            UpdateIssueAsync();
+        }
+
+        private async void ShowParentIssue(object sender)
+        {
+            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Fields.Parent.Key);
+
+            this._parent.ShowIssueDetail(completeIssue, this._project);
+        }
+
+        private void CreateSubTask(object sender)
         {
             this._parent.CreateIssue(this._issue, this._project);
         }
@@ -209,6 +261,25 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetAssigneesAsync()
+        {
+            System.Threading.Tasks.Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKey(this._issue.Key);
+
+            var userList = await userTask as UserList;
+
+            this.AssigneeList.Clear();
+
+            foreach (User u in userList)
+            {
+                this.AssigneeList.Add(u);
+
+                if (u.Name == this._issue.Fields.Status.Name)
+                {
+                    this.SelectedAssignee = u;
+                }
+            }
+        }
+
         private async void GetEditablePropertiesAsync()
         {
             System.Threading.Tasks.Task<EditableProperties> editablePropertiesTask = this._issueService.GetAllEditablePropertiesAsync(this._issue.Key);
@@ -223,6 +294,48 @@ namespace JiraEX.ViewModel
         private void CheckEditableProperties()
         {
             this.IsPriorityEditable = IsPropertyEditable("priority");
+            this.IsAffectsVersionsEditable = IsPropertyEditable("versions");
+            this.IsFixVersionsEditable = IsPropertyEditable("fixVersions");
+
+            if (this.IsAffectsVersionsEditable)
+            {
+                FetchAffectsVersionsList();
+            }
+
+            if (this.IsFixVersionsEditable)
+            {
+                FetchFixVersionsList();
+            }
+        }
+
+        private void FetchAffectsVersionsList()
+        {
+            this.AffectsVersionsList.Clear();
+
+            foreach(JiraRESTClient.Model.Version v in this._editablePropertiesFields.Versions.AllowedValues)
+            {
+                this.AffectsVersionsList.Add(v);
+            }
+        }
+
+        private void FetchFixVersionsList()
+        {
+            this.FixVersionsList.Clear();
+
+            foreach (JiraRESTClient.Model.Version v in this._editablePropertiesFields.FixVersions.AllowedValues)
+            {
+                foreach(JiraRESTClient.Model.Version ve in this.Issue.Fields.FixVersions)
+                {
+                    if (ve.Name.Equals(v.Name))
+                    {
+                        v.CheckedStatus = true;
+                        break;
+                    }
+
+                    v.CheckedStatus = false;
+                }
+                this.FixVersionsList.Add(v);
+            }
         }
 
         private async void UpdatePriorityAsync()
@@ -252,6 +365,13 @@ namespace JiraEX.ViewModel
         private async void DoTransitionAsync()
         {
             await this._transitionService.DoTransitionAsync(this._issue.Key, this.SelectedTransition);
+
+            UpdateIssueAsync();
+        }
+
+        private async void AssignAsync()
+        {
+            await this._issueService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
 
             UpdateIssueAsync();
         }
@@ -314,6 +434,26 @@ namespace JiraEX.ViewModel
             this.IsEditingTransition = false;
         }
 
+        private void EnableEditAssignee(object parameter)
+        {
+            this.IsEditingAssignee = true;
+        }
+
+        private void CancelEditAssignee(object parameter)
+        {
+            this.IsEditingAssignee = false;
+        }
+
+        private void EnableEditFixVersions(object parameter)
+        {
+            this.IsEditingFixVersions = true;
+        }
+
+        private void CancelEditFixVersions(object parameter)
+        {
+            this.IsEditingFixVersions = false;
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("Issue " + this.Issue.Key, Issue.Fields.Project.Name);
@@ -359,6 +499,25 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public bool IsEditingAssignee
+        {
+            get { return this._isEditingAssignee; }
+            set {
+                this._isEditingAssignee = value;
+                OnPropertyChanged("IsEditingAssignee");
+            }
+        }
+
+        public bool IsEditingFixVersions
+        {
+            get { return this._isEditingFixVersions; }
+            set
+            {
+                this._isEditingFixVersions = value;
+                OnPropertyChanged("IsEditingFixVersions");
+            }
+        }
+
         private bool IsPropertyEditable(string propertyName)
         {
             bool ret = false;
@@ -366,6 +525,12 @@ namespace JiraEX.ViewModel
             if (propertyName.Equals("priority"))
             {
                 ret = this._editablePropertiesFields.Priority != null;
+            } else if (propertyName.Equals("versions"))
+            {
+                ret = this._editablePropertiesFields.Versions != null;
+            } else if (propertyName.Equals("fixVersions"))
+            {
+                ret = this._editablePropertiesFields.FixVersions != null;
             }
 
             return ret;
@@ -451,6 +616,36 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public ObservableCollection<User> AssigneeList
+        {
+            get { return this._assigneeList; }
+            set
+            {
+                this._assigneeList = value;
+                OnPropertyChanged("AssigneeList");
+            }
+        }
+
+        public User SelectedAssignee
+        {
+            get { return this._selectedAssignee; }
+            set
+            {
+                if (this._selectedAssignee != null)
+                {
+                    this._selectedAssignee = value;
+                    this.AssignAsync();
+                }
+                else
+                {
+                    this._selectedAssignee = value;
+                }
+
+                OnPropertyChanged("SelectedAssignee");
+                this.IsEditingAssignee = false;
+            }
+        }
+
         public bool IsPriorityEditable
         {
             get { return this._isPriorityEditable; }
@@ -470,5 +665,58 @@ namespace JiraEX.ViewModel
                 OnPropertyChanged("IsSubTaskCreatable");
             }
         }
+
+        public bool IsSubTask
+        {
+            get
+            {
+                return this._issue.Fields.Issuetype.Subtask;
+            }
+            set
+            {
+                OnPropertyChanged("IsSubTask");
+            }
+        }
+
+        public bool IsFixVersionsEditable
+        {
+            get { return this._isFixVersionsEditable; }
+            set
+            {
+                this._isFixVersionsEditable = value;
+                OnPropertyChanged("IsFixVersionsEditable");
+            }
+        }
+
+        public bool IsAffectsVersionsEditable
+        {
+            get { return this._isAffectsVersionsEditable; }
+            set
+            {
+                this._isAffectsVersionsEditable = value;
+                OnPropertyChanged("IsAffectsVersionsEditable");
+            }
+        }
+
+        public ObservableCollection<JiraRESTClient.Model.Version> FixVersionsList
+        {
+            get { return this._fixVersionsList; }
+            set
+            {
+                this._fixVersionsList = value;
+                OnPropertyChanged("FixVersionsList");
+            }
+        }
+
+        public ObservableCollection<JiraRESTClient.Model.Version> AffectsVersionsList
+        {
+            get { return this._affectsVersionsList; }
+            set
+            {
+                this._affectsVersionsList = value;
+                OnPropertyChanged("AffectsVersionsList");
+            }
+        }
+
     }
 }
