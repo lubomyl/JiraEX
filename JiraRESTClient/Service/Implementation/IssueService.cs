@@ -155,5 +155,31 @@ namespace JiraRESTClient.Service.Implementation
                 this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
+
+        public Task AddIssueVersionPropertyAsync(string issueKey, string versionType, object versionName)
+        {
+            return Task.Run(() => {
+                versionName = JsonConvert.SerializeObject(versionName);
+
+                string updateString = $"{{\"update\":{{\"{versionType}\":[{{\"add\":{{\"name\":{versionName}}}}}]}}}}";
+
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+            });
+        }
+
+        public Task RemoveIssueVersionPropertyAsync(string issueKey, string versionType, object versionName)
+        {
+            return Task.Run(() => {
+                versionName = JsonConvert.SerializeObject(versionName);
+
+                string updateString = $"{{\"update\":{{\"{versionType}\":[{{\"remove\":{{\"name\":{versionName}}}}}]}}}}";
+
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+            });
+        }
     }
 }

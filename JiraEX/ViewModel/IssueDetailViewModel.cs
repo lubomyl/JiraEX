@@ -173,6 +173,8 @@ namespace JiraEX.ViewModel
             {
                 await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
             }
+
+            UpdateIssueAsync();
         }
 
         private async void ShowParentIssue(object sender)
@@ -322,7 +324,16 @@ namespace JiraEX.ViewModel
 
             foreach (JiraRESTClient.Model.Version v in this._editablePropertiesFields.FixVersions.AllowedValues)
             {
-                v.CheckedStatus = false;
+                foreach(JiraRESTClient.Model.Version ve in this.Issue.Fields.FixVersions)
+                {
+                    if (ve.Name.Equals(v.Name))
+                    {
+                        v.CheckedStatus = true;
+                        break;
+                    }
+
+                    v.CheckedStatus = false;
+                }
                 this.FixVersionsList.Add(v);
             }
         }
