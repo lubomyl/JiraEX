@@ -32,5 +32,13 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<UserList> GetAllAssignableUsersForIssueByIssueKey(string issueKey)
+        {
+            return Task.Run(() => {
+                var resource = $"user/assignable/search?issueKey={issueKey}";
+
+                return this._baseService.GetResource<UserList>(resource);
+            });
+        }
     }
 }
