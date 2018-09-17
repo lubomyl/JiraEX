@@ -10,6 +10,7 @@ namespace JiraRESTClient.Model
     {
 
         public string Key { get; set; }
+        public List<Priority> AllowedValues { get; set; }
 
     }
 }

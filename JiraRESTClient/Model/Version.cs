@@ -14,6 +14,7 @@ namespace JiraRESTClient.Model
         public bool Archived { get; set; }
         public bool Released { get; set; }
         public string ReleaseDate { get; set; }
+        public bool CheckedStatus { get; set; }
 
     }
 }

@@ -26,6 +26,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingPriority = false;
         private bool _isEditingTransition = false;
         private bool _isEditingAssignee = false;
+        private bool _isEditingFixVersions = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -81,6 +82,10 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditAssigneeCommand { get; set; }
         public DelegateCommand CancelEditAssigneeCommand { get; set; }
 
+        public DelegateCommand EditFixVersionsCommand { get; set; }
+        public DelegateCommand CancelEditFixVersionsCommand { get; set; }
+        public DelegateCommand CheckedFixVersionCommand { get; set; }
+
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
@@ -125,6 +130,8 @@ namespace JiraEX.ViewModel
             this._transitionList = new ObservableCollection<Transition>();
             this._attachmentsList = new ObservableCollection<Attachment>();
             this._assigneeList = new ObservableCollection<User>();
+            this._fixVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
+            this._affectsVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -150,16 +157,32 @@ namespace JiraEX.ViewModel
 
             this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
             this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
+
+            this.EditFixVersionsCommand = new DelegateCommand(EnableEditFixVersions);
+            this.CancelEditFixVersionsCommand = new DelegateCommand(CancelEditFixVersions);
+            this.CheckedFixVersionCommand = new DelegateCommand(CheckedFixVersion);
         }
 
-        private async void ShowParentIssue(object obj)
+        private async void CheckedFixVersion(object sender)
+        {
+            JiraRESTClient.Model.Version version = sender as JiraRESTClient.Model.Version;
+
+            if (version.CheckedStatus) {
+                await this._issueService.AddIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
+            } else
+            {
+                await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
+            }
+        }
+
+        private async void ShowParentIssue(object sender)
         {
             var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Fields.Parent.Key);
 
             this._parent.ShowIssueDetail(completeIssue, this._project);
         }
 
-        private void CreateSubTask(object obj)
+        private void CreateSubTask(object sender)
         {
             this._parent.CreateIssue(this._issue, this._project);
         }
@@ -287,7 +310,7 @@ namespace JiraEX.ViewModel
         {
             this.AffectsVersionsList.Clear();
 
-            foreach(JiraRESTClient.Model.Version v in this._editablePropertiesFields.AffectsVersions.AllowedValues)
+            foreach(JiraRESTClient.Model.Version v in this._editablePropertiesFields.Versions.AllowedValues)
             {
                 this.AffectsVersionsList.Add(v);
             }
@@ -299,6 +322,7 @@ namespace JiraEX.ViewModel
 
             foreach (JiraRESTClient.Model.Version v in this._editablePropertiesFields.FixVersions.AllowedValues)
             {
+                v.CheckedStatus = false;
                 this.FixVersionsList.Add(v);
             }
         }
@@ -409,6 +433,16 @@ namespace JiraEX.ViewModel
             this.IsEditingAssignee = false;
         }
 
+        private void EnableEditFixVersions(object parameter)
+        {
+            this.IsEditingFixVersions = true;
+        }
+
+        private void CancelEditFixVersions(object parameter)
+        {
+            this.IsEditingFixVersions = false;
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("Issue " + this.Issue.Key, Issue.Fields.Project.Name);
@@ -463,6 +497,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public bool IsEditingFixVersions
+        {
+            get { return this._isEditingFixVersions; }
+            set
+            {
+                this._isEditingFixVersions = value;
+                OnPropertyChanged("IsEditingFixVersions");
+            }
+        }
+
         private bool IsPropertyEditable(string propertyName)
         {
             bool ret = false;
@@ -470,6 +514,12 @@ namespace JiraEX.ViewModel
             if (propertyName.Equals("priority"))
             {
                 ret = this._editablePropertiesFields.Priority != null;
+            } else if (propertyName.Equals("versions"))
+            {
+                ret = this._editablePropertiesFields.Versions != null;
+            } else if (propertyName.Equals("fixVersions"))
+            {
+                ret = this._editablePropertiesFields.FixVersions != null;
             }
 
             return ret;
