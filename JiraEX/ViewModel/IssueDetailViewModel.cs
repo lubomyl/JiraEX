@@ -25,6 +25,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingDescription = false;
         private bool _isEditingPriority = false;
         private bool _isEditingTransition = false;
+        private bool _isEditingAssignee = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -35,17 +36,20 @@ namespace JiraEX.ViewModel
         private IPriorityService _priorityService;
         private ITransitionService _transitionService;
         private IAttachmentService _attachmentService;
+        private IUserService _userService;
 
         private Issue _issue;
         private BoardProject _project;
 
         private Priority _selectedPriority;
         private Transition _selectedTransition;
+        private User _selectedAssignee;
 
         private ObservableCollection<Priority> _priorityList;
 
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentsList;
+        private ObservableCollection<User> _assigneeList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -84,6 +88,7 @@ namespace JiraEX.ViewModel
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
             CheckSubTaskCreatable();
+            GetAssigneesAsync();
 
             UpdateIssueAsync();
 
@@ -108,10 +113,12 @@ namespace JiraEX.ViewModel
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
             this._attachmentService = new AttachmentService();
+            this._userService = new UserService();
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
             this._attachmentsList = new ObservableCollection<Attachment>();
+            this._assigneeList = new ObservableCollection<User>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -216,6 +223,25 @@ namespace JiraEX.ViewModel
                 if (t.Name == this._issue.Fields.Status.Name)
                 {
                     this.SelectedTransition = t;
+                }
+            }
+        }
+
+        private async void GetAssigneesAsync()
+        {
+            System.Threading.Tasks.Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKey(this._issue.Key);
+
+            var userList = await userTask as UserList;
+
+            this.AssigneeList.Clear();
+
+            foreach (User u in userList)
+            {
+                this.AssigneeList.Add(u);
+
+                if (u.Name == this._issue.Fields.Status.Name)
+                {
+                    this.SelectedAssignee = u;
                 }
             }
         }
@@ -370,6 +396,15 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public bool IsEditingAssignee
+        {
+            get { return this._isEditingAssignee; }
+            set {
+                this._isEditingAssignee = value;
+                OnPropertyChanged("IsEdtingAssignee");
+            }
+        }
+
         private bool IsPropertyEditable(string propertyName)
         {
             bool ret = false;
@@ -459,6 +494,26 @@ namespace JiraEX.ViewModel
 
                 OnPropertyChanged("SelectedTransition");
                 this.IsEditingTransition = false;
+            }
+        }
+
+        public ObservableCollection<User> AssigneeList
+        {
+            get { return this._assigneeList; }
+            set
+            {
+                this._assigneeList = value;
+                OnPropertyChanged("AssigneeList");
+            }
+        }
+
+        public User SelectedAssignee
+        {
+            get { return this._selectedAssignee; }
+            set
+            {
+                this._selectedAssignee = value;
+                OnPropertyChanged("SelectedAssignee");
             }
         }
 
