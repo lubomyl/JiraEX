@@ -256,7 +256,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" Style="{StaticResource PlainText}"/>
                             </Border>
                         </DataTemplate>
@@ -277,7 +277,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
                             </Border>
                         </DataTemplate>
@@ -285,7 +285,28 @@
                 </ItemsControl>
 
             </StackPanel>
-            
+
+            <!-- AffectsVersions -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Affects versions:</Label>
+
+                <ItemsControl ItemsSource="{Binding Issue.Fields.Versions}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+
             <!-- Attachments -->
             <Label Style="{StaticResource LabelFaded}">Attachments:</Label>
 

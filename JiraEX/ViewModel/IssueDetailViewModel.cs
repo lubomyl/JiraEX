@@ -301,7 +301,7 @@ namespace JiraEX.ViewModel
 
         private async void AssignAsync()
         {
-            await this._userService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
+            await this._issueService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
 
             UpdateIssueAsync();
         }

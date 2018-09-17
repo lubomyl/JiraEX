@@ -37,5 +37,7 @@ namespace JiraRESTClient.Service
         Task<Issue> CreateIssueAsync(string projectId, string summary, string description, string issueTypeId);
 
         Task<Issue> CreateSubTaskIssueAsync(string projectId, string summary, string description, string issueTypeId, string parentKey);
+
+        Task AssignAsync(string issueKey, string userName);
     }
 }

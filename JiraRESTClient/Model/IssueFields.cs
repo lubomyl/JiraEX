@@ -35,6 +35,7 @@ namespace JiraRESTClient.Model
         public List<Issue> Subtasks { get; set; }
 
         public List<FixVersion> FixVersions { get; set; }
+        public List<AffectsVersion> Versions { get; set; }
 
     }
 }

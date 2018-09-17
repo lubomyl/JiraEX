@@ -144,5 +144,16 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
             });
         }
+
+        public Task AssignAsync(string issueKey, string userName)
+        {
+            return Task.Run(() => {
+                string updateString = $"{{\"name\":\"{userName}\"}}";
+
+                var resource = $"issue/{issueKey}/assignee";
+
+                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+            });
+        }
     }
 }
