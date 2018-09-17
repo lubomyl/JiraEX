@@ -299,6 +299,13 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
         }
 
+        private async void AssignAsync()
+        {
+            await this._userService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
+
+            UpdateIssueAsync();
+        }
+
         private void EnableEditSummary(object parameter)
         {
             this.IsEditingSummary = true;
@@ -528,8 +535,18 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                this._selectedAssignee = value;
+                if (this._selectedAssignee != null)
+                {
+                    this._selectedAssignee = value;
+                    this.AssignAsync();
+                }
+                else
+                {
+                    this._selectedAssignee = value;
+                }
+
                 OnPropertyChanged("SelectedAssignee");
+                this.IsEditingAssignee = false;
             }
         }
 
