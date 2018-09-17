@@ -10,6 +10,8 @@ namespace JiraRESTClient.Model
     {
 
         public PriorityEditableProperty Priority { get; set; }
+        public AffectsVersionsEditableProperty AffectsVersions { get; set; }
+        public FixVersionsEditableProperty FixVersions { get; set; }
 
     }
 }

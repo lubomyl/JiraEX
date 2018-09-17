@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class AffectsVersion
+    public class Version
     {
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public bool Archived { get; set; }
+        public bool Released { get; set; }
+        public string ReleaseDate { get; set; }
 
     }
 }
