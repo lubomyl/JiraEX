@@ -61,6 +61,8 @@
     <Compile Include="Model\BoardProject.cs" />
     <Compile Include="Model\EditableProperties.cs" />
     <Compile Include="Model\FixVersionsEditableProperty.cs" />
+    <Compile Include="Model\LabelsList.cs" />
+    <Compile Include="Model\LabelSuggestion.cs" />
     <Compile Include="Model\Version.cs" />
     <Compile Include="Model\IssueFields.cs" />
     <Compile Include="Model\Issue.cs" />

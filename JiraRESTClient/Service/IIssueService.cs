@@ -26,7 +26,7 @@ namespace JiraRESTClient.Service
 
         Task<IssueList> GetAllIssuesOfBoardAsync(string boardId);
 
-        Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue);
+        Task UpdateIssuePropertyAsync(string issueKey, string action, string propertyName, object newValue);
 
         Task<Issue> GetIssueByIssueKeyAsync(string issueKey);
 
@@ -43,5 +43,7 @@ namespace JiraRESTClient.Service
         Task AddIssueVersionPropertyAsync(string issueKey, string versionType, object versionName);
 
         Task RemoveIssueVersionPropertyAsync(string issueKey, string versionType, object versionName);
+
+        Task<LabelsList> GetAllLabelsAsync(string queryString);
     }
 }

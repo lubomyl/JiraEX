@@ -49,7 +49,7 @@ namespace JiraEX.ViewModel
 
         private async void GetBoardsAsync()
         {
-            System.Threading.Tasks.Task<BoardList> boardTask = this._boardService.GetAllBoards();
+            Task<BoardList> boardTask = this._boardService.GetAllBoards();
 
             var boardList = await boardTask as BoardList;
 

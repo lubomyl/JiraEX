@@ -67,7 +67,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
 
             var issueList = await issueTask as IssueList;
 
@@ -83,7 +83,7 @@ namespace JiraEX.ViewModel
 
         private void GetIssuesBySprintAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
 
             var issueList = issueTask.Result as IssueList;
 
@@ -97,7 +97,7 @@ namespace JiraEX.ViewModel
 
         private void GetSprintsAsync()
         {
-            System.Threading.Tasks.Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
+            Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
 
             var sprintList = sprintTask.Result as SprintList;
 

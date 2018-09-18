@@ -51,7 +51,7 @@ namespace JiraEX.ViewModel
         {
             try
             {
-                System.Threading.Tasks.Task<User> authenticatedUserTask = this._userService.GetAuthenticatedUserAsync();
+                Task<User> authenticatedUserTask = this._userService.GetAuthenticatedUserAsync();
 
                 this.AuthenticatedUser = await authenticatedUserTask as User;
             }
