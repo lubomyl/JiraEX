@@ -27,6 +27,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingTransition = false;
         private bool _isEditingAssignee = false;
         private bool _isEditingFixVersions = false;
+        private bool _isEditingAffectsVersion = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -85,6 +86,10 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditFixVersionsCommand { get; set; }
         public DelegateCommand CancelEditFixVersionsCommand { get; set; }
         public DelegateCommand CheckedFixVersionCommand { get; set; }
+
+        public DelegateCommand EditAffectsVersionsCommand { get; set; }
+        public DelegateCommand CancelEditAffectsVersionsCommand { get; set; }
+        public DelegateCommand CheckedAffectsVersionCommand { get; set; }
 
         public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
@@ -161,6 +166,10 @@ namespace JiraEX.ViewModel
             this.EditFixVersionsCommand = new DelegateCommand(EnableEditFixVersions);
             this.CancelEditFixVersionsCommand = new DelegateCommand(CancelEditFixVersions);
             this.CheckedFixVersionCommand = new DelegateCommand(CheckedFixVersion);
+
+            this.EditAffectsVersionsCommand = new DelegateCommand(EnableEditAffectsVersions);
+            this.CancelEditAffectsVersionsCommand = new DelegateCommand(CancelEditAffectsVersions);
+            this.CheckedAffectsVersionCommand = new DelegateCommand(CheckedAffectsVersion);
         }
 
         private async void CheckedFixVersion(object sender)
@@ -172,6 +181,22 @@ namespace JiraEX.ViewModel
             } else
             {
                 await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
+            }
+
+            UpdateIssueAsync();
+        }
+
+        private async void CheckedAffectsVersion(object sender)
+        {
+            JiraRESTClient.Model.Version version = sender as JiraRESTClient.Model.Version;
+
+            if (version.CheckedStatus)
+            {
+                await this._issueService.AddIssueVersionPropertyAsync(this.Issue.Key, "versions", version.Name);
+            }
+            else
+            {
+                await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "versions", version.Name);
             }
 
             UpdateIssueAsync();
@@ -314,6 +339,16 @@ namespace JiraEX.ViewModel
 
             foreach(JiraRESTClient.Model.Version v in this._editablePropertiesFields.Versions.AllowedValues)
             {
+                foreach (JiraRESTClient.Model.Version ve in this.Issue.Fields.Versions)
+                {
+                    if (ve.Name.Equals(v.Name))
+                    {
+                        v.CheckedStatus = true;
+                        break;
+                    }
+
+                    v.CheckedStatus = false;
+                }
                 this.AffectsVersionsList.Add(v);
             }
         }
@@ -454,6 +489,16 @@ namespace JiraEX.ViewModel
             this.IsEditingFixVersions = false;
         }
 
+        private void EnableEditAffectsVersions(object parameter)
+        {
+            this.IsEditingAffectsVersions = true;
+        }
+
+        private void CancelEditAffectsVersions(object parameter)
+        {
+            this.IsEditingAffectsVersions = false;
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("Issue " + this.Issue.Key, Issue.Fields.Project.Name);
@@ -515,6 +560,16 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingFixVersions = value;
                 OnPropertyChanged("IsEditingFixVersions");
+            }
+        }
+
+        public bool IsEditingAffectsVersions
+        {
+            get { return this._isEditingAffectsVersion; }
+            set
+            {
+                this._isEditingAffectsVersion = value;
+                OnPropertyChanged("IsEditingAffectsVersions");
             }
         }
 

@@ -214,6 +214,7 @@
                 
                 <Grid>
                     <TextBlock Style="{StaticResource PlainText}"
+                               MinWidth="100" MinHeight="10"
                                Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"
                                Visibility="{Binding IsEditingAssignee, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock.InputBindings>
@@ -271,7 +272,7 @@
 
                 <Grid>
                     <Grid>
-                        <ItemsControl MinWidth="50" MinHeight="10" ItemsSource="{Binding Issue.Fields.FixVersions}"
+                        <ItemsControl ItemsSource="{Binding Issue.Fields.FixVersions}"
                             Visibility="{Binding IsEditingFixVersions, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -285,17 +286,15 @@
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                            <ItemsControl.InputBindings>
-                                <MouseBinding Command="{Binding EditFixVersionsCommand}" MouseAction="LeftClick" />
-                            </ItemsControl.InputBindings>
                         </ItemsControl>
 
-                        <TextBlock>
+                        <TextBlock MinWidth="100" MinHeight="10">
                             <TextBlock.InputBindings>
                                 <MouseBinding Command="{Binding EditFixVersionsCommand}" MouseAction="LeftClick" />
                             </TextBlock.InputBindings>
                         </TextBlock>
                     </Grid>
+                    
                     <ComboBox StaysOpenOnEdit="True" 
                               ItemsSource="{Binding FixVersionsList}"
                               Margin="0 0 5 0"
@@ -322,21 +321,53 @@
             <!-- AffectsVersions -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Affects versions:</Label>
+                
+                <Grid>
+                    <Grid>
+                        <ItemsControl ItemsSource="{Binding Issue.Fields.Versions}"
+                            Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource FalseToVisibleConverter}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
+                                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                <ItemsControl ItemsSource="{Binding Issue.Fields.Versions}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
-                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <TextBlock MinWidth="100" MinHeight="10"> 
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditAffectsVersionsCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
+
+                    <ComboBox StaysOpenOnEdit="True" 
+                              ItemsSource="{Binding AffectsVersionsList}"
+                              Margin="0 0 5 0"
+                              Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource TrueToVisibleConverter}}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding DataContext.CheckedAffectsVersionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                          Content="{Binding Name}" 
+                                          IsChecked="{Binding CheckedStatus}" 
+                                          CommandParameter="{Binding}">
+                                </CheckBox>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditAffectsVersionsCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+
+                </Grid>
 
             </StackPanel>
 
