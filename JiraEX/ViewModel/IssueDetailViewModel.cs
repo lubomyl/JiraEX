@@ -29,6 +29,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingFixVersions = false;
         private bool _isEditingAffectsVersion = false;
         private bool _isEditingLabels = false;
+        private bool _isEditingSprint = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -42,6 +43,7 @@ namespace JiraEX.ViewModel
         private ITransitionService _transitionService;
         private IAttachmentService _attachmentService;
         private IUserService _userService;
+        private IBoardService _boardService;
 
         private Issue _issue;
         private BoardProject _project;
@@ -49,14 +51,16 @@ namespace JiraEX.ViewModel
         private Priority _selectedPriority;
         private Transition _selectedTransition;
         private User _selectedAssignee;
+        private Sprint _selectedSprint;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
-        private ObservableCollection<Attachment> _attachmentsList;
+        private ObservableCollection<Attachment> _attachmentList;
         private ObservableCollection<User> _assigneeList;
         private ObservableCollection<JiraRESTClient.Model.Version> _fixVersionsList;
         private ObservableCollection<JiraRESTClient.Model.Version> _affectsVersionsList;
-        private ObservableCollection<JiraRESTClient.Model.LabelSuggestion> _labelsList;
+        private ObservableCollection<JiraRESTClient.Model.LabelSuggestion> _labelList;
+        private ObservableCollection<Sprint> _sprintList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -85,6 +89,9 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditAssigneeCommand { get; set; }
         public DelegateCommand CancelEditAssigneeCommand { get; set; }
 
+        public DelegateCommand EditSprintCommand { get; set; }
+        public DelegateCommand CancelEditSprintCommand { get; set; }
+
         public DelegateCommand EditFixVersionsCommand { get; set; }
         public DelegateCommand CancelEditFixVersionsCommand { get; set; }
         public DelegateCommand CheckedFixVersionCommand { get; set; }
@@ -112,6 +119,7 @@ namespace JiraEX.ViewModel
             CheckSubTaskCreatable();
             GetAssigneesAsync();
             GetLabelsAsync();
+            GetSprintsAsync();
 
             UpdateIssueAsync();
 
@@ -137,14 +145,16 @@ namespace JiraEX.ViewModel
             this._transitionService = new TransitionService();
             this._attachmentService = new AttachmentService();
             this._userService = new UserService();
+            this._boardService = new BoardService();
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
-            this._attachmentsList = new ObservableCollection<Attachment>();
+            this._attachmentList = new ObservableCollection<Attachment>();
             this._assigneeList = new ObservableCollection<User>();
             this._fixVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
             this._affectsVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
-            this._labelsList = new ObservableCollection<JiraRESTClient.Model.LabelSuggestion>();
+            this._labelList = new ObservableCollection<JiraRESTClient.Model.LabelSuggestion>();
+            this._sprintList = new ObservableCollection<Sprint>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -170,6 +180,9 @@ namespace JiraEX.ViewModel
 
             this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
             this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
+
+            this.EditSprintCommand = new DelegateCommand(EnableEditSprint);
+            this.CancelEditSprintCommand = new DelegateCommand(CancelEditSprint);
 
             this.EditFixVersionsCommand = new DelegateCommand(EnableEditFixVersions);
             this.CancelEditFixVersionsCommand = new DelegateCommand(CancelEditFixVersions);
@@ -333,6 +346,19 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetSprintsAsync()
+        {
+            Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(this._project.Id);
+            var sprintsList = await sprintsTask as SprintList;
+
+            this.SprintList.Clear();
+
+            foreach (Sprint s in sprintsList.Values)
+            {
+                this.SprintList.Add(s);
+            }
+
+        }
         private async void GetLabelsAsync()
         {
             Task<LabelsList> labelsTask = this._issueService.GetAllLabelsAsync("");
@@ -463,6 +489,13 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
         }
 
+        private async void UpdateSprint()
+        {
+            await this._issueService.MoveIssueToSprintAsync(this.Issue.Key, this.SelectedSprint.Id);
+
+            UpdateIssueAsync();
+        }
+
         private void EnableEditSummary(object parameter)
         {
             this.IsEditingSummary = true;
@@ -529,6 +562,16 @@ namespace JiraEX.ViewModel
         private void CancelEditAssignee(object parameter)
         {
             this.IsEditingAssignee = false;
+        }
+
+        private void EnableEditSprint(object parameter)
+        {
+            this.IsEditingSprint = true;
+        }
+
+        private void CancelEditSprint(object parameter)
+        {
+            this.IsEditingSprint = false;
         }
 
         private void EnableEditFixVersions(object parameter)
@@ -645,6 +688,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public bool IsEditingSprint
+        {
+            get { return this._isEditingSprint; }
+            set
+            {
+                this._isEditingSprint = value;
+                OnPropertyChanged("IsEditingSprint");
+            }
+        }
+
         private bool IsPropertyEditable(string propertyName)
         {
             bool ret = false;
@@ -685,10 +738,10 @@ namespace JiraEX.ViewModel
 
         public ObservableCollection<Attachment> AttachmentsList
         {
-            get { return this._attachmentsList; }
+            get { return this._attachmentList; }
             set
             {
-                this._attachmentsList = value;
+                this._attachmentList = value;
                 OnPropertyChanged("AttachmentsList");
             }
         }
@@ -753,6 +806,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public ObservableCollection<Sprint> SprintList
+        {
+            get { return this._sprintList; }
+            set
+            {
+                this._sprintList = value;
+                OnPropertyChanged("SprintList");
+            }
+        }
+
         public User SelectedAssignee
         {
             get { return this._selectedAssignee; }
@@ -770,6 +833,27 @@ namespace JiraEX.ViewModel
 
                 OnPropertyChanged("SelectedAssignee");
                 this.IsEditingAssignee = false;
+            }
+        }
+
+        public Sprint SelectedSprint
+        {
+            get { return this._selectedSprint; }
+            set
+            {
+                if (this._selectedAssignee != null)
+                {
+                    this._selectedSprint = value;
+                    this.UpdateSprint();
+                }
+                else
+                {
+                    this._selectedSprint = value;
+                }
+                
+                OnPropertyChanged("SelectedSprint");
+
+                this.IsEditingSprint = false;
             }
         }
 
@@ -847,10 +931,10 @@ namespace JiraEX.ViewModel
 
         public ObservableCollection<JiraRESTClient.Model.LabelSuggestion> LabelsList
         {
-            get { return this._labelsList; }
+            get { return this._labelList; }
             set
             {
-                this._labelsList = value;
+                this._labelList = value;
                 OnPropertyChanged("LabelsList");
             }
         }
