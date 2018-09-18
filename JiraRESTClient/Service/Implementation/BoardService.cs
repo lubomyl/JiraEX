@@ -24,9 +24,9 @@ namespace JiraRESTClient.Service.Implementation
         }
 
         /// <summary>
-        /// <see cref="IBoardService.GetAllBoards"/>
+        /// <see cref="IBoardService.GetAllBoardsAsync"/>
         /// </summary>
-        public Task<BoardList> GetAllBoards()
+        public Task<BoardList> GetAllBoardsAsync()
         {
             return Task.Run(() => {
                 var resource = "board";
@@ -35,5 +35,13 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<SprintList> GetAllSprintsByBoardIdAsync(string boardId)
+        {
+            return Task.Run(() => {
+                var resource = $"board/{boardId}/sprint";
+
+                return this._baseService.GetAgileResource<SprintList>(resource);
+            });
+        }
     }
 }

@@ -326,7 +326,7 @@
                         </TextBlock>
                     </Grid>
                     
-                    <ComboBox StaysOpenOnEdit="True" 
+                    <ComboBox StaysOpenOnEdit="True"
                               ItemsSource="{Binding FixVersionsList}"
                               Margin="0 0 5 0"
                               Visibility="{Binding IsEditingFixVersions, Converter={StaticResource TrueToVisibleConverter}}">
