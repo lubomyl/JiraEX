@@ -241,8 +241,31 @@
             <!-- Sprint -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
-                <TextBlock Style="{StaticResource PlainText}"
-                           Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"/>
+                
+                <Grid>
+                    <TextBlock Style="{StaticResource PlainText}"
+                               MinWidth="100" MinHeight="10"
+                               Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"
+                               Visibility="{Binding IsEditingSprint, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding EditSprintCommand}" MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+
+                    <ComboBox ItemsSource="{Binding SprintList}"
+                        Margin="0 0 5 0"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="Id"
+                        Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"
+                        SelectedValue="{Binding Path=Name}"
+                        SelectedItem="{Binding SelectedSprint}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditSprintCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
             </StackPanel>
 
             <!-- Labels -->

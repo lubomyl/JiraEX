@@ -355,6 +355,12 @@ namespace JiraEX.ViewModel
 
             foreach (Sprint s in sprintsList.Values)
             {
+
+                if(s.Id == this.Issue.Fields.Sprint.Id)
+                {
+                    this.SelectedSprint = s;
+                }
+
                 this.SprintList.Add(s);
             }
 

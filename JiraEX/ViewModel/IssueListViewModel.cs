@@ -71,8 +71,6 @@ namespace JiraEX.ViewModel
 
             var issueList = await issueTask as IssueList;
 
-            Debug.WriteLine("ISSUES LIST: " + issueTask.IsCompleted);
-
             this.IssueList.Clear();
 
             foreach (Issue i in issueList.Issues)
