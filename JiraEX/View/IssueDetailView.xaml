@@ -60,11 +60,10 @@
 
         <!-- Parent, Type, Status, Priority -->
         <StackPanel Orientation="Horizontal">
-            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
+            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FFFFFF"
                     Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}">
                 <TextBlock>
-                    <Hyperlink Command="{Binding ShowParentIssueCommand}" 
-                                    CommandParameter="{Binding}">
+                    <Hyperlink Command="{Binding ShowIssueCommand}" CommandParameter="{Binding Issue.Fields.Parent}">
                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" Text="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" />
                     </Hyperlink>
                 </TextBlock>
@@ -208,6 +207,32 @@
                         Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
             </StackPanel>
 
+            <!-- Sub-task/s -->
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding HaveSubtasks, Converter={StaticResource TrueToVisibleConverter}}">
+                <Label Style="{StaticResource LabelFaded}">Subtasks:</Label>
+
+                <ItemsControl ItemsSource="{Binding Issue.Fields.Subtasks}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FFFFFF">
+                                <TextBlock>
+                                    <Hyperlink Command="{Binding DataContext.ShowIssueCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}">
+                                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Key, Mode=OneWay}" Text="{Binding Key, Mode=OneWay}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+
+            </StackPanel>
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Assignee:</Label>

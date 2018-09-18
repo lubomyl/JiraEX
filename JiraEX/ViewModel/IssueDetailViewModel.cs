@@ -35,6 +35,7 @@ namespace JiraEX.ViewModel
         private bool _isSubTaskCreatable = false;
         private bool _isFixVersionsEditable = false;
         private bool _isAffectsVersionsEditable = false;
+        private bool _haveSubtasks = false;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -53,7 +54,8 @@ namespace JiraEX.ViewModel
         private User _selectedAssignee;
         private Sprint _selectedSprint;
 
-        private bool isInitializing = true;
+        private bool _isInitializingSprints = true;
+        private bool _isInitializingAssignees = true;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -86,7 +88,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateSubTaskCommand { get; set; }
 
-        public DelegateCommand ShowParentIssueCommand { get; set; }
+        public DelegateCommand ShowIssueCommand { get; set; }
 
         public DelegateCommand EditAssigneeCommand { get; set; }
         public DelegateCommand CancelEditAssigneeCommand { get; set; }
@@ -119,6 +121,7 @@ namespace JiraEX.ViewModel
             GetTransitionsAsync();
             GetEditablePropertiesAsync();
             CheckSubTaskCreatable();
+            CheckHaveSubtasks();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetSprintsAsync();
@@ -126,8 +129,6 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
 
             SetPanelTitles();
-
-            this.isInitializing = false;
         }
 
         private void CheckSubTaskCreatable()
@@ -139,6 +140,14 @@ namespace JiraEX.ViewModel
                     this.IsSubTaskCreatable = true;
                     break;
                 }
+            }
+        }
+
+        private void CheckHaveSubtasks()
+        {
+            if(this._issue.Fields.Subtasks.Count != 0)
+            {
+                this.HaveSubtasks = true;
             }
         }
 
@@ -180,7 +189,7 @@ namespace JiraEX.ViewModel
 
             this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
 
-            this.ShowParentIssueCommand = new DelegateCommand(ShowParentIssue);
+            this.ShowIssueCommand = new DelegateCommand(ShowIssue);
 
             this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
             this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
@@ -247,9 +256,11 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
         }
 
-        private async void ShowParentIssue(object sender)
+        private async void ShowIssue(object sender)
         {
-            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Fields.Parent.Key);
+            Issue issue = sender as Issue;
+
+            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
 
             this._parent.ShowIssueDetail(completeIssue, this._project);
         }
@@ -348,6 +359,8 @@ namespace JiraEX.ViewModel
                     this.SelectedAssignee = u;
                 }
             }
+
+            this._isInitializingAssignees = false;
         }
 
         private async void GetSprintsAsync()
@@ -373,6 +386,7 @@ namespace JiraEX.ViewModel
                 }
             }
 
+            this._isInitializingSprints = false;
         }
         private async void GetLabelsAsync()
         {
@@ -836,7 +850,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                if (!this.isInitializing)
+                if (!this._isInitializingAssignees)
                 {
                     this._selectedAssignee = value;
                     this.AssignAsync();
@@ -856,7 +870,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedSprint; }
             set
             {
-                if (!this.isInitializing)
+                if (!this._isInitializingSprints)
                 {
                     this._selectedSprint = value;
                     this.UpdateSprint();
@@ -921,6 +935,16 @@ namespace JiraEX.ViewModel
             {
                 this._isAffectsVersionsEditable = value;
                 OnPropertyChanged("IsAffectsVersionsEditable");
+            }
+        }
+
+        public bool HaveSubtasks
+        {
+            get { return this._haveSubtasks; }
+            set
+            {
+                this._haveSubtasks = value;
+                OnPropertyChanged("HaveSubtasks");
             }
         }
 
