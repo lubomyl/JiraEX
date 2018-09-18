@@ -38,7 +38,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, int sprintId)
+        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, string sprintId)
         {
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/{sprintId}/issue";
@@ -56,12 +56,12 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task UpdateIssuePropertyAsync(string issueKey, string propertyName, object newValue)
+        public Task UpdateIssuePropertyAsync(string issueKey, string action, string propertyName, object newValue)
         {
             return Task.Run(() => {
                 newValue = JsonConvert.SerializeObject(newValue);
 
-                string updateString = $"{{\"update\":{{\"{propertyName}\":[{{\"set\":{newValue}}}]}}}}";
+                string updateString = $"{{\"update\":{{\"{propertyName}\":[{{\"{action}\":{newValue}}}]}}}}";
 
                 var resource = $"issue/{issueKey}";
 
@@ -179,6 +179,26 @@ namespace JiraRESTClient.Service.Implementation
                 var resource = $"issue/{issueKey}";
 
                 this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+            });
+        }
+
+        public Task<LabelsList> GetAllLabelsAsync(string queryString)
+        {
+            return Task.Run(() => {
+                var resource = $"labels/suggest?query={queryString}";
+
+                return this._baseService.Get10Resource<LabelsList>(resource);
+            });
+        }
+
+        public Task MoveIssueToSprintAsync(string issueKey, string sprintId)
+        {
+            return Task.Run(() => {
+                string updateString = $"{{\"issues\":[\"{issueKey}\"]}}";
+
+                var resource = $"sprint/{sprintId}/issue";
+
+                this._baseService.PostAgileResourceContent(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
     }

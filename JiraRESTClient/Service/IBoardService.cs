@@ -18,7 +18,9 @@ namespace JiraRESTClient.Service
         /// Async method to get a <see cref="List{Board}"/> object containg all <see cref="Board"/> related to currently authenticated user.
         /// </summary>
         /// <returns>Task containing deserialized <see cref="BoardList"/> model class object.</returns>
-        Task<BoardList> GetAllBoards();
+        Task<BoardList> GetAllBoardsAsync();
+
+        Task<SprintList> GetAllSprintsByBoardIdAsync(string boardId);
 
     }
 }

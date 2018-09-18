@@ -47,7 +47,7 @@ namespace JiraEX.ViewModel
 
             this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
 
-            this._defaultSprintSelected = new Sprint(0, "All sprints");
+            this._defaultSprintSelected = new Sprint("0", "All sprints");
 
             OleMenuCommandService service = JiraPackage.Mcs;
 
@@ -67,11 +67,9 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
 
             var issueList = await issueTask as IssueList;
-
-            Debug.WriteLine("ISSUES LIST: " + issueTask.IsCompleted);
 
             this.IssueList.Clear();
 
@@ -83,7 +81,7 @@ namespace JiraEX.ViewModel
 
         private void GetIssuesBySprintAsync()
         {
-            System.Threading.Tasks.Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
 
             var issueList = issueTask.Result as IssueList;
 
@@ -97,7 +95,7 @@ namespace JiraEX.ViewModel
 
         private void GetSprintsAsync()
         {
-            System.Threading.Tasks.Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
+            Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
 
             var sprintList = sprintTask.Result as SprintList;
 
@@ -142,7 +140,7 @@ namespace JiraEX.ViewModel
             set {
                 this._selectedSprint = value;
 
-                if (this._selectedSprint.Id == 0)
+                if (this._selectedSprint.Id.Equals("0"))
                 {
                     this.GetIssuesAsync();
                 }
