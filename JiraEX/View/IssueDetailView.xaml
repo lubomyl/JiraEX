@@ -24,53 +24,53 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical"
-                Margin="8 0 8 0">
+                    Margin="8 0 8 0">
 
         <!-- Summary -->
         <Grid Margin="0 0 0 10">
             <TextBlock Text="{Binding Issue.Fields.Summary}" 
-                TextWrapping="Wrap"
-                VerticalAlignment="Center"
-                Visibility="{Binding IsEditingSummary, Converter={StaticResource FalseToVisibleConverter}}"
-                Style="{StaticResource TitleText}">
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource FalseToVisibleConverter}}"
+                    Style="{StaticResource TitleText}">
                 <TextBlock.InputBindings>
                     <MouseBinding Command="{Binding EditSummaryCommand}" MouseAction="LeftClick" />
                 </TextBlock.InputBindings>
             </TextBlock>
 
             <TextBox Text="{Binding Issue.Fields.Summary}" 
-                TextWrapping="Wrap"
-                VerticalAlignment="Center"
-                Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"/>
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"/>
         </Grid>
 
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding ConfirmEditSummaryCommand}" CommandParameter="{Binding ElementName=This}"
-                Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
-                Content="Save" 
-                HorizontalAlignment="Left"
-                Height="25" x:Name="ConfirmEditSummary" Width="75" Margin="0 0 5 10"/>
+                    Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
+                    Content="Save" 
+                    HorizontalAlignment="Left"
+                    Height="25" x:Name="ConfirmEditSummary" Width="75" Margin="0 0 5 10"/>
 
             <Button Command="{Binding CancelEditSummaryCommand}" CommandParameter="{Binding ElementName=This}"
-                    Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
-                    Content="Cancel" 
-                    HorizontalAlignment="Left"
-                    Height="25" x:Name="CancelEditSummary" Width="75" Margin="0 0 0 10"/>
+                        Visibility="{Binding IsEditingSummary, Converter={StaticResource TrueToVisibleConverter}}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" x:Name="CancelEditSummary" Width="75" Margin="0 0 0 10"/>
         </StackPanel>
 
         <!-- Parent, Type, Status, Priority -->
         <StackPanel Orientation="Horizontal">
             <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FFFFFF"
-                    Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}">
+                        Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}">
                 <TextBlock>
-                    <Hyperlink Command="{Binding ShowIssueCommand}" CommandParameter="{Binding Issue.Fields.Parent}">
-                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" Text="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" />
-                    </Hyperlink>
-                </TextBlock>
+                        <Hyperlink Command="{Binding ShowIssueCommand}" CommandParameter="{Binding Issue.Fields.Parent}">
+                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" Text="{Binding Issue.Fields.Parent.Key, Mode=OneWay}" />
+                        </Hyperlink>
+                    </TextBlock>
             </Border>
 
             <TextBlock Style="{StaticResource TitleText}" Text="/" Margin="0 0 5 0"
-                       Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
+                           Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
 
             <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50">
                 <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
@@ -78,7 +78,7 @@
 
             <Grid>
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FF4B4D50"
-                                Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedTransition.Name, Mode=OneWay}" Text="{Binding SelectedTransition.Name, Mode=OneWay}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditTransitionCommand}" MouseAction="LeftClick" />
@@ -87,12 +87,12 @@
                 </Border>
 
                 <ComboBox ItemsSource="{Binding TransitionList}"
-                        Margin="0 0 5 0"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="Id"
-                        Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
-                        SelectedValue="{Binding Path=Name}"
-                        SelectedItem="{Binding SelectedTransition}">
+                            Margin="0 0 5 0"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedTransition}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
@@ -103,7 +103,7 @@
 
             <Grid Visibility="{Binding IsPriorityEditable, Converter={StaticResource TrueToVisibleConverter}}">
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="{Binding SelectedPriority.StatusColor, Mode=OneWay}"
-                                Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
+                                    Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriority.Name, Mode=OneWay}" Text="{Binding SelectedPriority.Name, Mode=OneWay}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditPriorityCommand}" MouseAction="LeftClick" />
@@ -112,12 +112,12 @@
                 </Border>
 
                 <ComboBox ItemsSource="{Binding PriorityList}"
-                        Margin="0 0 5 0"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="Id"
-                        Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
-                        SelectedValue="{Binding Path=Name}"
-                        SelectedItem="{Binding SelectedPriority}">
+                            Margin="0 0 5 0"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedPriority}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
@@ -126,7 +126,7 @@
                 </ComboBox>
             </Grid>
         </StackPanel>
-            
+
         <!-- Created, Updated -->
         <Grid>
             <Grid.RowDefinitions>
@@ -141,75 +141,75 @@
 
             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelFaded}">Created</Label>
             <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource PlainTextFaded}"
-                           Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
+                               Text="{Binding Issue.Fields.Created, Mode=OneWay}"/>
 
             <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelFaded}">Updated</Label>
             <TextBlock Grid.Row="1" Grid.Column="1" Opacity="0.5" Style="{StaticResource PlainTextFaded}"
-                           Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
+                               Text="{Binding Issue.Fields.Updated, Mode=OneWay}"/>
         </Grid>
 
         <!-- Add attachment, Create sub-task-->
         <StackPanel Orientation="Horizontal">
             <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                    <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
-                                CommandParameter="{Binding}">
-                        Attachment...
-                    </Hyperlink>
+                        <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
+                                    CommandParameter="{Binding}">
+                            Attachment...
+                        </Hyperlink>
             </TextBlock>
 
             <TextBlock Style="{StaticResource PlainText}"
-                       Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
-                    <Hyperlink Command="{Binding CreateSubTaskCommand}" 
-                                CommandParameter="{Binding}">
-                        Sub-task...
-                    </Hyperlink>
+                           Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
+                        <Hyperlink Command="{Binding CreateSubTaskCommand}" 
+                                    CommandParameter="{Binding}">
+                            Sub-task...
+                        </Hyperlink>
             </TextBlock>
         </StackPanel>
 
         <Separator Margin="0,5,0,0"
-               Style="{StaticResource PaneHorizontalSeparator}" />
+                   Style="{StaticResource PaneHorizontalSeparator}" />
 
         <StackPanel Orientation="Vertical"
-                Margin="8 0 8 0">
+                    Margin="8 0 8 0">
 
             <!-- Description -->
             <Label Style="{StaticResource LabelFaded}">Description:</Label>
             <Grid Margin="0 0 0 10">
                 <TextBlock
-                    Text="{Binding Issue.Fields.Description}"
-                    TextWrapping="Wrap"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsEditingDescription, Converter={StaticResource FalseToVisibleConverter}}"
-                    Style="{StaticResource PlainText}">
+                        Text="{Binding Issue.Fields.Description}"
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource FalseToVisibleConverter}}"
+                        Style="{StaticResource PlainText}">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding EditDescriptionCommand}" MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
                 </TextBlock>
 
                 <TextBox Text="{Binding Issue.Fields.Description}" 
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
+                        AcceptsReturn="True"
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
             </Grid>
 
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding ConfirmEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                    Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
-                    Content="Save" 
-                    HorizontalAlignment="Left"
-                    Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                        Content="Save" 
+                        HorizontalAlignment="Left"
+                        Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
 
                 <Button Command="{Binding CancelEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
-                        Content="Cancel" 
-                        HorizontalAlignment="Left"
-                        Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
+                            Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
+                            Content="Cancel" 
+                            HorizontalAlignment="Left"
+                            Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
             </StackPanel>
 
             <!-- Sub-task/s -->
             <StackPanel Orientation="Horizontal"
-                        Visibility="{Binding HaveSubtasks, Converter={StaticResource TrueToVisibleConverter}}">
+                            Visibility="{Binding HaveSubtasks, Converter={StaticResource TrueToVisibleConverter}}">
                 <Label Style="{StaticResource LabelFaded}">Subtasks:</Label>
 
                 <ItemsControl ItemsSource="{Binding Issue.Fields.Subtasks}">
@@ -222,38 +222,38 @@
                         <DataTemplate>
                             <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" Background="#FFFFFF">
                                 <TextBlock>
-                                    <Hyperlink Command="{Binding DataContext.ShowIssueCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}">
-                                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Key, Mode=OneWay}" Text="{Binding Key, Mode=OneWay}" />
-                                    </Hyperlink>
-                                </TextBlock>
+                                        <Hyperlink Command="{Binding DataContext.ShowIssueCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}">
+                                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Key, Mode=OneWay}" Text="{Binding Key, Mode=OneWay}" />
+                                        </Hyperlink>
+                                    </TextBlock>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
+
 
             </StackPanel>
             <!-- Assignee -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
-                
+
                 <Grid>
                     <TextBlock Style="{StaticResource PlainText}"
-                               MinWidth="100" MinHeight="10"
-                               Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"
-                               Visibility="{Binding IsEditingAssignee, Converter={StaticResource FalseToVisibleConverter}}">
+                                   MinWidth="100" MinHeight="10"
+                                   Text="{Binding Issue.Fields.Assignee.Name, Mode=OneWay}"
+                                   Visibility="{Binding IsEditingAssignee, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditAssigneeCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>
                     </TextBlock>
 
                     <ComboBox ItemsSource="{Binding AssigneeList}"
-                        Margin="0 0 5 0"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="Id"
-                        Visibility="{Binding IsEditingAssignee, Converter={StaticResource TrueToVisibleConverter}}"
-                        SelectedValue="{Binding Path=Name}"
-                        SelectedItem="{Binding SelectedAssignee}">
+                            Margin="0 0 5 0"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingAssignee, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedAssignee}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditAssigneeCommand}"/>
@@ -266,24 +266,24 @@
             <!-- Sprint -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
-                
+
                 <Grid>
                     <TextBlock Style="{StaticResource PlainText}"
-                               MinWidth="100" MinHeight="10"
-                               Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"
-                               Visibility="{Binding IsEditingSprint, Converter={StaticResource FalseToVisibleConverter}}">
+                                   MinWidth="100" MinHeight="10"
+                                   Text="{Binding Issue.Fields.Sprint.Name, Mode=OneWay}"
+                                   Visibility="{Binding IsEditingSprint, Converter={StaticResource FalseToVisibleConverter}}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditSprintCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>
                     </TextBlock>
 
                     <ComboBox ItemsSource="{Binding SprintList}"
-                        Margin="0 0 5 0"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="Id"
-                        Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"
-                        SelectedValue="{Binding Path=Name}"
-                        SelectedItem="{Binding SelectedSprint}">
+                            Margin="0 0 5 0"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedSprint}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditSprintCommand}"/>
@@ -300,7 +300,7 @@
                 <Grid>
                     <Grid>
                         <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}"
-                            Visibility="{Binding IsEditingLabels, Converter={StaticResource FalseToVisibleConverter}}">
+                                Visibility="{Binding IsEditingLabels, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"/>
@@ -323,15 +323,15 @@
                     </Grid>
 
                     <ComboBox StaysOpenOnEdit="True" 
-                              ItemsSource="{Binding LabelsList}"
-                              Margin="0 0 5 0"
-                              Visibility="{Binding IsEditingLabels, Converter={StaticResource TrueToVisibleConverter}}">
+                                  ItemsSource="{Binding LabelsList}"
+                                  Margin="0 0 5 0"
+                                  Visibility="{Binding IsEditingLabels, Converter={StaticResource TrueToVisibleConverter}}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox Command="{Binding DataContext.CheckedLabelsCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                          Content="{Binding Label}" 
-                                          IsChecked="{Binding CheckedStatus}" 
-                                          CommandParameter="{Binding}">
+                                              Content="{Binding Label}" 
+                                              IsChecked="{Binding CheckedStatus}" 
+                                              CommandParameter="{Binding}">
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -352,7 +352,7 @@
                 <Grid>
                     <Grid>
                         <ItemsControl ItemsSource="{Binding Issue.Fields.FixVersions}"
-                            Visibility="{Binding IsEditingFixVersions, Converter={StaticResource FalseToVisibleConverter}}">
+                                Visibility="{Binding IsEditingFixVersions, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"/>
@@ -373,17 +373,17 @@
                             </TextBlock.InputBindings>
                         </TextBlock>
                     </Grid>
-                    
+
                     <ComboBox StaysOpenOnEdit="True"
-                              ItemsSource="{Binding FixVersionsList}"
-                              Margin="0 0 5 0"
-                              Visibility="{Binding IsEditingFixVersions, Converter={StaticResource TrueToVisibleConverter}}">
+                                  ItemsSource="{Binding FixVersionsList}"
+                                  Margin="0 0 5 0"
+                                  Visibility="{Binding IsEditingFixVersions, Converter={StaticResource TrueToVisibleConverter}}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox Command="{Binding DataContext.CheckedFixVersionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                          Content="{Binding Name}" 
-                                          IsChecked="{Binding CheckedStatus}" 
-                                          CommandParameter="{Binding}">
+                                              Content="{Binding Name}" 
+                                              IsChecked="{Binding CheckedStatus}" 
+                                              CommandParameter="{Binding}">
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -398,13 +398,14 @@
             </StackPanel>
 
             <!-- AffectsVersions -->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding IsAffectsVersionsEditable, Converter={StaticResource TrueToVisibleConverter}}">
                 <Label Style="{StaticResource LabelFaded}">Affects versions:</Label>
-                
+
                 <Grid>
                     <Grid>
                         <ItemsControl ItemsSource="{Binding Issue.Fields.Versions}"
-                            Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource FalseToVisibleConverter}}">
+                                Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"/>
@@ -419,7 +420,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <TextBlock MinWidth="100" MinHeight="10"> 
+                        <TextBlock MinWidth="100" MinHeight="10">
                             <TextBlock.InputBindings>
                                 <MouseBinding Command="{Binding EditAffectsVersionsCommand}" MouseAction="LeftClick" />
                             </TextBlock.InputBindings>
@@ -427,15 +428,15 @@
                     </Grid>
 
                     <ComboBox StaysOpenOnEdit="True" 
-                              ItemsSource="{Binding AffectsVersionsList}"
-                              Margin="0 0 5 0"
-                              Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource TrueToVisibleConverter}}">
+                                  ItemsSource="{Binding AffectsVersionsList}"
+                                  Margin="0 0 5 0"
+                                  Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource TrueToVisibleConverter}}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox Command="{Binding DataContext.CheckedAffectsVersionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                          Content="{Binding Name}" 
-                                          IsChecked="{Binding CheckedStatus}" 
-                                          CommandParameter="{Binding}">
+                                              Content="{Binding Name}" 
+                                              IsChecked="{Binding CheckedStatus}" 
+                                              CommandParameter="{Binding}">
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -454,8 +455,8 @@
             <Label Style="{StaticResource LabelFaded}">Attachments:</Label>
 
             <ListBox ItemsSource="{Binding AttachmentsList}"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                     BorderThickness="0">
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                         BorderThickness="0">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -471,14 +472,14 @@
                     <DataTemplate>
                         <Grid>
                             <Border Width="100" Height="120" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
-                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                                        Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
                                 <DockPanel LastChildFill="False">
                                     <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Text="{Binding Filename}" TextWrapping="Wrap" />
 
                                     <Button DockPanel.Dock="Bottom" Command="{Binding DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
-                                            CommandParameter="{Binding}" Margin="0 5 0 0"
-                                        Content="Delete" 
-                                        Height="25" Width="75"/>
+                                                CommandParameter="{Binding}" Margin="0 5 0 0"
+                                            Content="Delete" 
+                                            Height="25" Width="75"/>
 
                                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                                         <Image Width="14">
