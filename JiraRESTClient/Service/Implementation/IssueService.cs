@@ -38,7 +38,7 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, int sprintId)
+        public Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, string sprintId)
         {
             return Task.Run(() => {
                 var resource = $"board/{boardId}/sprint/{sprintId}/issue";
@@ -188,6 +188,17 @@ namespace JiraRESTClient.Service.Implementation
                 var resource = $"labels/suggest?query={queryString}";
 
                 return this._baseService.Get10Resource<LabelsList>(resource);
+            });
+        }
+
+        public Task MoveIssueToSprintAsync(string issueKey, string sprintId)
+        {
+            return Task.Run(() => {
+                string updateString = $"{{\"issues\":[\"{issueKey}\"]}}";
+
+                var resource = $"sprint/{sprintId}/issue";
+
+                this._baseService.PostAgileResourceContent(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
     }

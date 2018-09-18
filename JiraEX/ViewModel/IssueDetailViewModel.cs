@@ -53,6 +53,8 @@ namespace JiraEX.ViewModel
         private User _selectedAssignee;
         private Sprint _selectedSprint;
 
+        private bool isInitializing = true;
+
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
         private ObservableCollection<Attachment> _attachmentList;
@@ -124,6 +126,8 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
 
             SetPanelTitles();
+
+            this.isInitializing = false;
         }
 
         private void CheckSubTaskCreatable()
@@ -355,13 +359,18 @@ namespace JiraEX.ViewModel
 
             foreach (Sprint s in sprintsList.Values)
             {
-
-                if(s.Id == this.Issue.Fields.Sprint.Id)
+                if (!s.State.Equals("closed"))
                 {
-                    this.SelectedSprint = s;
-                }
+                    if (this.Issue.Fields.Sprint != null)
+                    {
+                        if (s.Id == this.Issue.Fields.Sprint.Id)
+                        {
+                            this.SelectedSprint = s;
+                        }
+                    }
 
-                this.SprintList.Add(s);
+                    this.SprintList.Add(s);
+                }
             }
 
         }
@@ -762,7 +771,7 @@ namespace JiraEX.ViewModel
                     this._selectedPriority = value;
                     this.UpdatePriorityAsync();
                 }
-                else if (this._selectedPriority == null)
+                else
                 {
                     this._selectedPriority = value;
                 }
@@ -827,7 +836,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                if (this._selectedAssignee != null)
+                if (!this.isInitializing)
                 {
                     this._selectedAssignee = value;
                     this.AssignAsync();
@@ -847,7 +856,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedSprint; }
             set
             {
-                if (this._selectedAssignee != null)
+                if (!this.isInitializing)
                 {
                     this._selectedSprint = value;
                     this.UpdateSprint();

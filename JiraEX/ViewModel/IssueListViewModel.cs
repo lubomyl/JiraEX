@@ -47,7 +47,7 @@ namespace JiraEX.ViewModel
 
             this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
 
-            this._defaultSprintSelected = new Sprint(0, "All sprints");
+            this._defaultSprintSelected = new Sprint("0", "All sprints");
 
             OleMenuCommandService service = JiraPackage.Mcs;
 
@@ -140,7 +140,7 @@ namespace JiraEX.ViewModel
             set {
                 this._selectedSprint = value;
 
-                if (this._selectedSprint.Id == 0)
+                if (this._selectedSprint.Id.Equals("0"))
                 {
                     this.GetIssuesAsync();
                 }
