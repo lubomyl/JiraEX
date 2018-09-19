@@ -35,6 +35,13 @@ namespace JiraEX.ViewModel
         private bool _isSubTaskCreatable = false;
         private bool _isFixVersionsEditable = false;
         private bool _isAffectsVersionsEditable = false;
+        private bool _haveSubtasks = false;
+        private bool _haveAttachments = false;
+        private bool _isDescriptionEmpty = true;
+        private bool _isSprintEmpty = true;
+        private bool _isLabelsEmpty = true;
+        private bool _isFixVersionsEmpty = true;
+        private bool _isAffectsVersionsEmpty = true;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -47,13 +54,15 @@ namespace JiraEX.ViewModel
 
         private Issue _issue;
         private BoardProject _project;
+        private User _unassigned;
 
         private Priority _selectedPriority;
         private Transition _selectedTransition;
         private User _selectedAssignee;
         private Sprint _selectedSprint;
 
-        private bool isInitializing = true;
+        private bool _isInitializingSprints = true;
+        private bool _isInitializingAssignees = true;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -86,7 +95,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateSubTaskCommand { get; set; }
 
-        public DelegateCommand ShowParentIssueCommand { get; set; }
+        public DelegateCommand ShowIssueCommand { get; set; }
 
         public DelegateCommand EditAssigneeCommand { get; set; }
         public DelegateCommand CancelEditAssigneeCommand { get; set; }
@@ -117,17 +126,17 @@ namespace JiraEX.ViewModel
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
-            GetEditablePropertiesAsync();
-            CheckSubTaskCreatable();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetSprintsAsync();
 
+            GetEditablePropertiesAsync();
+            CheckSubTaskCreatable();
+            
+            CheckEmptyFields();
             UpdateIssueAsync();
 
             SetPanelTitles();
-
-            this.isInitializing = false;
         }
 
         private void CheckSubTaskCreatable()
@@ -142,8 +151,70 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private void CheckEmptyFields()
+        {
+            if (this._issue.Fields.Subtasks.Count != 0)
+            {
+                this.HaveSubtasks = true;
+            } else
+            {
+                this.HaveSubtasks = false;
+            }
+
+            if (this._issue.Fields.Attachment.Count != 0)
+            {
+                this.HaveAttachments = true;
+            }
+            else
+            {
+                this.HaveAttachments = false;
+            }
+
+            if (this._issue.Fields.Description != null)
+            {
+                this.IsDescriptionEmpty = false;
+            } else
+            {
+                this.IsDescriptionEmpty = true;
+            }
+
+            if (this._issue.Fields.Sprint != null) {
+                this.IsSprintEmpty = false;
+            } else
+            {
+                this.IsSprintEmpty = true;
+            }
+
+            if (this._issue.Fields.Labels.Length > 0)
+            {
+                this.IsLabelsEmpty = false;
+            } else
+            {
+                this.IsLabelsEmpty = true;
+            } 
+
+            if(this._issue.Fields.FixVersions.Count > 0)
+            {
+                this.IsFixVersionsEmpty = false;
+            }
+            else
+            {
+                this.IsFixVersionsEmpty = true;
+            }
+
+            if(this._issue.Fields.Versions.Count > 0)
+            {
+                this.IsAffectsVersionsEmpty = false;
+            } else
+            {
+                this.IsAffectsVersionsEmpty = true;
+            }
+        }
+
         private void Initialize()
         {
+            this._unassigned = new User("Unassigned", "-1");
+
             this._issueService = new IssueService();
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
@@ -180,7 +251,7 @@ namespace JiraEX.ViewModel
 
             this.CreateSubTaskCommand = new DelegateCommand(CreateSubTask);
 
-            this.ShowParentIssueCommand = new DelegateCommand(ShowParentIssue);
+            this.ShowIssueCommand = new DelegateCommand(ShowIssue);
 
             this.EditAssigneeCommand = new DelegateCommand(EnableEditAssignee);
             this.CancelEditAssigneeCommand = new DelegateCommand(CancelEditAssignee);
@@ -247,9 +318,11 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
         }
 
-        private async void ShowParentIssue(object sender)
+        private async void ShowIssue(object sender)
         {
-            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Fields.Parent.Key);
+            Issue issue = sender as Issue;
+
+            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
 
             this._parent.ShowIssueDetail(completeIssue, this._project);
         }
@@ -339,15 +412,27 @@ namespace JiraEX.ViewModel
 
             this.AssigneeList.Clear();
 
+            this.AssigneeList.Add(this._unassigned);
+
             foreach (User u in userList)
             {
                 this.AssigneeList.Add(u);
 
-                if (u.Name == this._issue.Fields.Status.Name)
+                if (this._issue.Fields.Assignee != null)
                 {
-                    this.SelectedAssignee = u;
+                    if (u.Name == this._issue.Fields.Assignee.Name)
+                    {
+                        this.SelectedAssignee = u;
+                    }
                 }
             }
+
+            if(this.SelectedAssignee == null)
+            {
+                this.SelectedAssignee = this.AssigneeList[0];
+            }
+
+            this._isInitializingAssignees = false;
         }
 
         private async void GetSprintsAsync()
@@ -373,6 +458,7 @@ namespace JiraEX.ViewModel
                 }
             }
 
+            this._isInitializingSprints = false;
         }
         private async void GetLabelsAsync()
         {
@@ -478,6 +564,7 @@ namespace JiraEX.ViewModel
             this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
 
             UpdateAttachments();
+            CheckEmptyFields();
         }
 
         private void UpdateAttachments()
@@ -836,7 +923,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                if (!this.isInitializing)
+                if (!this._isInitializingAssignees)
                 {
                     this._selectedAssignee = value;
                     this.AssignAsync();
@@ -856,7 +943,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedSprint; }
             set
             {
-                if (!this.isInitializing)
+                if (!this._isInitializingSprints)
                 {
                     this._selectedSprint = value;
                     this.UpdateSprint();
@@ -921,6 +1008,76 @@ namespace JiraEX.ViewModel
             {
                 this._isAffectsVersionsEditable = value;
                 OnPropertyChanged("IsAffectsVersionsEditable");
+            }
+        }
+
+        public bool HaveSubtasks
+        {
+            get { return this._haveSubtasks; }
+            set
+            {
+                this._haveSubtasks = value;
+                OnPropertyChanged("HaveSubtasks");
+            }
+        }
+
+        public bool HaveAttachments
+        {
+            get { return this._haveAttachments; }
+            set
+            {
+                this._haveAttachments = value;
+                OnPropertyChanged("HaveAttachments");
+            }
+        }
+
+        public bool IsDescriptionEmpty
+        {
+            get { return this._isDescriptionEmpty; }
+            set
+            {
+                this._isDescriptionEmpty = value;
+                OnPropertyChanged("IsDescriptionEmpty");
+            }
+        }
+
+        public bool IsSprintEmpty
+        {
+            get { return this._isSprintEmpty; }
+            set
+            {
+                this._isSprintEmpty = value;
+                OnPropertyChanged("IsSprintEmpty");
+            }
+        }
+
+        public bool IsLabelsEmpty
+        {
+            get { return this._isLabelsEmpty; }
+            set
+            {
+                this._isLabelsEmpty = value;
+                OnPropertyChanged("IsLabelsEmpty");
+            }
+        }
+
+        public bool IsFixVersionsEmpty
+        {
+            get { return this._isFixVersionsEmpty; }
+            set
+            {
+                this._isFixVersionsEmpty = value;
+                OnPropertyChanged("IsFixVersionsEmpty");
+            }
+        }
+
+        public bool IsAffectsVersionsEmpty
+        {
+            get { return this._isAffectsVersionsEmpty; }
+            set
+            {
+                this._isAffectsVersionsEmpty = value;
+                OnPropertyChanged("IsAffectsVersionsEmpty");
             }
         }
 

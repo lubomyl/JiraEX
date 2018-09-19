@@ -29,7 +29,7 @@
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <!-- Type -->
             <Grid Margin="0 0 10 0">
-                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Background="#FF4B4D50"
+                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50"
                                         Visibility="{Binding IsEditingType, Converter={StaticResource FalseToVisibleConverter}}">
                     <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedType.Name, Mode=OneWay}" Text="{Binding SelectedType.Name, Mode=OneWay}">
                         <TextBlock.InputBindings>

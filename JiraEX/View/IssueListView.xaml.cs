@@ -36,8 +36,8 @@ namespace JiraEX.View
 
         void IssueSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {   
-            ListBoxItem listBoxItem = sender as ListBoxItem;
-            Issue issue = listBoxItem.Content as Issue;
+            ListBox listBox = sender as ListBox;
+            Issue issue = listBox.SelectedItem as Issue;
 
             this._viewModel.OnItemSelected(issue);
         }

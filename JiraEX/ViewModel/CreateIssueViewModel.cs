@@ -102,7 +102,14 @@ namespace JiraEX.ViewModel
 
         private void CancelCreateIssue(object sender)
         {
-            this._parent.ShowIssuesOfProject(this._project);
+            if (this._parentIssue != null)
+            {
+                this._parent.ShowIssueDetail(this._parentIssue, this._project);
+            }
+            else
+            {
+                this._parent.ShowIssuesOfProject(this._project);
+            }
         }
 
         private void EnableEditType(object parameter)

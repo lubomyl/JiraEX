@@ -42,19 +42,20 @@
         <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
                          BorderThickness="0"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         MouseDoubleClick="IssueSelected_MouseDoubleClick">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="BorderThickness" Value="0 0 0 1"/>
                         <Setter Property="BorderBrush" Value="#FF2D2D30"/>
-                        <EventSetter Event="MouseDoubleClick" Handler="IssueSelected_MouseDoubleClick"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Vertical" Margin="8 0 8 0">
+                                
                                 <Grid Margin="0 3 0 3">
                                     <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
                                         <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5"/>
