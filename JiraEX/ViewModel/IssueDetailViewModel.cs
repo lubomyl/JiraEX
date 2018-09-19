@@ -36,6 +36,12 @@ namespace JiraEX.ViewModel
         private bool _isFixVersionsEditable = false;
         private bool _isAffectsVersionsEditable = false;
         private bool _haveSubtasks = false;
+        private bool _haveAttachments = false;
+        private bool _isDescriptionEmpty = true;
+        private bool _isSprintEmpty = true;
+        private bool _isLabelsEmpty = true;
+        private bool _isFixVersionsEmpty = true;
+        private bool _isAffectsVersionsEmpty = true;
 
         private JiraToolWindowNavigatorViewModel _parent;
 
@@ -48,6 +54,7 @@ namespace JiraEX.ViewModel
 
         private Issue _issue;
         private BoardProject _project;
+        private User _unassigned;
 
         private Priority _selectedPriority;
         private Transition _selectedTransition;
@@ -119,13 +126,14 @@ namespace JiraEX.ViewModel
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
-            GetEditablePropertiesAsync();
-            CheckSubTaskCreatable();
-            CheckHaveSubtasks();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetSprintsAsync();
 
+            GetEditablePropertiesAsync();
+            CheckSubTaskCreatable();
+            
+            CheckEmptyFields();
             UpdateIssueAsync();
 
             SetPanelTitles();
@@ -143,16 +151,70 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void CheckHaveSubtasks()
+        private void CheckEmptyFields()
         {
-            if(this._issue.Fields.Subtasks.Count != 0)
+            if (this._issue.Fields.Subtasks.Count != 0)
             {
                 this.HaveSubtasks = true;
+            } else
+            {
+                this.HaveSubtasks = false;
+            }
+
+            if (this._issue.Fields.Attachment.Count != 0)
+            {
+                this.HaveAttachments = true;
+            }
+            else
+            {
+                this.HaveAttachments = false;
+            }
+
+            if (this._issue.Fields.Description != null)
+            {
+                this.IsDescriptionEmpty = false;
+            } else
+            {
+                this.IsDescriptionEmpty = true;
+            }
+
+            if (this._issue.Fields.Sprint != null) {
+                this.IsSprintEmpty = false;
+            } else
+            {
+                this.IsSprintEmpty = true;
+            }
+
+            if (this._issue.Fields.Labels.Length > 0)
+            {
+                this.IsLabelsEmpty = false;
+            } else
+            {
+                this.IsLabelsEmpty = true;
+            } 
+
+            if(this._issue.Fields.FixVersions.Count > 0)
+            {
+                this.IsFixVersionsEmpty = false;
+            }
+            else
+            {
+                this.IsFixVersionsEmpty = true;
+            }
+
+            if(this._issue.Fields.Versions.Count > 0)
+            {
+                this.IsAffectsVersionsEmpty = false;
+            } else
+            {
+                this.IsAffectsVersionsEmpty = true;
             }
         }
 
         private void Initialize()
         {
+            this._unassigned = new User("Unassigned", "-1");
+
             this._issueService = new IssueService();
             this._priorityService = new PriorityService();
             this._transitionService = new TransitionService();
@@ -350,14 +412,24 @@ namespace JiraEX.ViewModel
 
             this.AssigneeList.Clear();
 
+            this.AssigneeList.Add(this._unassigned);
+
             foreach (User u in userList)
             {
                 this.AssigneeList.Add(u);
 
-                if (u.Name == this._issue.Fields.Status.Name)
+                if (this._issue.Fields.Assignee != null)
                 {
-                    this.SelectedAssignee = u;
+                    if (u.Name == this._issue.Fields.Assignee.Name)
+                    {
+                        this.SelectedAssignee = u;
+                    }
                 }
+            }
+
+            if(this.SelectedAssignee == null)
+            {
+                this.SelectedAssignee = this.AssigneeList[0];
             }
 
             this._isInitializingAssignees = false;
@@ -492,6 +564,7 @@ namespace JiraEX.ViewModel
             this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
 
             UpdateAttachments();
+            CheckEmptyFields();
         }
 
         private void UpdateAttachments()
@@ -945,6 +1018,66 @@ namespace JiraEX.ViewModel
             {
                 this._haveSubtasks = value;
                 OnPropertyChanged("HaveSubtasks");
+            }
+        }
+
+        public bool HaveAttachments
+        {
+            get { return this._haveAttachments; }
+            set
+            {
+                this._haveAttachments = value;
+                OnPropertyChanged("HaveAttachments");
+            }
+        }
+
+        public bool IsDescriptionEmpty
+        {
+            get { return this._isDescriptionEmpty; }
+            set
+            {
+                this._isDescriptionEmpty = value;
+                OnPropertyChanged("IsDescriptionEmpty");
+            }
+        }
+
+        public bool IsSprintEmpty
+        {
+            get { return this._isSprintEmpty; }
+            set
+            {
+                this._isSprintEmpty = value;
+                OnPropertyChanged("IsSprintEmpty");
+            }
+        }
+
+        public bool IsLabelsEmpty
+        {
+            get { return this._isLabelsEmpty; }
+            set
+            {
+                this._isLabelsEmpty = value;
+                OnPropertyChanged("IsLabelsEmpty");
+            }
+        }
+
+        public bool IsFixVersionsEmpty
+        {
+            get { return this._isFixVersionsEmpty; }
+            set
+            {
+                this._isFixVersionsEmpty = value;
+                OnPropertyChanged("IsFixVersionsEmpty");
+            }
+        }
+
+        public bool IsAffectsVersionsEmpty
+        {
+            get { return this._isAffectsVersionsEmpty; }
+            set
+            {
+                this._isAffectsVersionsEmpty = value;
+                OnPropertyChanged("IsAffectsVersionsEmpty");
             }
         }
 

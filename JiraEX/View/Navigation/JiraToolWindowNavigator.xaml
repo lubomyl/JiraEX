@@ -40,9 +40,7 @@
                    Style="{StaticResource PaneHorizontalSeparator}" />
         </StackPanel>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
-        </ScrollViewer>
+        <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
     </DockPanel>
 
 
