@@ -13,7 +13,7 @@ namespace JiraEX.UnitTests.ViewModel
     public class CreateIssueViewModelTests
     {
         Mock<BoardProject> _mockBoardProject;
-        Mock<JiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
+        Mock<IJiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
         Mock<Issue> _mockParent;
 
         CreateIssueViewModel _subTaskViewModel;
@@ -26,7 +26,7 @@ namespace JiraEX.UnitTests.ViewModel
             this._mockBoardProject.Object.CreatableIssueTypesList = new List<IssueType>();
             this._mockBoardProject.Object.CreatableIssueTypesList.Add(new IssueType());
 
-            this._mockJiraToolWindowNavigatorViewModel = new Mock<JiraToolWindowNavigatorViewModel>(It.IsAny<JiraToolWindow>());
+            this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>(It.IsAny<JiraToolWindow>());
             this._mockParent = new Mock<Issue>();
 
             this._mockJiraToolWindowNavigatorViewModel.Setup(mock => mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<BoardProject>())).Verifiable();

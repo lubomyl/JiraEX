@@ -16,7 +16,7 @@ namespace JiraEX.ViewModel
     public class CreateIssueViewModel : ViewModelBase, ITitleable
     {
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
         private BoardProject _project;
         private Issue _parentIssue;
 
@@ -62,7 +62,7 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
-        public CreateIssueViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject project) : this(project)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject project) : this(project)
         {
             this._parent = parent;
             this._project = project;
@@ -70,7 +70,7 @@ namespace JiraEX.ViewModel
             this.SelectedType = this._typesList[0];
         }
 
-        public CreateIssueViewModel(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project) : this(project)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project) : this(project)
         {
             this._parent = parent;
             this._parentIssue = parentIssue;

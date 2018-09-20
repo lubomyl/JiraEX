@@ -16,7 +16,7 @@ using System.Windows.Controls;
 
 namespace JiraEX.ViewModel.Navigation
 {
-    public class JiraToolWindowNavigatorViewModel : ViewModelBase
+    public class JiraToolWindowNavigatorViewModel : ViewModelBase, IJiraToolWindowNavigatorViewModel
     {
 
         private object _selectedView;
