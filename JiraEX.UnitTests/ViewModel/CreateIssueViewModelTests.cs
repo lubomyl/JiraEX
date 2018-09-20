@@ -25,8 +25,11 @@ namespace JiraEX.UnitTests.ViewModel
         public void Initialize()
         {
             this._mockBoardProject = new Mock<BoardProject>();
+
+            //Cannot mock Get methods on Class object - only works against Interface with Moq framework
             this._mockBoardProject.Object.CreatableIssueTypesList = new List<IssueType>();
             this._mockBoardProject.Object.CreatableIssueTypesList.Add(new IssueType());
+            this._mockBoardProject.Object.Location = new Location();
 
             this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>();
             this._mockIssueService = new Mock<IIssueService>();
@@ -46,6 +49,8 @@ namespace JiraEX.UnitTests.ViewModel
             this._viewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
                 _mockBoardProject.Object,
                 this._mockIssueService.Object);
+
+            this._subTaskViewModel.SelectedType = new Mock<IssueType>().Object;
         }
 
         [TestCleanup]
