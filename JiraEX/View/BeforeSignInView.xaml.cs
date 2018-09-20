@@ -1,5 +1,6 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,11 @@ namespace JiraEX.View
 
         private BeforeSignInViewModel _viewModel;
 
-        public BeforeSignInView(JiraToolWindowNavigatorViewModel parent)
+        public BeforeSignInView(JiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
         {
             InitializeComponent();
 
-            this._viewModel = new BeforeSignInViewModel(parent);
+            this._viewModel = new BeforeSignInViewModel(parent, oAuthService);
             this.DataContext = this._viewModel;
         }
     }

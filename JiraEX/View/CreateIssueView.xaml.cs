@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,20 +27,20 @@ namespace JiraEX.View
 
         private CreateIssueViewModel _viewModel;
 
-        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, BoardProject project)
+        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, BoardProject project, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new CreateIssueViewModel(parent, project);
+            this._viewModel = new CreateIssueViewModel(parent, project, issueService);
             this.DataContext = this._viewModel;
         }
 
         //sub-task overload
-        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project)
+        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new CreateIssueViewModel(parent, parentIssue, project);
+            this._viewModel = new CreateIssueViewModel(parent, parentIssue, project, issueService);
             this.DataContext = this._viewModel;
         }
     }

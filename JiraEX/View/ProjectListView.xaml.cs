@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace JiraEX.View
 
         private ProjectListViewModel _viewModel;
 
-        public ProjectListView(JiraToolWindowNavigatorViewModel parent)
+        public ProjectListView(JiraToolWindowNavigatorViewModel parent, IProjectService projectService, IBoardService boardService)
         {
             InitializeComponent();
 
-            this._viewModel = new ProjectListViewModel(parent);
+            this._viewModel = new ProjectListViewModel(parent, projectService, boardService);
             this.DataContext = this._viewModel;
         }
 

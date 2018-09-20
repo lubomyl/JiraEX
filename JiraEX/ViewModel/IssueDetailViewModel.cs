@@ -43,7 +43,7 @@ namespace JiraEX.ViewModel
         private bool _isFixVersionsEmpty = true;
         private bool _isAffectsVersionsEmpty = true;
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private IIssueService _issueService;
         private IPriorityService _priorityService;
@@ -115,11 +115,14 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditLabelsCommand { get; set; }
         public DelegateCommand CheckedLabelsCommand { get; set; }
 
-        public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project, 
+            IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService, 
+            IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
         {
             this._parent = parent;
 
-            Initialize();
+            Initialize(issueService, priorityService, transitionService,
+            attachmentService, userService, boardService);
 
             this.Issue = issue;
             this._project = project;
@@ -137,6 +140,11 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
 
             SetPanelTitles();
+        }
+
+        public IssueDetailViewModel()
+        {
+           
         }
 
         private void CheckSubTaskCreatable()
@@ -211,16 +219,17 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void Initialize()
+        private void Initialize(IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
+            IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
         {
             this._unassigned = new User("Unassigned", "-1");
 
-            this._issueService = new IssueService();
-            this._priorityService = new PriorityService();
-            this._transitionService = new TransitionService();
-            this._attachmentService = new AttachmentService();
-            this._userService = new UserService();
-            this._boardService = new BoardService();
+            this._issueService = issueService;
+            this._priorityService = priorityService;
+            this._transitionService = transitionService;
+            this._attachmentService = attachmentService;
+            this._userService = userService;
+            this._boardService = boardService;
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();

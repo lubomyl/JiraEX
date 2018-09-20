@@ -12,7 +12,10 @@ namespace JiraRESTClient.Service
     /// </summary>
     public interface IAttachmentService
     {
-
+        /// <summary>
+        /// Async method to delete issue's attachment by it's id.
+        /// </summary>
+        /// <returns>Task representing api call.</returns>
         Task DeleteAttachmentByIdAsync(string attachmentId);
 
     }

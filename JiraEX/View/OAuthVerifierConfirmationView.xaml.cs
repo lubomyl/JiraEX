@@ -1,6 +1,7 @@
 ﻿using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace JiraEX.View
 
         private OAuthVerifierConfirmationViewModel _viewModel;
 
-        public OAuthVerifierConfirmationView(JiraToolWindowNavigatorViewModel parent, IToken requestToken)
+        public OAuthVerifierConfirmationView(JiraToolWindowNavigatorViewModel parent, IToken requestToken, IOAuthService oAuthService)
         {
             InitializeComponent();
 
-            this._viewModel = new OAuthVerifierConfirmationViewModel(parent, requestToken);
+            this._viewModel = new OAuthVerifierConfirmationViewModel(parent, requestToken, oAuthService);
             this.DataContext = this._viewModel;
         }
     }
