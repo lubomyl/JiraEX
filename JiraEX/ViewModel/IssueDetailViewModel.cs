@@ -43,7 +43,7 @@ namespace JiraEX.ViewModel
         private bool _isFixVersionsEmpty = true;
         private bool _isAffectsVersionsEmpty = true;
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private IIssueService _issueService;
         private IPriorityService _priorityService;
@@ -115,7 +115,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditLabelsCommand { get; set; }
         public DelegateCommand CheckedLabelsCommand { get; set; }
 
-        public IssueDetailViewModel(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project)
         {
             this._parent = parent;
 

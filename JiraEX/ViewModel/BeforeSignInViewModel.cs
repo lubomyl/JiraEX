@@ -22,7 +22,7 @@ namespace JiraEX.ViewModel
 
         private IOAuthService _oAuthService;
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private string _errorMessage;
         private string _baseUrl;
@@ -31,7 +31,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignInOAuthCommand { get; private set; }
 
-        public BeforeSignInViewModel(JiraToolWindowNavigatorViewModel parent)
+        public BeforeSignInViewModel(IJiraToolWindowNavigatorViewModel parent)
         {
             this._parent = parent;
 

@@ -21,7 +21,7 @@ namespace JiraEX.ViewModel
 
         private const int REQUEST_TOKEN_EXPIRATION_TIME_SECONDS = 600;
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private OAuthService _oAuthService;
 
@@ -38,7 +38,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignInCommand { get; private set; }
 
-        public OAuthVerifierConfirmationViewModel(JiraToolWindowNavigatorViewModel parent, IToken requestToken)
+        public OAuthVerifierConfirmationViewModel(IJiraToolWindowNavigatorViewModel parent, IToken requestToken)
         {
             this._parent = parent;
 

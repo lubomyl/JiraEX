@@ -19,7 +19,7 @@ namespace JiraEX.ViewModel
     public class AfterSignInViewModel : ViewModelBase, ITitleable
     {
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private User _authenticatedUser;
 
@@ -31,7 +31,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignOutCommand { get; private set; }
 
-        public AfterSignInViewModel(JiraToolWindowNavigatorViewModel parent)
+        public AfterSignInViewModel(IJiraToolWindowNavigatorViewModel parent)
         {
             this._parent = parent;
 

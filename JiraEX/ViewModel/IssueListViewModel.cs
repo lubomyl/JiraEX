@@ -21,7 +21,7 @@ namespace JiraEX.ViewModel
         private IIssueService _issueService;
         private ISprintService _sprintService;
 
-        private JiraToolWindowNavigatorViewModel _parent;
+        private IJiraToolWindowNavigatorViewModel _parent;
 
         private BoardProject _boardProject;
 
@@ -33,7 +33,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateIssueCommand { get; private set; }
 
-        public IssueListViewModel(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
         {
             this._issueService = new IssueService();
             this._sprintService = new SprintService();
