@@ -21,6 +21,8 @@ namespace JiraEX.ViewModel
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
+        private bool _noProjects = false;
+
         private ObservableCollection<BoardProject> _boardProjectList;
         private ProjectCreatableList _projectCreatableList;
 
@@ -55,20 +57,27 @@ namespace JiraEX.ViewModel
 
             this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
 
-            foreach (BoardProject b in boardList.Values)
+            if (boardList.Values.Count > 0)
             {
-
-                //Fetching Creatable IssueTypes for each project
-                foreach(ProjectCreatable p in this._projectCreatableList.Projects)
+                foreach (BoardProject b in boardList.Values)
                 {
-                    if (b.Location.ProjectId.Equals(p.Id))
-                    {
-                        b.CreatableIssueTypesList = p.Issuetypes;
-                    }
-                }
-                //end fetching
 
-                this.BoardProjectList.Add(b);
+                    //Fetching Creatable IssueTypes for each project
+                    foreach (ProjectCreatable p in this._projectCreatableList.Projects)
+                    {
+                        if (b.Location.ProjectId.Equals(p.Id))
+                        {
+                            b.CreatableIssueTypesList = p.Issuetypes;
+                        }
+                    }
+                    //end fetching
+
+                    this.BoardProjectList.Add(b);
+                }
+            }
+            else
+            {
+                this.NoProjects = true;
             }
         }
 
@@ -92,6 +101,16 @@ namespace JiraEX.ViewModel
         {
             get { return this._boardProjectList; }
             set { this._boardProjectList = value; }
+        }
+
+        public bool NoProjects
+        {
+            get { return this._noProjects; }
+            set
+            {
+                this._noProjects = value;
+                OnPropertyChanged("NoProjects");
+            }
         }
     }
 }
