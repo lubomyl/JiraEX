@@ -6,6 +6,7 @@ using JiraRESTClient.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Service;
 
 namespace JiraEX.UnitTests.ViewModel
 {
@@ -14,6 +15,7 @@ namespace JiraEX.UnitTests.ViewModel
     {
         Mock<BoardProject> _mockBoardProject;
         Mock<IJiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
+        Mock<IIssueService> _mockIssueService;
         Mock<Issue> _mockParent;
 
         CreateIssueViewModel _subTaskViewModel;
@@ -26,16 +28,24 @@ namespace JiraEX.UnitTests.ViewModel
             this._mockBoardProject.Object.CreatableIssueTypesList = new List<IssueType>();
             this._mockBoardProject.Object.CreatableIssueTypesList.Add(new IssueType());
 
-            this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>(It.IsAny<JiraToolWindow>());
+            this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>();
+            this._mockIssueService = new Mock<IIssueService>();
             this._mockParent = new Mock<Issue>();
 
-            this._mockJiraToolWindowNavigatorViewModel.Setup(mock => mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<BoardProject>())).Verifiable();
+            this._mockJiraToolWindowNavigatorViewModel.Setup(mock => mock.ShowIssueDetail(It.IsAny<Issue>(), 
+                It.IsAny<BoardProject>())).Verifiable();
+            this._mockIssueService.Setup(mock => mock.CreateIssueAsync(It.IsAny<string>(), It.IsAny<string>(), 
+                It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            this._mockIssueService.Setup(mock => mock.CreateSubTaskIssueAsync(It.IsAny<string>(), It.IsAny<string>(), 
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             this._subTaskViewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
                 _mockParent.Object, 
                 _mockBoardProject.Object);
             this._viewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
                 _mockBoardProject.Object);
+
+            this._viewModel._issueService = this._mockIssueService;
         }
 
         [TestCleanup]
@@ -76,11 +86,40 @@ namespace JiraEX.UnitTests.ViewModel
         [TestMethod]
         public void ShowIssueDetail_CalledOnce_On_Cancel_If_Creating_Subtask()
         {
-            this._viewModel.CancelCreateIssueCommand.Execute(null);
+            this._subTaskViewModel.CancelCreateIssueCommand.Execute(null);
 
-            this._mockJiraToolWindowNavigatorViewModel.Verify(mock => mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<BoardProject>()));
+            this._mockJiraToolWindowNavigatorViewModel.Verify(mock => 
+                mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<BoardProject>()), Times.Once());
         }
 
+        [TestMethod]
+        public void ShowIssuesOfProject_CalledOnce_On_Cancel_If_Creating_NewIssue()
+        {
+            this._viewModel.CancelCreateIssueCommand.Execute(null);
+
+            this._mockJiraToolWindowNavigatorViewModel.Verify(mock =>
+                mock.ShowIssuesOfProject(It.IsAny<BoardProject>()), Times.Once());
+        }
+
+        [TestMethod]
+        public void CreateSubTaskIssue_CalledOnce_On_Create_If_Creating_Subtask()
+        {
+            this._subTaskViewModel.ConfirmCreateIssueCommand.Execute(null);
+
+            this._mockIssueService.Verify(mock =>
+                mock.CreateSubTaskIssueAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), 
+                It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+        }
+
+        [TestMethod]
+        public void CreateIssue_CalledOnce_On_Create_If_Creating_NewIssue()
+        {
+            this._viewModel.ConfirmCreateIssueCommand.Execute(null);
+
+            this._mockIssueService.Verify(mock =>
+                mock.CreateIssueAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>()), Times.Once());
+        }
 
     }
 }

@@ -20,7 +20,7 @@ namespace JiraEX.ViewModel
         private BoardProject _project;
         private Issue _parentIssue;
 
-        private IIssueService _issueService;
+        public IIssueService _issueService;
 
         private bool _isEditingType = false;
         private bool _isCreatingSubTask = false;
