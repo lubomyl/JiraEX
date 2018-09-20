@@ -31,12 +31,12 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignOutCommand { get; private set; }
 
-        public AfterSignInViewModel(IJiraToolWindowNavigatorViewModel parent)
+        public AfterSignInViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
         {
             this._parent = parent;
 
-            this._oauthService = new OAuthService();
-            this._userService = new UserService();
+            this._oauthService = oAuthService;
+            this._userService = userService;
             this.GetAuthenticatedUserAsync();
 
             SettingsManager settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);

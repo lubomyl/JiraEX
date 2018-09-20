@@ -20,7 +20,7 @@ namespace JiraEX.ViewModel
         private BoardProject _project;
         private Issue _parentIssue;
 
-        public IIssueService _issueService;
+        private IIssueService _issueService;
 
         private bool _isEditingType = false;
         private bool _isCreatingSubTask = false;
@@ -38,7 +38,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditTypeCommand { get; private set; }
         public DelegateCommand CancelEditTypeCommand { get; private set; }
 
-        private CreateIssueViewModel(BoardProject project)
+        private CreateIssueViewModel(BoardProject project, IIssueService issueService)
         {
             this._typesList = new ObservableCollection<IssueType>();
 
@@ -53,7 +53,7 @@ namespace JiraEX.ViewModel
                 }
             }
 
-            this._issueService = new IssueService();
+            this._issueService = issueService;
 
             this.CancelCreateIssueCommand = new DelegateCommand(CancelCreateIssue);
             this.ConfirmCreateIssueCommand = new DelegateCommand(ConfirmCreateIssue);
@@ -62,7 +62,7 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
-        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject project) : this(project)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject project, IIssueService issueService) : this(project, issueService)
         {
             this._parent = parent;
             this._project = project;
@@ -70,7 +70,7 @@ namespace JiraEX.ViewModel
             this.SelectedType = this._typesList[0];
         }
 
-        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project) : this(project)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project, IIssueService issueService) : this(project, issueService)
         {
             this._parent = parent;
             this._parentIssue = parentIssue;

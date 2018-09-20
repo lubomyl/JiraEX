@@ -41,11 +41,11 @@ namespace JiraEX.UnitTests.ViewModel
 
             this._subTaskViewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
                 _mockParent.Object, 
-                _mockBoardProject.Object);
+                _mockBoardProject.Object,
+                this._mockIssueService.Object);
             this._viewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
-                _mockBoardProject.Object);
-
-            this._viewModel._issueService = this._mockIssueService;
+                _mockBoardProject.Object,
+                this._mockIssueService.Object);
         }
 
         [TestCleanup]

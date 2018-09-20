@@ -29,10 +29,10 @@ namespace JiraEX.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public ProjectListViewModel(IJiraToolWindowNavigatorViewModel parent)
+        public ProjectListViewModel(IJiraToolWindowNavigatorViewModel parent, IProjectService projectService, IBoardService boardService)
         {
-            this._projectService = new ProjectService();
-            this._boardService = new BoardService();
+            this._projectService = projectService;
+            this._boardService = boardService;
 
             this._parent = parent;
             this.BoardProjectList = new ObservableCollection<BoardProject>();

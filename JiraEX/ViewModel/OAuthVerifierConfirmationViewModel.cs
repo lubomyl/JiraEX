@@ -2,6 +2,7 @@
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
@@ -23,7 +24,7 @@ namespace JiraEX.ViewModel
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
-        private OAuthService _oAuthService;
+        private IOAuthService _oAuthService;
 
         private string _oAuthVerificationCode;
         private IToken _requestToken;
@@ -38,9 +39,11 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignInCommand { get; private set; }
 
-        public OAuthVerifierConfirmationViewModel(IJiraToolWindowNavigatorViewModel parent, IToken requestToken)
+        public OAuthVerifierConfirmationViewModel(IJiraToolWindowNavigatorViewModel parent, IToken requestToken, IOAuthService oAuthService)
         {
             this._parent = parent;
+
+            this._oAuthService = oAuthService;
 
             this._requestToken = requestToken;
 
@@ -56,8 +59,6 @@ namespace JiraEX.ViewModel
 
         private async void SignIn(object parameter)
         {
-            this._oAuthService = new OAuthService();
-
             try
             {
                 IToken accessToken = await this._oAuthService.ExchangeRequestTokenForAccessToken(this._requestToken, OAuthVerificationCode);

@@ -33,10 +33,10 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CreateIssueCommand { get; private set; }
 
-        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject boardProject, IIssueService issueService, ISprintService sprintService)
         {
-            this._issueService = new IssueService();
-            this._sprintService = new SprintService();
+            this._issueService = issueService;
+            this._sprintService = sprintService;
 
             this._parent = parent;
 

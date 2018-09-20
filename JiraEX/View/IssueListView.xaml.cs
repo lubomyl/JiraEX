@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace JiraEX.View
 
         private IssueListViewModel _viewModel;
 
-        public IssueListView(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject)
+        public IssueListView(JiraToolWindowNavigatorViewModel parent, BoardProject boardProject, IIssueService issueService, ISprintService sprintService)
         {
             InitializeComponent();
 
-            this._viewModel = new IssueListViewModel(parent, boardProject);
+            this._viewModel = new IssueListViewModel(parent, boardProject, issueService, sprintService);
             this.DataContext = this._viewModel;
         }
 

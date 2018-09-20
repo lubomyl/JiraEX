@@ -31,9 +31,11 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignInOAuthCommand { get; private set; }
 
-        public BeforeSignInViewModel(IJiraToolWindowNavigatorViewModel parent)
+        public BeforeSignInViewModel(IJiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
         {
             this._parent = parent;
+
+            this._oAuthService = oAuthService;
 
             SettingsManager settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
@@ -45,8 +47,6 @@ namespace JiraEX.ViewModel
 
         private async void SignInOAuth(object parameter)
         {
-            this._oAuthService = new OAuthService();
-
             IToken requestToken;
             string authorizationUrl;
 

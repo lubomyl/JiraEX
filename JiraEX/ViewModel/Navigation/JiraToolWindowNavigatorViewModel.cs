@@ -22,7 +22,15 @@ namespace JiraEX.ViewModel.Navigation
         private object _selectedView;
         private JiraToolWindow _parent;
 
+        private IUserService _userService;
         private IOAuthService _oAuthService;
+        private IIssueService _issueService;
+        private ITransitionService _transitionService;
+        private IPriorityService _priorityService;
+        private IAttachmentService _attachmentService;
+        private IBoardService _boardService;
+        private ISprintService _sprintService;
+        private IProjectService _projectService;
 
         private BeforeSignInView _beforeSignInView;
         private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
@@ -43,7 +51,15 @@ namespace JiraEX.ViewModel.Navigation
 
             this._service = JiraPackage.Mcs;
 
+            this._userService = new UserService();
             this._oAuthService = new OAuthService();
+            this._issueService = new IssueService();
+            this._transitionService = new TransitionService();
+            this._priorityService = new PriorityService();
+            this._attachmentService = new AttachmentService();
+            this._boardService = new BoardService();
+            this._sprintService = new SprintService();
+            this._projectService = new ProjectService();
 
             InitializeCommands(this._service);
         }
@@ -73,7 +89,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             if (this._beforeSignInView == null)
             {
-                this._beforeSignInView = new BeforeSignInView(this);
+                this._beforeSignInView = new BeforeSignInView(this, this._oAuthService);
 
                 SelectedView = this._beforeSignInView;
             }
@@ -87,7 +103,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             if (this._afterSignInView == null)
             {
-                this._afterSignInView = new AfterSignInView(this);
+                this._afterSignInView = new AfterSignInView(this, this._userService, this._oAuthService);
 
                 SelectedView = this._afterSignInView;
             }
@@ -99,7 +115,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
-            this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken);
+            this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
 
             SelectedView = this._oAuthVerifierConfirmationView;
         }
@@ -108,7 +124,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             if (this._projectListView == null)
             {
-                this._projectListView = new ProjectListView(this);
+                this._projectListView = new ProjectListView(this, this._projectService, this._boardService);
 
                 SelectedView = this._projectListView;
             }
@@ -120,21 +136,23 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfProject(BoardProject boardProject)
         {
-            this._issueListView = new IssueListView(this, boardProject);
+            this._issueListView = new IssueListView(this, boardProject, this._issueService, this._sprintService);
 
             SelectedView = this._issueListView;
         }
 
         public void ShowIssueDetail(Issue issue, BoardProject project)
         {
-            this._issueDetailView = new IssueDetailView(this, issue, project);
+            this._issueDetailView = new IssueDetailView(this, issue, project,
+                this._issueService, this._priorityService, this._transitionService,
+                this._attachmentService, this._userService, this._boardService);
 
             SelectedView = this._issueDetailView;
         }
 
         public void CreateIssue(BoardProject project)
         {
-            this._createIssueView = new CreateIssueView(this, project);
+            this._createIssueView = new CreateIssueView(this, project, this._issueService);
 
             SelectedView = this._createIssueView;
         }
@@ -142,7 +160,7 @@ namespace JiraEX.ViewModel.Navigation
         //sub-task overload
         public void CreateIssue(Issue parentIssue, BoardProject project)
         {
-            this._createIssueView = new CreateIssueView(this, parentIssue, project);
+            this._createIssueView = new CreateIssueView(this, parentIssue, project, this._issueService);
 
             SelectedView = this._createIssueView;
         }
