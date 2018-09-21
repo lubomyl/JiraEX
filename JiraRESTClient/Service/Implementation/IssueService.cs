@@ -210,5 +210,14 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetResource<FilterList>(resource);
             });
         }
+
+        public Task<IssueList> GetAllIssuesByJqlAsync(string jql)
+        {
+            return Task.Run(() => {
+                var resource = $"search?jql={jql}";
+
+                return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
     }
 }
