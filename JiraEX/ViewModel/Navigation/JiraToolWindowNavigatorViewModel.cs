@@ -39,6 +39,7 @@ namespace JiraEX.ViewModel.Navigation
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
         private CreateIssueView _createIssueView;
+        private FiltersListView _filtersListView;
 
         private OleMenuCommandService _service;
 
@@ -165,18 +166,35 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._createIssueView;
         }
 
+        public void ShowFilters(object sender, EventArgs e)
+        {
+            if (this.filtersListView == null)
+            {
+                this._filtersListView = new FiltersListView(this);
+
+                SelectedView = this._filtersListView;
+            }
+            else
+            {
+                SelectedView = this._filtersListView;
+            }
+        }
+
         private void InitializeCommands(OleMenuCommandService service)
         {
             if (service != null)
             {
                 CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
                 CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+                CommandID toolbarMenuCommandFiltersID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FILTERS_ID);
 
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
                 MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
 
                 service.AddCommand(onToolbarMenuCommandHomeClick);
                 service.AddCommand(onToolbarMenuCommandConnectionClick);
+                service.AddCommand(onToolbarMenuCommandFiltersClick);
             }
         }
 

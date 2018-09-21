@@ -95,16 +95,24 @@ namespace JiraEX.ViewModel
 
         private void GetSprintsAsync()
         {
-            Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
-
-            var sprintList = sprintTask.Result as SprintList;
-
-            this.SprintList.Add(this._defaultSprintSelected);
-            this.SelectedSprint = this.SprintList[0];
-
-            foreach (Sprint s in sprintList.Values)
+            try
             {
-                this.SprintList.Add(s);
+                //TODO catch exception about not being able to support sprints
+                Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
+
+                var sprintList = sprintTask.Result as SprintList;
+
+                this.SprintList.Add(this._defaultSprintSelected);
+                this.SelectedSprint = this.SprintList[0];
+
+                foreach (Sprint s in sprintList.Values)
+                {
+                    this.SprintList.Add(s);
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
