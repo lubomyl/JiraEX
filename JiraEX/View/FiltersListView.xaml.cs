@@ -1,4 +1,7 @@
-﻿using System;
+﻿using JiraEX.ViewModel;
+using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +23,23 @@ namespace JiraEX.View
     /// </summary>
     public partial class FiltersListView : UserControl
     {
-        public FiltersListView()
+
+        private FilterListViewModel _viewModel;
+
+        public FiltersListView(IJiraToolWindowNavigatorViewModel parent)
         {
             InitializeComponent();
+
+            this._viewModel = new FilterListViewModel(parent);
+            this.DataContext = this._viewModel;
+        }
+
+        void FilterSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem listBoxItem = sender as ListBoxItem;
+            Filter filter = listBoxItem.Content as Filter;
+
+            this._viewModel.OnItemSelected(filter);
         }
     }
 }

@@ -168,7 +168,7 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowFilters(object sender, EventArgs e)
         {
-            if (this.filtersListView == null)
+            if (this._filtersListView == null)
             {
                 this._filtersListView = new FiltersListView(this);
 

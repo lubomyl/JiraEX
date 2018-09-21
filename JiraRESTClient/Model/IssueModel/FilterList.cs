@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JiraRESTClient.Model.Issue
+namespace JiraRESTClient.Model
 {
     public class FilterList : List<Filter>
     {

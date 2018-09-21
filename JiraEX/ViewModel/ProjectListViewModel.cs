@@ -100,7 +100,11 @@ namespace JiraEX.ViewModel
         public ObservableCollection<BoardProject> BoardProjectList
         {
             get { return this._boardProjectList; }
-            set { this._boardProjectList = value; }
+            set
+            {
+                this._boardProjectList = value;
+                OnPropertyChanged("BoardProjectList");
+            }
         }
 
         public bool NoProjects
