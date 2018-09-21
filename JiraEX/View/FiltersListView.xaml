@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="JiraEX.View.FltersListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <ListBox ItemsSource="{Binding FilterList}"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                    <Setter Property="BorderBrush" Value="#FF2D2D30"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="FilterSelected_MouseDoubleClick"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="8 3 8 3">
+                        <Grid>
+                            <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
+
+                                <Border DockPanel.Dock="Right" CornerRadius="2" Padding="5 1" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" ToolTip="{Binding Location.ProjectTypeKey, Mode=OneWay}" Text="{Binding Location.ProjectTypeKey, Mode=OneWay}" />
+                                </Border>
+                            </DockPanel>
+                        </Grid>
+
+                        <TextBlock Text="{Binding Jql}" Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Margin="10" 
+                    VerticalAlignment="Center"
+                    Visibility="{Binding NoFilters, Converter={StaticResource TrueToVisibleConverter}}">
+            <TextBlock Style="{StaticResource TitleText}" 
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Margin="4"
+                    Text="There aren't any favourite filters."/>
+            <TextBlock Style="{StaticResource PlainTextFaded}" 
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="4"
+                    Text="Check your Jira application to create or make favourite any filter."/>
+        </StackPanel>
+    </Grid>
+
+</UserControl>
+    
