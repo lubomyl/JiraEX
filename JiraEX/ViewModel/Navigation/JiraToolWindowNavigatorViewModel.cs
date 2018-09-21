@@ -170,7 +170,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             if (this._filtersListView == null)
             {
-                this._filtersListView = new FiltersListView(this);
+                this._filtersListView = new FiltersListView(this, this._issueService);
 
                 SelectedView = this._filtersListView;
             }

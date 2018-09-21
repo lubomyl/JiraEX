@@ -201,5 +201,14 @@ namespace JiraRESTClient.Service.Implementation
                 this._baseService.PostAgileResourceContent(resource, Encoding.UTF8.GetBytes(updateString));
             });
         }
+
+        Task<FilterList> IIssueService.GetAllFiltersAsync()
+        {
+            return Task.Run(() => {
+                var resource = "filter/favourite";
+
+                return this._baseService.GetResource<FilterList>(resource);
+            });
+        }
     }
 }

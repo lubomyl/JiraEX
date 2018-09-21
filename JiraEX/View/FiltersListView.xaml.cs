@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace JiraEX.View
 
         private FilterListViewModel _viewModel;
 
-        public FiltersListView(IJiraToolWindowNavigatorViewModel parent)
+        public FiltersListView(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new FilterListViewModel(parent);
+            this._viewModel = new FilterListViewModel(parent, issueService);
             this.DataContext = this._viewModel;
         }
 

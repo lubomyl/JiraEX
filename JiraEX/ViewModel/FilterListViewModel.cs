@@ -36,7 +36,7 @@ namespace JiraEX.ViewModel
 
         private async void GetFiltersAsync()
         {
-            Task<FilterList> filterTask = this._issueService.GetAllFavouriteFilters();
+            Task<FilterList> filterTask = this._issueService.GetAllFiltersAsync();
 
             var filterList = await filterTask as FilterList;
 
