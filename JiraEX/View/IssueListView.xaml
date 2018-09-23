@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d"
@@ -16,12 +17,15 @@
                 <ResourceDictionary x:Uid="VisualStudioThemeResources"
 					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <DockPanel>
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-            <Grid Margin="8">
+            <Grid Margin="8" Visibility="{Binding CanFilterBySprint, Converter={StaticResource TrueToVisibleConverter}}">
 
                 <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
                           DisplayMemberPath="Name"
@@ -31,7 +35,8 @@
                 </ComboBox>
             </Grid>
 
-            <TextBlock Margin="8 0 0 0"  Style="{StaticResource PlainText}">
+            <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
+                       Margin="8 0 0 0" Style="{StaticResource PlainText}">
                         <Hyperlink Command="{Binding CreateIssueCommand}" 
                                     CommandParameter="{Binding}">
                             Create issue

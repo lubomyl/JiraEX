@@ -57,7 +57,7 @@ namespace JiraEX.ViewModel
         {
             Filter filter = sender as Filter;
 
-           // this._parent.Show(filter);
+            this._parent.ShowIssuesOfFilter(filter);
         }
 
         public void SetPanelTitles()

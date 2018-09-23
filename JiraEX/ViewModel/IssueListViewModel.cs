@@ -31,31 +31,52 @@ namespace JiraEX.ViewModel
         private Sprint _selectedSprint;
         private Sprint _defaultSprintSelected;
 
+        private string _subtitle;
+        private bool _canCreateIssue = false;
+        private bool _canFilterBySprint = false;
+
         public DelegateCommand CreateIssueCommand { get; private set; }
 
-        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject boardProject, IIssueService issueService, ISprintService sprintService)
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, ISprintService sprintService)
         {
             this._issueService = issueService;
             this._sprintService = sprintService;
 
             this._parent = parent;
 
-            this._boardProject = boardProject;
-
             this.IssueList = new ObservableCollection<Issue>();
-            this.SprintList = new ObservableCollection<Sprint>();
 
             this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
 
-            this._defaultSprintSelected = new Sprint("0", "All sprints");
-
             OleMenuCommandService service = JiraPackage.Mcs;
+        }
+
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, ISprintService sprintService, BoardProject boardProject) : this(parent, issueService, sprintService)
+        {
+            this._boardProject = boardProject;
+            this._subtitle = this._boardProject.Name;
+            this.CanCreateIssue = true;
+
+            this.SprintList = new ObservableCollection<Sprint>();
+
+            this._defaultSprintSelected = new Sprint("0", "All sprints");
 
             GetIssuesAsync();
             GetSprintsAsync();
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
             this.SprintList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
+        }
+
+
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, ISprintService sprintService, string filter) : this(parent, issueService, sprintService)
+        {
+            GetIssuesAsync(filter);
+            this._subtitle = filter;
+
+            this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
         }
@@ -68,6 +89,20 @@ namespace JiraEX.ViewModel
         private async void GetIssuesAsync()
         {
             Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
+
+            var issueList = await issueTask as IssueList;
+
+            this.IssueList.Clear();
+
+            foreach (Issue i in issueList.Issues)
+            {
+                this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetIssuesAsync(string filter)
+        {
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
 
             var issueList = await issueTask as IssueList;
 
@@ -109,6 +144,11 @@ namespace JiraEX.ViewModel
                 {
                     this.SprintList.Add(s);
                 }
+
+                if(this.SprintList.Count > 0)
+                {
+                    this.CanFilterBySprint = true;
+                }
             }
             catch (Exception ex)
             {
@@ -127,7 +167,7 @@ namespace JiraEX.ViewModel
 
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", this._boardProject.Name);
+            this._parent.SetPanelTitles("JiraEX", this._subtitle);
         }
 
         public ObservableCollection<Issue> IssueList
@@ -157,6 +197,26 @@ namespace JiraEX.ViewModel
                     this.GetIssuesBySprintAsync();
                 }
                 OnPropertyChanged("SelectedSprint");
+            }
+        }
+
+        public bool CanCreateIssue
+        {
+            get { return this._canCreateIssue; }
+            set
+            {
+                this._canCreateIssue = value;
+                OnPropertyChanged("CanCreateIssue");
+            }
+        }
+
+        public bool CanFilterBySprint
+        {
+            get { return this._canFilterBySprint; }
+            set
+            {
+                this._canFilterBySprint = value;
+                OnPropertyChanged("CanFilterBySprint");
             }
         }
     }

@@ -30,5 +30,7 @@ namespace JiraEX.ViewModel.Navigation
         void CreateIssue(Issue parentIssue, BoardProject project);
 
         void SetPanelTitles(string title, string subtitle);
+
+        void ShowIssuesOfFilter(Filter filter);
     }
 }

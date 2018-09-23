@@ -33,6 +33,7 @@
                 <TextBlock Margin="0,-5,0,0"
                      VerticalAlignment="Center"
                      Foreground="#FF717171"
+                     TextTrimming="CharacterEllipsis"
                      Text="{Binding Subtitle}" />
             </StackPanel>
 

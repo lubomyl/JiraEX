@@ -137,7 +137,14 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfProject(BoardProject boardProject)
         {
-            this._issueListView = new IssueListView(this, boardProject, this._issueService, this._sprintService);
+            this._issueListView = new IssueListView(this, this._issueService, this._sprintService, boardProject);
+
+            SelectedView = this._issueListView;
+        }
+
+        public void ShowIssuesOfFilter(Filter filter)
+        {
+            this._issueListView = new IssueListView(this, this._issueService, this._sprintService, filter.Jql);
 
             SelectedView = this._issueListView;
         }
