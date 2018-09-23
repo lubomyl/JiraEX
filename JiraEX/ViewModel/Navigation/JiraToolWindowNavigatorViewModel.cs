@@ -39,6 +39,7 @@ namespace JiraEX.ViewModel.Navigation
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
         private CreateIssueView _createIssueView;
+        private FiltersListView _filtersListView;
 
         private OleMenuCommandService _service;
 
@@ -77,6 +78,9 @@ namespace JiraEX.ViewModel.Navigation
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
                     this.ShowAfterSignIn();
+                } else
+                {
+                    this.ShowBeforeSignIn();
                 }
             }
             catch (Exception ex)
@@ -134,23 +138,30 @@ namespace JiraEX.ViewModel.Navigation
             }
         }
 
-        public void ShowIssuesOfProject(BoardProject boardProject)
+        public void ShowIssuesOfProject(Project project)
         {
-            this._issueListView = new IssueListView(this, boardProject, this._issueService, this._sprintService);
+            this._issueListView = new IssueListView(this, this._issueService, project);
 
             SelectedView = this._issueListView;
         }
 
-        public void ShowIssueDetail(Issue issue, BoardProject project)
+        public void ShowIssuesOfFilter(Filter filter)
         {
-            this._issueDetailView = new IssueDetailView(this, issue, project,
+            this._issueListView = new IssueListView(this, this._issueService, this._sprintService, filter.Jql);
+
+            SelectedView = this._issueListView;
+        }
+
+        public void ShowIssueDetail(Issue issue, Project project)
+        {
+            this._issueDetailView = new IssueDetailView(this, issue, project, 
                 this._issueService, this._priorityService, this._transitionService,
-                this._attachmentService, this._userService, this._boardService);
+                this._attachmentService, this._userService, this._boardService, this._projectService);
 
             SelectedView = this._issueDetailView;
         }
 
-        public void CreateIssue(BoardProject project)
+        public void CreateIssue(Project project)
         {
             this._createIssueView = new CreateIssueView(this, project, this._issueService);
 
@@ -158,11 +169,25 @@ namespace JiraEX.ViewModel.Navigation
         }
 
         //sub-task overload
-        public void CreateIssue(Issue parentIssue, BoardProject project)
+        public void CreateIssue(Issue parentIssue, Project project)
         {
             this._createIssueView = new CreateIssueView(this, parentIssue, project, this._issueService);
 
             SelectedView = this._createIssueView;
+        }
+
+        public void ShowFilters(object sender, EventArgs e)
+        {
+            if (this._filtersListView == null)
+            {
+                this._filtersListView = new FiltersListView(this, this._issueService);
+
+                SelectedView = this._filtersListView;
+            }
+            else
+            {
+                SelectedView = this._filtersListView;
+            }
         }
 
         private void InitializeCommands(OleMenuCommandService service)
@@ -171,12 +196,15 @@ namespace JiraEX.ViewModel.Navigation
             {
                 CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
                 CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+                CommandID toolbarMenuCommandFiltersID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FILTERS_ID);
 
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
                 MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
 
                 service.AddCommand(onToolbarMenuCommandHomeClick);
                 service.AddCommand(onToolbarMenuCommandConnectionClick);
+                service.AddCommand(onToolbarMenuCommandFiltersClick);
             }
         }
 

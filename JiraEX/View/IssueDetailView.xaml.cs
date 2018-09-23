@@ -27,15 +27,15 @@ namespace JiraEX.View
 
         private IssueDetailViewModel _viewModel;
 
-        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project,
+        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
-            IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
+            IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             InitializeComponent();
 
-            this._viewModel = new IssueDetailViewModel(parent, issue, project, 
+            this._viewModel = new IssueDetailViewModel(parent, issue, project,
                 issueService, priorityService, transitionService,
-                attachmentService, userService, boardService);
+                attachmentService, userService, boardService, projectService);
             this.DataContext = this._viewModel;
         }
 

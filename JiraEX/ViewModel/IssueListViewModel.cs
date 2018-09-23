@@ -19,55 +19,63 @@ namespace JiraEX.ViewModel
     public class IssueListViewModel : ViewModelBase, ITitleable
     {
         private IIssueService _issueService;
-        private ISprintService _sprintService;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
-        private BoardProject _boardProject;
+        private Project _project;
 
         private ObservableCollection<Issue> _issueList;
-        private ObservableCollection<Sprint> _sprintList;
 
-        private Sprint _selectedSprint;
-        private Sprint _defaultSprintSelected;
+        private string _subtitle;
+        private bool _canCreateIssue = false;
 
         public DelegateCommand CreateIssueCommand { get; private set; }
 
-        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject boardProject, IIssueService issueService, ISprintService sprintService)
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
             this._issueService = issueService;
-            this._sprintService = sprintService;
 
             this._parent = parent;
 
-            this._boardProject = boardProject;
-
             this.IssueList = new ObservableCollection<Issue>();
-            this.SprintList = new ObservableCollection<Sprint>();
 
             this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
 
-            this._defaultSprintSelected = new Sprint("0", "All sprints");
-
             OleMenuCommandService service = JiraPackage.Mcs;
+        }
+
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, Project project) : this(parent, issueService)
+        {
+            this._project = project;
+            this._subtitle = this._project.Name;
+            this.CanCreateIssue = true;
 
             GetIssuesAsync();
-            GetSprintsAsync();
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
-            this.SprintList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
+        }
+
+
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, string filter) : this(parent, issueService)
+        {
+            GetIssuesAsync(filter);
+            this._subtitle = filter;
+
+            this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
         }
 
         private void RedirectCreateIssue(object sender)
         {
-            this._parent.CreateIssue(this._boardProject);
+            this._parent.CreateIssue(this._project);
         }
 
         private async void GetIssuesAsync()
         {
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardAsync(this._boardProject.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
 
             var issueList = await issueTask as IssueList;
 
@@ -79,11 +87,11 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void GetIssuesBySprintAsync()
+        private async void GetIssuesAsync(string filter)
         {
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfBoardOfSprintAsync(this._boardProject.Id, this._selectedSprint.Id);
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
 
-            var issueList = issueTask.Result as IssueList;
+            var issueList = await issueTask as IssueList;
 
             this.IssueList.Clear();
 
@@ -93,24 +101,9 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private void GetSprintsAsync()
-        {
-            Task<SprintList> sprintTask = this._sprintService.GetAllSprintsOfBoardtAsync(this._boardProject.Id);
-
-            var sprintList = sprintTask.Result as SprintList;
-
-            this.SprintList.Add(this._defaultSprintSelected);
-            this.SelectedSprint = this.SprintList[0];
-
-            foreach (Sprint s in sprintList.Values)
-            {
-                this.SprintList.Add(s);
-            }
-        }
-
         public void OnItemSelected(Issue issue)
         {
-            this._parent.ShowIssueDetail(issue, this._boardProject);
+            this._parent.ShowIssueDetail(issue, this._project);
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -119,7 +112,7 @@ namespace JiraEX.ViewModel
 
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", this._boardProject.Name);
+            this._parent.SetPanelTitles("JiraEX", this._subtitle);
         }
 
         public ObservableCollection<Issue> IssueList
@@ -128,27 +121,13 @@ namespace JiraEX.ViewModel
             set { this._issueList = value; }
         }
 
-        public ObservableCollection<Sprint> SprintList
+        public bool CanCreateIssue
         {
-            get { return this._sprintList; }
-            set { this._sprintList = value; }
-        }
-
-        public Sprint SelectedSprint
-        {
-            get { return this._selectedSprint; }
-            set {
-                this._selectedSprint = value;
-
-                if (this._selectedSprint.Id.Equals("0"))
-                {
-                    this.GetIssuesAsync();
-                }
-                else
-                {
-                    this.GetIssuesBySprintAsync();
-                }
-                OnPropertyChanged("SelectedSprint");
+            get { return this._canCreateIssue; }
+            set
+            {
+                this._canCreateIssue = value;
+                OnPropertyChanged("CanCreateIssue");
             }
         }
     }

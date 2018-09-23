@@ -17,7 +17,7 @@ namespace JiraEX.ViewModel
     {
 
         private IJiraToolWindowNavigatorViewModel _parent;
-        private BoardProject _project;
+        private Project _project;
         private Issue _parentIssue;
 
         private IIssueService _issueService;
@@ -38,7 +38,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditTypeCommand { get; private set; }
         public DelegateCommand CancelEditTypeCommand { get; private set; }
 
-        private CreateIssueViewModel(BoardProject project, IIssueService issueService)
+        private CreateIssueViewModel(Project project, IIssueService issueService)
         {
             this._typesList = new ObservableCollection<IssueType>();
 
@@ -62,7 +62,7 @@ namespace JiraEX.ViewModel
             this.CancelEditTypeCommand = new DelegateCommand(CancelEditType);
         }
 
-        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, BoardProject project, IIssueService issueService) : this(project, issueService)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Project project, IIssueService issueService) : this(project, issueService)
         {
             this._parent = parent;
             this._project = project;
@@ -70,7 +70,7 @@ namespace JiraEX.ViewModel
             this.SelectedType = this._typesList[0];
         }
 
-        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project, IIssueService issueService) : this(project, issueService)
+        public CreateIssueViewModel(IJiraToolWindowNavigatorViewModel parent, Issue parentIssue, Project project, IIssueService issueService) : this(project, issueService)
         {
             this._parent = parent;
             this._parentIssue = parentIssue;
@@ -86,13 +86,13 @@ namespace JiraEX.ViewModel
             Issue fullyCreatedIssue = null;
 
             if (this.IsCreatingSubTask) {
-                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
+                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
 
                 fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
             }
             else
             {
-                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Location.ProjectId, this.Summary, this.Description, this.SelectedType.Id);
+                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
 
                 fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
             }

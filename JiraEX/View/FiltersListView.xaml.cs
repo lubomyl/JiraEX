@@ -20,27 +20,27 @@ using System.Windows.Shapes;
 namespace JiraEX.View
 {
     /// <summary>
-    /// Interaction logic for ProjectsListView.xaml
+    /// Interaction logic for FiltersListView.xaml
     /// </summary>
-    public partial class ProjectListView : UserControl
+    public partial class FiltersListView : UserControl
     {
 
-        private ProjectListViewModel _viewModel;
+        private FilterListViewModel _viewModel;
 
-        public ProjectListView(JiraToolWindowNavigatorViewModel parent, IProjectService projectService, IBoardService boardService)
+        public FiltersListView(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new ProjectListViewModel(parent, projectService, boardService);
+            this._viewModel = new FilterListViewModel(parent, issueService);
             this.DataContext = this._viewModel;
         }
 
-        void ProjectSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        void FilterSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             ListBoxItem listBoxItem = sender as ListBoxItem;
-            Project project = listBoxItem.Content as Project;
+            Filter filter = listBoxItem.Content as Filter;
 
-            this._viewModel.OnItemSelected(project);
+            this._viewModel.OnItemSelected(filter);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace JiraEX.View
 
         private CreateIssueViewModel _viewModel;
 
-        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, BoardProject project, IIssueService issueService)
+        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Project project, IIssueService issueService)
         {
             InitializeComponent();
 
@@ -36,7 +36,7 @@ namespace JiraEX.View
         }
 
         //sub-task overload
-        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, BoardProject project, IIssueService issueService)
+        public CreateIssueView(JiraToolWindowNavigatorViewModel parent, Issue parentIssue, Project project, IIssueService issueService)
         {
             InitializeComponent();
 

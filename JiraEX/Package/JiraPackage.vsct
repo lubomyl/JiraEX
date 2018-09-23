@@ -26,6 +26,9 @@
       <Group guid="guidJiraPackage" id="JiraToolbarGroup" priority="0x0000">
         <Parent guid="guidJiraPackage" id="JiraToolbar" />
       </Group>
+      <Group guid="guidJiraPackage" id="JiraToolbarGroup2" priority="0x0001">
+        <Parent guid="guidJiraPackage" id="JiraToolbar" />
+      </Group>
     </Groups>
       
     <!-- VS menu main button to show Tool Window -->
@@ -68,7 +71,7 @@
       </Strings>
     </Button>
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandConnection" priority="0x0000" type="Button" >
-      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup2" />
       <Icon guid="ImageCatalogGuid" id="AddConnection" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
@@ -77,7 +80,7 @@
       </Strings>
     </Button>
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandRefresh" priority="0x0000" type="Button" >
-      <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
+      <Parent guid="guidJiraPackage" id="JiraToolbarGroup2" />
       <Icon guid="ImageCatalogGuid" id="Refresh" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <CommandFlag>DefaultDisabled</CommandFlag>
@@ -86,6 +89,16 @@
         <ButtonText>Refresh Issues</ButtonText>
       </Strings>
     </Button>
+      <Button guid="guidJiraToolbarMenu" id="ToolbarCommandFilters" priority="0x0000" type="Button" >
+        <Parent guid="guidJiraPackage" id="JiraToolbarGroup2" />
+        <Icon guid="ImageCatalogGuid" id="Filter" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <CommandName>Filters</CommandName>
+          <ButtonText>Filters</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
   </Commands>
@@ -94,6 +107,7 @@
     <GuidSymbol name="guidJiraPackage" value="{923D3D57-D913-4751-93AA-14D5026B1144}">
       <IDSymbol name="JiraToolbar" value="0x1000" />
       <IDSymbol name="JiraToolbarGroup" value="0x1050" />
+      <IDSymbol name="JiraToolbarGroup2" value="0x1051" />
     </GuidSymbol>
 
     <GuidSymbol name="guidJiraToolbarMenu" value="{81EE54E9-FC51-4A19-8964-6C52F1917B97}">
@@ -102,6 +116,7 @@
       <IDSymbol name="ToolbarCommandForward" value="0x0131" />
       <IDSymbol name="ToolbarCommandConnection" value="0x0132" />
       <IDSymbol name="ToolbarCommandRefresh" value="0x0133" />
+      <IDSymbol name="ToolbarCommandFilters" value="0x0134" />
     </GuidSymbol>
 
     <GuidSymbol name="guidJiraMenuGroup" value="{C900F2A3-AAD5-4EAF-A04E-B1BFC7741C45}">

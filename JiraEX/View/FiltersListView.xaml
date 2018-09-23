@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="JiraEX.View.ProjectListView"
+﻿<UserControl x:Class="JiraEX.View.FiltersListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,7 +24,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <ListBox ItemsSource="{Binding ProjectList}"
+        <ListBox ItemsSource="{Binding FilterList}"
                          BorderThickness="0"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemContainerStyle>
@@ -32,22 +32,15 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="BorderThickness" Value="0 0 0 1"/>
                     <Setter Property="BorderBrush" Value="#FF2D2D30"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="ProjectSelected_MouseDoubleClick"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="FilterSelected_MouseDoubleClick"/>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" Margin="8 3 8 3">
-                        <Grid>
-                            <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding Name}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
 
-                                <Border DockPanel.Dock="Right" CornerRadius="2" Padding="5 1" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FF4B4D50">
-                                    <TextBlock FontFamily="Consolas" ToolTip="{Binding ProjectTypeKey, Mode=OneWay}" Text="{Binding ProjectTypeKey, Mode=OneWay}" />
-                                </Border>
-                            </DockPanel>
-                        </Grid>
+                        <TextBlock Text="{Binding Jql}" Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -55,18 +48,18 @@
 
         <StackPanel Margin="10" 
                     VerticalAlignment="Center"
-                    Visibility="{Binding NoProjects, Converter={StaticResource TrueToVisibleConverter}}">
+                    Visibility="{Binding NoFilters, Converter={StaticResource TrueToVisibleConverter}}">
             <TextBlock Style="{StaticResource TitleText}" 
                     HorizontalAlignment="Center"
                     FontSize="16"
                     Margin="4"
-                    Text="There aren't any projects."/>
+                    Text="There aren't any favourite filters."/>
             <TextBlock Style="{StaticResource PlainTextFaded}" 
                     TextWrapping="Wrap"
                     TextAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="4"
-                    Text="Check your Jira application to create or become a part of any project."/>
+                    Text="Check your Jira application to create or make favourite any filter."/>
         </StackPanel>
     </Grid>
 

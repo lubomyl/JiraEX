@@ -15,12 +15,13 @@ namespace JiraRESTClient.Service
     {
 
         /// <summary>
-        /// Async method to get a <see cref="List{Board}"/> object containg all <see cref="Board"/> related to currently authenticated user.
+        /// Async method to get a <see cref="List{Board}"/> object containg all <see cref="BoardList"/> related to currently authenticated user.
         /// </summary>
-        /// <returns>Task containing deserialized <see cref="BoardList"/> model class object.</returns>
-        Task<BoardList> GetAllBoardsAsync();
+        /// <returns>Task containing deserialized <see cref="BoardProjectList"/> model class object.</returns>
+        Task<BoardProjectList> GetAllBoardsAsync();
 
         Task<SprintList> GetAllSprintsByBoardIdAsync(string boardId);
 
+        Task<BoardList> GetAllBoardsByProjectKeyAsync(string projectKey);
     }
 }

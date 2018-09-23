@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class Board
+    public class BoardProjectList
     {
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public List<BoardProject> Values { get; set; }
 
     }
 }

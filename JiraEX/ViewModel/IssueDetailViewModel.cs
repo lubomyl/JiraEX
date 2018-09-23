@@ -51,9 +51,10 @@ namespace JiraEX.ViewModel
         private IAttachmentService _attachmentService;
         private IUserService _userService;
         private IBoardService _boardService;
+        private IProjectService _projectService;
 
         private Issue _issue;
-        private BoardProject _project;
+        private Project _project;
         private User _unassigned;
 
         private Priority _selectedPriority;
@@ -72,6 +73,7 @@ namespace JiraEX.ViewModel
         private ObservableCollection<JiraRESTClient.Model.Version> _affectsVersionsList;
         private ObservableCollection<JiraRESTClient.Model.LabelSuggestion> _labelList;
         private ObservableCollection<Sprint> _sprintList;
+        private ObservableCollection<Board> _boardList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -115,36 +117,27 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditLabelsCommand { get; set; }
         public DelegateCommand CheckedLabelsCommand { get; set; }
 
-        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project, 
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project, 
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService, 
-            IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
+            IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._parent = parent;
 
             Initialize(issueService, priorityService, transitionService,
-            attachmentService, userService, boardService);
+            attachmentService, userService, boardService, projectService);
 
             this.Issue = issue;
-            this._project = project;
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetAssigneesAsync();
             GetLabelsAsync();
-            GetSprintsAsync();
 
             GetEditablePropertiesAsync();
-            CheckSubTaskCreatable();
             
-            CheckEmptyFields();
             UpdateIssueAsync();
 
             SetPanelTitles();
-        }
-
-        public IssueDetailViewModel()
-        {
-           
         }
 
         private void CheckSubTaskCreatable()
@@ -220,7 +213,7 @@ namespace JiraEX.ViewModel
         }
 
         private void Initialize(IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
-            IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
+            IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._unassigned = new User("Unassigned", "-1");
 
@@ -230,6 +223,7 @@ namespace JiraEX.ViewModel
             this._attachmentService = attachmentService;
             this._userService = userService;
             this._boardService = boardService;
+            this._projectService = projectService;
 
             this._priorityList = new ObservableCollection<Priority>();
             this._transitionList = new ObservableCollection<Transition>();
@@ -239,6 +233,7 @@ namespace JiraEX.ViewModel
             this._affectsVersionsList = new ObservableCollection<JiraRESTClient.Model.Version>();
             this._labelList = new ObservableCollection<JiraRESTClient.Model.LabelSuggestion>();
             this._sprintList = new ObservableCollection<Sprint>();
+            this._boardList = new ObservableCollection<Board>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -444,9 +439,24 @@ namespace JiraEX.ViewModel
             this._isInitializingAssignees = false;
         }
 
+        private async void GetBoardsAsync()
+        {
+            Task<BoardList> boardsTask = this._boardService.GetAllBoardsByProjectKeyAsync(this._project.Key);
+            var boardsList = await boardsTask as BoardList;
+
+            this.BoardList.Clear();
+
+            foreach (Board b in boardsList.Values)
+            {
+                this.BoardList.Add(b);
+            }
+
+            GetSprintsAsync();
+        }
+
         private async void GetSprintsAsync()
         {
-            Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(this._project.Id);
+            Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(this.BoardList[0].Id);
             var sprintsList = await sprintsTask as SprintList;
 
             this.SprintList.Clear();
@@ -469,6 +479,7 @@ namespace JiraEX.ViewModel
 
             this._isInitializingSprints = false;
         }
+
         private async void GetLabelsAsync()
         {
             Task<LabelsList> labelsTask = this._issueService.GetAllLabelsAsync("");
@@ -572,7 +583,10 @@ namespace JiraEX.ViewModel
         {
             this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
 
+            this._project = this._issue.Fields.Project;
+
             UpdateAttachments();
+            GetCreatableIssueTypes();
             CheckEmptyFields();
         }
 
@@ -584,6 +598,21 @@ namespace JiraEX.ViewModel
             {
                 this.AttachmentsList.Add(a);
             }
+        }
+
+        private async void GetCreatableIssueTypes()
+        {
+            var projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
+
+            foreach (ProjectCreatable pc in projectCreatableList.Projects)
+            {
+                if (this._project.Id.Equals(pc.Id))
+                {
+                    this._project.CreatableIssueTypesList = pc.Issuetypes;
+                }
+            }
+
+            CheckSubTaskCreatable();
         }
 
         private async void DoTransitionAsync()
@@ -633,11 +662,10 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmEditDescription(object parameter)
         {
+            this.IsEditingDescription = false;
             await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "description", this._issue.Fields.Description);
 
             UpdateIssueAsync();
-
-            this.IsEditingDescription = false;
         }
 
         private void CancelEditDescription(object parameter)
@@ -914,6 +942,16 @@ namespace JiraEX.ViewModel
             {
                 this._assigneeList = value;
                 OnPropertyChanged("AssigneeList");
+            }
+        }
+
+        public ObservableCollection<Board> BoardList
+        {
+            get { return this._boardList; }
+            set
+            {
+                this._boardList = value;
+                OnPropertyChanged("BoardList");
             }
         }
 
