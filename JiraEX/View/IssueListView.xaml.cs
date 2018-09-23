@@ -27,11 +27,11 @@ namespace JiraEX.View
 
         private IssueListViewModel _viewModel;
 
-        public IssueListView(JiraToolWindowNavigatorViewModel parent, IIssueService issueService, ISprintService sprintService, BoardProject boardProject)
+        public IssueListView(JiraToolWindowNavigatorViewModel parent, IIssueService issueService, Project project)
         {
             InitializeComponent();
 
-            this._viewModel = new IssueListViewModel(parent, issueService, sprintService, boardProject);
+            this._viewModel = new IssueListViewModel(parent, issueService, project);
             this.DataContext = this._viewModel;
         }
 
@@ -39,7 +39,7 @@ namespace JiraEX.View
         {
             InitializeComponent();
 
-            this._viewModel = new IssueListViewModel(parent, issueService, sprintService, filter);
+            this._viewModel = new IssueListViewModel(parent, issueService, filter);
             this.DataContext = this._viewModel;
         }
 

@@ -21,13 +21,13 @@ namespace JiraEX.ViewModel.Navigation
 
         void ShowProjects(object sender, EventArgs e);
 
-        void ShowIssuesOfProject(BoardProject boardProject);
+        void ShowIssuesOfProject(Project project);
 
-        void ShowIssueDetail(Issue issue, BoardProject project);
+        void ShowIssueDetail(Issue issue, Project project);
 
-        void CreateIssue(BoardProject project);
+        void CreateIssue(Project project);
 
-        void CreateIssue(Issue parentIssue, BoardProject project);
+        void CreateIssue(Issue parentIssue, Project project);
 
         void SetPanelTitles(string title, string subtitle);
 

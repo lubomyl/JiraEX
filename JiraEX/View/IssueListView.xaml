@@ -25,16 +25,6 @@
 
     <DockPanel>
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-            <Grid Margin="8" Visibility="{Binding CanFilterBySprint, Converter={StaticResource TrueToVisibleConverter}}">
-
-                <ComboBox DockPanel.Dock="Left" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding SprintList}"
-                          DisplayMemberPath="Name"
-                          SelectedValuePath="Id"
-                          SelectedValue="{Binding Path=Name}"
-                          SelectedItem="{Binding Path=SelectedSprint}">
-                </ComboBox>
-            </Grid>
-
             <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
                        Margin="8 0 0 0" Style="{StaticResource PlainText}">
                         <Hyperlink Command="{Binding CreateIssueCommand}" 

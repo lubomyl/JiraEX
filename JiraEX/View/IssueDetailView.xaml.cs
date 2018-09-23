@@ -27,7 +27,7 @@ namespace JiraEX.View
 
         private IssueDetailViewModel _viewModel;
 
-        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project,
+        public IssueDetailView(JiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
         {

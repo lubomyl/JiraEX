@@ -83,9 +83,9 @@ namespace JiraEX.ViewModel
 
         public void OnItemSelected(object sender)
         {
-            BoardProject boardProject = sender as BoardProject;
+            Project project = sender as Project;
 
-            this._parent.ShowIssuesOfProject(boardProject);
+            this._parent.ShowIssuesOfProject(project);
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

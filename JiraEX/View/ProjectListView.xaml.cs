@@ -38,7 +38,7 @@ namespace JiraEX.View
         void ProjectSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             ListBoxItem listBoxItem = sender as ListBoxItem;
-            BoardProject project = listBoxItem.Content as BoardProject;
+            Project project = listBoxItem.Content as Project;
 
             this._viewModel.OnItemSelected(project);
         }

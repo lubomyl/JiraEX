@@ -13,7 +13,7 @@ namespace JiraEX.UnitTests.ViewModel
     [TestClass]
     public class CreateIssueViewModelTests
     {
-        Mock<BoardProject> _mockBoardProject;
+        Mock<Project> _mockProject;
         Mock<IJiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
         Mock<IIssueService> _mockIssueService;
         Mock<Issue> _mockParent;
@@ -24,19 +24,18 @@ namespace JiraEX.UnitTests.ViewModel
         [TestInitialize]
         public void Initialize()
         {
-            this._mockBoardProject = new Mock<BoardProject>();
+            this._mockProject = new Mock<Project>();
 
             //Cannot mock Get methods on Class object - only works against Interface with Moq framework
-            this._mockBoardProject.Object.CreatableIssueTypesList = new List<IssueType>();
-            this._mockBoardProject.Object.CreatableIssueTypesList.Add(new IssueType());
-            this._mockBoardProject.Object.Location = new Location();
+            this._mockProject.Object.CreatableIssueTypesList = new List<IssueType>();
+            this._mockProject.Object.CreatableIssueTypesList.Add(new IssueType());
 
             this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>();
             this._mockIssueService = new Mock<IIssueService>();
             this._mockParent = new Mock<Issue>();
 
             this._mockJiraToolWindowNavigatorViewModel.Setup(mock => mock.ShowIssueDetail(It.IsAny<Issue>(), 
-                It.IsAny<BoardProject>())).Verifiable();
+                It.IsAny<Project>())).Verifiable();
             this._mockIssueService.Setup(mock => mock.CreateIssueAsync(It.IsAny<string>(), It.IsAny<string>(), 
                 It.IsAny<string>(), It.IsAny<string>())).Verifiable();
             this._mockIssueService.Setup(mock => mock.CreateSubTaskIssueAsync(It.IsAny<string>(), It.IsAny<string>(), 
@@ -44,10 +43,10 @@ namespace JiraEX.UnitTests.ViewModel
 
             this._subTaskViewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
                 _mockParent.Object, 
-                _mockBoardProject.Object,
+                _mockProject.Object,
                 this._mockIssueService.Object);
             this._viewModel = new CreateIssueViewModel(_mockJiraToolWindowNavigatorViewModel.Object, 
-                _mockBoardProject.Object,
+                _mockProject.Object,
                 this._mockIssueService.Object);
 
             this._subTaskViewModel.SelectedType = new Mock<IssueType>().Object;
@@ -94,7 +93,7 @@ namespace JiraEX.UnitTests.ViewModel
             this._subTaskViewModel.CancelCreateIssueCommand.Execute(null);
 
             this._mockJiraToolWindowNavigatorViewModel.Verify(mock => 
-                mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<BoardProject>()), Times.Once());
+                mock.ShowIssueDetail(It.IsAny<Issue>(), It.IsAny<Project>()), Times.Once());
         }
 
         [TestMethod]
@@ -103,7 +102,7 @@ namespace JiraEX.UnitTests.ViewModel
             this._viewModel.CancelCreateIssueCommand.Execute(null);
 
             this._mockJiraToolWindowNavigatorViewModel.Verify(mock =>
-                mock.ShowIssuesOfProject(It.IsAny<BoardProject>()), Times.Once());
+                mock.ShowIssuesOfProject(It.IsAny<Project>()), Times.Once());
         }
 
         [TestMethod]

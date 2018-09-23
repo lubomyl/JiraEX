@@ -53,7 +53,7 @@ namespace JiraEX.ViewModel
         private IBoardService _boardService;
 
         private Issue _issue;
-        private BoardProject _project;
+        private Project _project;
         private User _unassigned;
 
         private Priority _selectedPriority;
@@ -115,7 +115,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditLabelsCommand { get; set; }
         public DelegateCommand CheckedLabelsCommand { get; set; }
 
-        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, BoardProject project, 
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project, 
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService, 
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService)
         {
