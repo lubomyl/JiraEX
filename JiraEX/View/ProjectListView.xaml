@@ -24,7 +24,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <ListBox ItemsSource="{Binding BoardProjectList}"
+        <ListBox ItemsSource="{Binding ProjectList}"
                          BorderThickness="0"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemContainerStyle>
@@ -40,11 +40,11 @@
                     <StackPanel Orientation="Vertical" Margin="8 3 8 3">
                         <Grid>
                             <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding Location.ProjectKey}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding Location.ProjectName}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Name}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
 
                                 <Border DockPanel.Dock="Right" CornerRadius="2" Padding="5 1" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FF4B4D50">
-                                    <TextBlock FontFamily="Consolas" ToolTip="{Binding Location.ProjectTypeKey, Mode=OneWay}" Text="{Binding Location.ProjectTypeKey, Mode=OneWay}" />
+                                    <TextBlock FontFamily="Consolas" ToolTip="{Binding ProjectTypeKey, Mode=OneWay}" Text="{Binding ProjectTypeKey, Mode=OneWay}" />
                                 </Border>
                             </DockPanel>
                         </Grid>

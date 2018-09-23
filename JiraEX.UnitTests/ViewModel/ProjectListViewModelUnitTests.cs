@@ -66,7 +66,7 @@ namespace JiraEX.UnitTests.ViewModel
         [TestMethod]
         public void BoardProjectList_Is_Initialized()
         {
-            Assert.AreEqual(this._viewModel.BoardProjectList.Count, NUMBER_OF_PROJECTS);
+            Assert.AreEqual(this._viewModel.ProjectList.Count, NUMBER_OF_PROJECTS);
             Assert.IsFalse(this._viewModel.NoProjects);
         }
 
@@ -79,7 +79,7 @@ namespace JiraEX.UnitTests.ViewModel
                 this._mockProjectService.Object,
                 this._mockBoardService.Object);
 
-            Assert.AreEqual(this._viewModel.BoardProjectList.Count, 0);
+            Assert.AreEqual(this._viewModel.ProjectList.Count, 0);
             Assert.IsTrue(this._viewModel.NoProjects);
         }
 

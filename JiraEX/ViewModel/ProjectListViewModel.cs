@@ -23,7 +23,7 @@ namespace JiraEX.ViewModel
 
         private bool _noProjects = false;
 
-        private ObservableCollection<BoardProject> _boardProjectList;
+        private ObservableCollection<Project> _projectList;
         private ProjectCreatableList _projectCreatableList;
 
         public DelegateCommand ProjectSelectedCommand { get; private set; }
@@ -37,42 +37,42 @@ namespace JiraEX.ViewModel
             this._boardService = boardService;
 
             this._parent = parent;
-            this.BoardProjectList = new ObservableCollection<BoardProject>();
+            this.ProjectList = new ObservableCollection<Project>();
 
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
             OleMenuCommandService service = JiraPackage.Mcs;
 
-            GetBoardsAsync();
+            GetProjectsAsync();
 
-            this.BoardProjectList.CollectionChanged += this.OnCollectionChanged;
+            this.ProjectList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
         }
 
-        private async void GetBoardsAsync()
+        private async void GetProjectsAsync()
         {
-            Task<BoardList> boardTask = this._boardService.GetAllBoardsAsync();
+            Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
-            var boardList = await boardTask as BoardList;
+            var projectList = await projectTask as ProjectList;
 
             this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
 
-            if (boardList.Values.Count > 0)
+            if (projectList.Count > 0)
             {
-                foreach (BoardProject b in boardList.Values)
+                foreach (Project p in projectList)
                 {
 
                     //Fetching Creatable IssueTypes for each project
-                    foreach (ProjectCreatable p in this._projectCreatableList.Projects)
+                    foreach (ProjectCreatable pc in this._projectCreatableList.Projects)
                     {
-                        if (b.Location.ProjectId.Equals(p.Id))
+                        if (p.Id.Equals(pc.Id))
                         {
-                            b.CreatableIssueTypesList = p.Issuetypes;
+                            p.CreatableIssueTypesList = pc.Issuetypes;
                         }
                     }
                     //end fetching
 
-                    this.BoardProjectList.Add(b);
+                    this.ProjectList.Add(p);
                 }
             }
             else
@@ -97,13 +97,13 @@ namespace JiraEX.ViewModel
             this._parent.SetPanelTitles("JiraEX", "Projects");
         }
 
-        public ObservableCollection<BoardProject> BoardProjectList
+        public ObservableCollection<Project> ProjectList
         {
-            get { return this._boardProjectList; }
+            get { return this._projectList; }
             set
             {
-                this._boardProjectList = value;
-                OnPropertyChanged("BoardProjectList");
+                this._projectList = value;
+                OnPropertyChanged("ProjectList");
             }
         }
 

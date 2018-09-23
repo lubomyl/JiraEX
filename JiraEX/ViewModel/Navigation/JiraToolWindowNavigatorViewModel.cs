@@ -78,6 +78,9 @@ namespace JiraEX.ViewModel.Navigation
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
                     this.ShowAfterSignIn();
+                } else
+                {
+                    this.ShowBeforeSignIn();
                 }
             }
             catch (Exception ex)
