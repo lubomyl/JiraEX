@@ -54,10 +54,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Editable\AffectsVersionsEditableProperty.cs" />
     <Compile Include="Model\IssueModel\Attachment.cs" />
-    <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Board\BoardList.cs" />
+    <Compile Include="Model\Board\BoardProjectList.cs" />
     <Compile Include="Model\Board\BoardProject.cs" />
     <Compile Include="Model\Editable\EditableProperties.cs" />
     <Compile Include="Model\Editable\FixVersionsEditableProperty.cs" />

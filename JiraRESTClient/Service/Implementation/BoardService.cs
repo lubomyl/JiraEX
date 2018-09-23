@@ -26,10 +26,19 @@ namespace JiraRESTClient.Service.Implementation
         /// <summary>
         /// <see cref="IBoardService.GetAllBoardsAsync"/>
         /// </summary>
-        public Task<BoardList> GetAllBoardsAsync()
+        public Task<BoardProjectList> GetAllBoardsAsync()
         {
             return Task.Run(() => {
                 var resource = "board";
+
+                return this._baseService.GetAgileResource<BoardProjectList>(resource);
+            });
+        }
+
+        public Task<BoardList> GetAllBoardsByProjectKeyAsync(string projectKey)
+        {
+            return Task.Run(() => {
+                var resource = $"board?projectKeyOrId={projectKey}";
 
                 return this._baseService.GetAgileResource<BoardList>(resource);
             });

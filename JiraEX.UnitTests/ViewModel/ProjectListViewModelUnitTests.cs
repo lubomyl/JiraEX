@@ -20,7 +20,7 @@ namespace JiraEX.UnitTests.ViewModel
         Mock<IProjectService> _mockProjectService;
         Mock<IBoardService> _mockBoardService;
 
-        Mock<BoardList> _mockBoardList;
+        Mock<BoardProjectList> _mockBoardList;
         Mock<BoardProject> _mockBoardProject;
         Mock<ProjectCreatableList> _mockProjectCreatableList;
 
@@ -33,7 +33,7 @@ namespace JiraEX.UnitTests.ViewModel
             this._mockBoardProject.Object.Location = new Mock<Location>().Object;
             this._mockBoardProject.Object.Location.ProjectId = "0";
 
-            this._mockBoardList = new Mock<BoardList>();
+            this._mockBoardList = new Mock<BoardProjectList>();
             this._mockBoardList.Object.Values = new List<BoardProject>();
 
             this._mockProjectCreatableList = new Mock<ProjectCreatableList>();

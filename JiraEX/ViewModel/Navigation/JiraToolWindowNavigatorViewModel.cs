@@ -154,9 +154,9 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssueDetail(Issue issue, Project project)
         {
-            this._issueDetailView = new IssueDetailView(this, issue, project,
+            this._issueDetailView = new IssueDetailView(this, issue, project, 
                 this._issueService, this._priorityService, this._transitionService,
-                this._attachmentService, this._userService, this._boardService);
+                this._attachmentService, this._userService, this._boardService, this._projectService);
 
             SelectedView = this._issueDetailView;
         }
