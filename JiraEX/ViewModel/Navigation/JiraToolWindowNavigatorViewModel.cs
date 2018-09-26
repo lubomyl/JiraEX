@@ -195,7 +195,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             if (this._advancedSearchView == null)
             {
-                this._advancedSearchView = new AdvancedSearchView(this, this._issueService);
+                this._advancedSearchView = new AdvancedSearchView(this);
 
                 SelectedView = this._advancedSearchView;
             }

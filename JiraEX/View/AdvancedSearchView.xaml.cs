@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel.Navigation;
+﻿using JiraEX.ViewModel;
+using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace JiraEX.View
             InitializeComponent();
 
             this._viewModel = new AdvancedSearchViewModel(parent);
+            this.DataContext = this._viewModel;
         }
 
         void IssueSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
