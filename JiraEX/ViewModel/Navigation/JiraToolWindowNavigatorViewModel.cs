@@ -40,6 +40,7 @@ namespace JiraEX.ViewModel.Navigation
         private IssueDetailView _issueDetailView;
         private CreateIssueView _createIssueView;
         private FiltersListView _filtersListView;
+        private AdvancedSearchView _advancedSearchView;
 
         private OleMenuCommandService _service;
 
@@ -190,6 +191,20 @@ namespace JiraEX.ViewModel.Navigation
             }
         }
 
+        public void ShowAdvancedSearch(object sender, EventArgs e)
+        {
+            if (this._advancedSearchView == null)
+            {
+                this._advancedSearchView = new AdvancedSearchView(this, this._issueService);
+
+                SelectedView = this._advancedSearchView;
+            }
+            else
+            {
+                SelectedView = this._advancedSearchView;
+            }
+        }
+
         private void InitializeCommands(OleMenuCommandService service)
         {
             if (service != null)
@@ -197,14 +212,17 @@ namespace JiraEX.ViewModel.Navigation
                 CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
                 CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
                 CommandID toolbarMenuCommandFiltersID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FILTERS_ID);
+                CommandID toolbarMenuCommandAdvancedSearchID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
                 MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
                 MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
+                MenuCommand onToolbarMenuCommandAdvancedSearClick = new MenuCommand(ShowAdvancedSearch, toolbarMenuCommandAdvancedSearchID);
 
                 service.AddCommand(onToolbarMenuCommandHomeClick);
                 service.AddCommand(onToolbarMenuCommandConnectionClick);
                 service.AddCommand(onToolbarMenuCommandFiltersClick);
+                service.AddCommand(onToolbarMenuCommandAdvancedSearClick);
             }
         }
 
