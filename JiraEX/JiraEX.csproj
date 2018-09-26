@@ -78,6 +78,9 @@
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\AdvancedSearchView.xaml.cs">
+      <DependentUpon>AdvancedSearchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AfterSignInView.xaml.cs">
       <DependentUpon>AfterSignInView.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,10 @@
     <Page Include="Theme\VisualStudioThemeResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AdvancedSearchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AfterSignInView.xaml">
       <SubType>Designer</SubType>
