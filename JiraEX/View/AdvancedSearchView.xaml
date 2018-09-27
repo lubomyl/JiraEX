@@ -46,12 +46,19 @@
             </ComboBox>
 
             <!-- Priorities -->
-            <ComboBox ItemsSource="{Binding PriorityList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedPriority}">
+            <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding PriorityList}"
+                                    Margin="0 0 5 0"
+                                    Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource TrueToVisibleConverter}}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                        </CheckBox>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <!-- Assignees -->

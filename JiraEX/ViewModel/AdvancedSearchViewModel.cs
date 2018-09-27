@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel.Navigation;
+﻿using ConfluenceEX.Command;
+using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using System;
@@ -20,7 +21,6 @@ namespace JiraEX.ViewModel
 
         private Sprint _selectedSprint;
         private User _selectedAssignee;
-        private Priority _selectedPriority;
         private Status _selectedStatus;
         private Project _selectedProject;
         private string _searchText;
@@ -33,6 +33,8 @@ namespace JiraEX.ViewModel
 
         private ObservableCollection<Issue> _issueList;
 
+        public DelegateCommand CheckedPriorityCommand { get; set; }
+
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
         {
             this._parent = parent;
@@ -43,6 +45,9 @@ namespace JiraEX.ViewModel
             this.PriorityList = new ObservableCollection<Priority>();
             this.IssueList = new ObservableCollection<Issue>();
 
+
+            this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
+
             GetIssuesAsync();
             GetPrioritiesAsync();
         }
@@ -50,10 +55,25 @@ namespace JiraEX.ViewModel
         private async void GetIssuesAsync()
         {
             string jql = "";
+            string priorityJql = "";
 
-            if (this.SelectedPriority != null)
+            foreach (Priority p in PriorityList)
             {
-                jql += $"priority in ({this.SelectedPriority.Name})";
+                if (p.CheckedStatus)
+                {
+                    if (priorityJql.Equals(""))
+                    {
+                        priorityJql += p.Name;
+                    } else
+                    {
+                        priorityJql += "," + p.Name;
+                    }
+                }
+            }
+
+            if (!priorityJql.Equals(""))
+            {
+                jql += $"priority in ({priorityJql})";
             }
 
             Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
@@ -82,9 +102,11 @@ namespace JiraEX.ViewModel
             }
         }
 
-        public AdvancedSearchViewModel(JiraToolWindowNavigatorViewModel parent)
+        private void CheckedPriority(object sender)
         {
-            this._parent = parent;
+            Priority priority = sender as Priority;
+
+            GetIssuesAsync();
         }
 
         public void OnItemSelected(Issue issue)
@@ -114,17 +136,6 @@ namespace JiraEX.ViewModel
             {
                 this._selectedAssignee = value;
                 OnPropertyChanged("SelectedAssignee");
-            }
-        }
-
-        public Priority SelectedPriority
-        {
-            get { return this._selectedPriority; }
-            set
-            {
-                this._selectedPriority = value;
-                OnPropertyChanged("SelectedPriority");
-                GetIssuesAsync();
             }
         }
 
