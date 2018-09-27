@@ -1,5 +1,6 @@
 ﻿using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,9 @@ namespace JiraEX.ViewModel
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
+        private IPriorityService _priorityService;
+        private IIssueService _issueService;
+
         private Sprint _selectedSprint;
         private User _selectedAssignee;
         private Priority _selectedPriority;
@@ -26,6 +30,57 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
         private ObservableCollection<Project> _projectList;
+
+        private ObservableCollection<Issue> _issueList;
+
+        public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
+        {
+            this._parent = parent;
+
+            this._priorityService = priorityService;
+            this._issueService = issueService;
+
+            this.PriorityList = new ObservableCollection<Priority>();
+            this.IssueList = new ObservableCollection<Issue>();
+
+            GetIssuesAsync();
+            GetPrioritiesAsync();
+        }
+
+        private async void GetIssuesAsync()
+        {
+            string jql = "";
+
+            if (this.SelectedPriority != null)
+            {
+                jql += $"priority in ({this.SelectedPriority.Name})";
+            }
+
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
+
+            var issueList = await issueTask as IssueList;
+
+            this.IssueList.Clear();
+
+            foreach (Issue i in issueList.Issues)
+            {
+                this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetPrioritiesAsync()
+        {
+            Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
+
+            var priorityList = await priorityTask as PriorityList;
+
+            this.PriorityList.Clear();
+
+            foreach (Priority p in priorityList)
+            {
+                this.PriorityList.Add(p);
+            }
+        }
 
         public AdvancedSearchViewModel(JiraToolWindowNavigatorViewModel parent)
         {
@@ -69,6 +124,7 @@ namespace JiraEX.ViewModel
             {
                 this._selectedPriority = value;
                 OnPropertyChanged("SelectedPriority");
+                GetIssuesAsync();
             }
         }
 
@@ -149,6 +205,16 @@ namespace JiraEX.ViewModel
             {
                 this._projectList = value;
                 OnPropertyChanged("ProjectList");
+            }
+        }
+
+        public ObservableCollection<Issue> IssueList
+        {
+            get { return this._issueList; }
+            set
+            {
+                this._issueList = value;
+                OnPropertyChanged("IssueList");
             }
         }
     }

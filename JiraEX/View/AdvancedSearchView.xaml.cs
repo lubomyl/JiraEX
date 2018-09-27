@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +25,11 @@ namespace JiraEX.View
 
         private AdvancedSearchViewModel _viewModel;
 
-        public AdvancedSearchView(JiraToolWindowNavigatorViewModel parent)
+        public AdvancedSearchView(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new AdvancedSearchViewModel(parent);
+            this._viewModel = new AdvancedSearchViewModel(parent, priorityService, issueService);
             this.DataContext = this._viewModel;
         }
 
