@@ -35,6 +35,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CheckedPriorityCommand { get; set; }
 
+        Task<IssueList> issueTask;
+
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
         {
             this._parent = parent;
@@ -76,7 +78,7 @@ namespace JiraEX.ViewModel
                 jql += $"priority in ({priorityJql})";
             }
 
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
+            this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
             var issueList = await issueTask as IssueList;
 
