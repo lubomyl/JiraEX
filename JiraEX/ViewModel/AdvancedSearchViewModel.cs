@@ -65,10 +65,10 @@ namespace JiraEX.ViewModel
                 {
                     if (priorityJql.Equals(""))
                     {
-                        priorityJql += p.Name;
+                        priorityJql += "\"" + p.Name + "\"";
                     } else
                     {
-                        priorityJql += "," + p.Name;
+                        priorityJql += "," + "\"" + p.Name + "\"";
                     }
                 }
             }
@@ -76,6 +76,18 @@ namespace JiraEX.ViewModel
             if (!priorityJql.Equals(""))
             {
                 jql += $"priority in ({priorityJql})";
+            }
+
+            if (this.SearchText != null)
+            {
+                if (!jql.Equals(""))
+                {
+                    jql += $" AND text~\"{this.SearchText}\"";
+                }
+                else
+                {
+                    jql += $"text~\"{this.SearchText}\"";
+                }
             }
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
@@ -168,6 +180,7 @@ namespace JiraEX.ViewModel
             {
                 this._searchText = value;
                 OnPropertyChanged("SearchText");
+                GetIssuesAsync();
             }
         }
 

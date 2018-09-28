@@ -78,6 +78,12 @@
                                 SelectedValue="{Binding Path=Name}"
                                 SelectedItem="{Binding SelectedStatus}">
             </ComboBox>
+            
+            <!-- Containing text -->
+            <TextBox Text="{Binding SearchText}"
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Center"/>
+            
         </StackPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
