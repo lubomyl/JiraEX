@@ -99,6 +99,16 @@
           <ButtonText>Filters</ButtonText>
         </Strings>
       </Button>
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandAdvancedSearch" priority="0x0000" type="Button" >
+        <Parent guid="guidJiraPackage" id="JiraToolbarGroup2" />
+        <Icon guid="ImageCatalogGuid" id="Search" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <CommandName>Advanced Search</CommandName>
+          <ButtonText>Advanced Search</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
   </Commands>
@@ -117,6 +127,7 @@
       <IDSymbol name="ToolbarCommandConnection" value="0x0132" />
       <IDSymbol name="ToolbarCommandRefresh" value="0x0133" />
       <IDSymbol name="ToolbarCommandFilters" value="0x0134" />
+    <IDSymbol name="ToolbarCommandAdvancedSearch" value="0x0135" />
     </GuidSymbol>
 
     <GuidSymbol name="guidJiraMenuGroup" value="{C900F2A3-AAD5-4EAF-A04E-B1BFC7741C45}">
