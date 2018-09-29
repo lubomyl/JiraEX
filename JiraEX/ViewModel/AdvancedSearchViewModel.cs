@@ -46,12 +46,14 @@ namespace JiraEX.ViewModel
             this._issueService = issueService;
 
             this.PriorityList = new ObservableCollection<Priority>();
+            this.StatusList = new ObservableCollection<Status>();
             this.IssueList = new ObservableCollection<Issue>();
 
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
+            GetStatusesAsync();
         }
 
         private async void GetIssuesAsync()
@@ -81,6 +83,33 @@ namespace JiraEX.ViewModel
             foreach (Priority p in priorityList)
             {
                 this.PriorityList.Add(p);
+            }
+        }
+
+        private async void GetStatusesAsync()
+        {
+            Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
+
+            var projectList = await projectTask as ProjectList;
+
+            this.StatusList.Clear();
+
+            foreach(Project p in projectList)
+            {
+                Task<StatusList> statusTask = this._projectService.GetAllStatusesAsync(p.Key);
+
+                var statusList = await statusTask as StatusList;
+
+                foreach(Status s in statusList.Statuses)
+                {
+                    foreach(Status st in this.StatusList)
+                    {
+                        if (!s.Name.Equals(st.Name))
+                        {
+                            this.StatusList.Add(s);
+                        }
+                    }
+                }
             }
         }
 
