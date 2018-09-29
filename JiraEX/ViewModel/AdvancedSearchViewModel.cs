@@ -1,4 +1,5 @@
 ﻿using ConfluenceEX.Command;
+using JiraEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -47,7 +48,6 @@ namespace JiraEX.ViewModel
             this.PriorityList = new ObservableCollection<Priority>();
             this.IssueList = new ObservableCollection<Issue>();
 
-
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
 
             GetIssuesAsync();
@@ -56,39 +56,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            string jql = "";
-            string priorityJql = "";
-
-            foreach (Priority p in PriorityList)
-            {
-                if (p.CheckedStatus)
-                {
-                    if (priorityJql.Equals(""))
-                    {
-                        priorityJql += "\"" + p.Name + "\"";
-                    } else
-                    {
-                        priorityJql += "," + "\"" + p.Name + "\"";
-                    }
-                }
-            }
-
-            if (!priorityJql.Equals(""))
-            {
-                jql += $"priority in ({priorityJql})";
-            }
-
-            if (this.SearchText != null)
-            {
-                if (!jql.Equals(""))
-                {
-                    jql += $" AND text~\"{this.SearchText}\"";
-                }
-                else
-                {
-                    jql += $"text~\"{this.SearchText}\"";
-                }
-            }
+            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), null, null, this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
