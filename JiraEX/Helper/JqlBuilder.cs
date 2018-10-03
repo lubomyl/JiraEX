@@ -12,11 +12,12 @@ namespace JiraEX.Helper
 
         private static string jql = "";
 
-        public static string Build(Sprint[] sprints, User[] assignees, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
+        public static string Build(Sprint[] sprints, bool isAssignedToMe, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
         {
             jql = "";
 
             ProcessSprints(sprints);
+            ProcessAssignedToMe(isAssignedToMe);
             ProcessPriorities(priorities);
             ProcessStatuses(statuses);
             ProcessProjects(projects);
@@ -39,6 +40,16 @@ namespace JiraEX.Helper
                     }
                 }
 
+                CloseParameterValuesIn();
+            }
+        }
+
+        private static void ProcessAssignedToMe(bool isAssignedToMe)
+        {
+            if (isAssignedToMe)
+            {
+                AppendParameterNameIn("assignee");
+                AddParameterValueAssignedUser("currentUser()");
                 CloseParameterValuesIn();
             }
         }
@@ -138,6 +149,18 @@ namespace JiraEX.Helper
             } else
             {
                 jql += "," + "\"" + value + "\"";
+            }
+        }
+
+        private static void AddParameterValueAssignedUser(string value)
+        {
+            if (jql[jql.Length - 1] == '(')
+            {
+                jql += value;
+            }
+            else
+            {
+                jql += "," + value;
             }
         }
 

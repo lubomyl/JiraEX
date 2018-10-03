@@ -25,8 +25,9 @@ namespace JiraEX.ViewModel
 
         private string _searchText;
 
+        private bool _isAssignedToMe;
+
         private ObservableCollection<Sprint> _sprintList;
-        private ObservableCollection<User> _assigneeList;
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
         private ObservableCollection<Project> _projectList;
@@ -73,7 +74,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(this.SprintList.ToArray(), null, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
+            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -222,6 +223,16 @@ namespace JiraEX.ViewModel
             this._parent.SetPanelTitles("JiraEX", "Advanced search");
         }
 
+        public bool IsAssignedToMe
+        {
+            get { return this._isAssignedToMe; }
+            set
+            {
+                this._isAssignedToMe = value;
+                OnPropertyChanged("IsAssignedToMe");
+                GetIssuesAsync();
+            }
+        }
         public string SearchText
         {
             get { return this._searchText; }
@@ -240,16 +251,6 @@ namespace JiraEX.ViewModel
             {
                 this._sprintList = value;
                 OnPropertyChanged("SprintList");
-            }
-        }
-
-        public ObservableCollection<User> AssigneeList
-        {
-            get { return this._assigneeList; }
-            set
-            {
-                this._assigneeList = value;
-                OnPropertyChanged("AssigneeList");
             }
         }
 

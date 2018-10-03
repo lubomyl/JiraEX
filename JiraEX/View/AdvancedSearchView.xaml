@@ -72,14 +72,9 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <!-- Assignees -->
-            <ComboBox ItemsSource="{Binding AssigneeList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedAssignee}">
-            </ComboBox>
+            <!-- Assigned to me -->
+            <CheckBox IsChecked="{Binding IsAssignedToMe}" />
+            <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me." Margin="0 0 5 0"/>
 
             <!-- Statuses -->
             <ComboBox StaysOpenOnEdit="True" 
