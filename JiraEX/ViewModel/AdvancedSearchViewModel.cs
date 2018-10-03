@@ -20,9 +20,9 @@ namespace JiraEX.ViewModel
         private IPriorityService _priorityService;
         private IIssueService _issueService;
         private IProjectService _projectService;
+        private ISprintService _sprintService;
+        private IBoardService _boardService;
 
-        private Sprint _selectedSprint;
-        private User _selectedAssignee;
         private string _searchText;
 
         private ObservableCollection<Sprint> _sprintList;
@@ -30,42 +30,50 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
         private ObservableCollection<Project> _projectList;
+        private List<BoardProject> _boardList;
 
         private ObservableCollection<Issue> _issueList;
 
         public DelegateCommand CheckedPriorityCommand { get; set; }
         public DelegateCommand CheckedStatusCommand { get; set; }
         public DelegateCommand CheckedProjectCommand { get; set; }
+        public DelegateCommand CheckedSprintCommand { get; set; }
 
         Task<IssueList> issueTask;
 
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
-            IIssueService issueService, IProjectService projectService)
+            IIssueService issueService, IProjectService projectService, ISprintService sprintService, IBoardService boardService)
         {
             this._parent = parent;
 
             this._priorityService = priorityService;
             this._issueService = issueService;
             this._projectService = projectService;
+            this._sprintService = sprintService;
+            this._boardService = boardService;
 
             this.PriorityList = new ObservableCollection<Priority>();
             this.StatusList = new ObservableCollection<Status>();
             this.ProjectList = new ObservableCollection<Project>();
             this.IssueList = new ObservableCollection<Issue>();
+            this._boardList = new List<BoardProject>();
+            this.SprintList = new ObservableCollection<Sprint>();
 
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
             this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
             this.CheckedProjectCommand = new DelegateCommand(CheckedProject);
+            this.CheckedSprintCommand = new DelegateCommand(CheckedSprint);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
             GetStatusesAsync();
             GetProjectsAsync();
+            GetBoardsAsync();
         }
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
+            string jql = JqlBuilder.Build(this.SprintList.ToArray(), null, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -139,6 +147,43 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetBoardsAsync()
+        {
+            Task<BoardProjectList> boardsTask = this._boardService.GetAllBoardsAsync();
+            var boardsList = await boardsTask as BoardProjectList;
+
+            this._boardList.Clear();
+
+            foreach (BoardProject b in boardsList.Values)
+            {
+                this._boardList.Add(b);
+            }
+
+            GetSprintsAsync();
+        }
+
+        private async void GetSprintsAsync()
+        {
+            this.SprintList.Clear();
+
+            foreach (BoardProject bp in this._boardList)
+            {
+                Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(bp.Id);
+                var sprintsList = await sprintsTask as SprintList;
+
+                if (sprintsList != null)
+                {
+                    foreach (Sprint s in sprintsList.Values)
+                    {
+                        if (!this.SprintList.Any(sprint => sprint.Id == s.Id))
+                        {
+                            this.SprintList.Add(s);
+                        }
+                    }
+                }
+            }
+        }
+
         private void CheckedPriority(object sender)
         {
             Priority priority = sender as Priority;
@@ -160,6 +205,13 @@ namespace JiraEX.ViewModel
             GetIssuesAsync();
         }
 
+        private void CheckedSprint(object sender)
+        {
+            Sprint sprint = sender as Sprint;
+
+            GetIssuesAsync();
+        }
+
         public void OnItemSelected(Issue issue)
         {
             this._parent.ShowIssueDetail(issue, null);
@@ -168,26 +220,6 @@ namespace JiraEX.ViewModel
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", "Advanced search");
-        }
-
-        public Sprint SelectedSprint
-        {
-            get { return this._selectedSprint; }
-            set
-            {
-                this._selectedSprint = value;
-                OnPropertyChanged("SelectedSprint");
-            }
-        }
-
-        public User SelectedAssignee
-        {
-            get { return this._selectedAssignee; }
-            set
-            {
-                this._selectedAssignee = value;
-                OnPropertyChanged("SelectedAssignee");
-            }
         }
 
         public string SearchText

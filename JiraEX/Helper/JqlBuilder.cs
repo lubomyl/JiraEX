@@ -15,13 +15,32 @@ namespace JiraEX.Helper
         public static string Build(Sprint[] sprints, User[] assignees, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
         {
             jql = "";
-            
+
+            ProcessSprints(sprints);
             ProcessPriorities(priorities);
             ProcessStatuses(statuses);
             ProcessProjects(projects);
             ProcessSearchText(searchText);
 
             return jql;
+        }
+
+        private static void ProcessSprints(Sprint[] sprints)
+        {
+            if (sprints.Any(sprint => sprint.CheckedStatus))
+            {
+                AppendParameterNameIn("sprint");
+
+                foreach (Sprint s in sprints)
+                {
+                    if (s.CheckedStatus)
+                    {
+                        AddParameterValueIn(s.Id);
+                    }
+                }
+
+                CloseParameterValuesIn();
+            }
         }
 
         private static void ProcessPriorities(Priority[] priorities)

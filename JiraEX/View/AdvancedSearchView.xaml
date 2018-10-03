@@ -28,12 +28,18 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             
             <!-- Sprints -->
-            <ComboBox ItemsSource="{Binding SprintList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedSprint}">
+            <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding SprintList}"
+                                    Margin="0 0 5 0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                        </CheckBox>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <!-- Projects -->
