@@ -19,6 +19,7 @@ namespace JiraEX.ViewModel
 
         private IPriorityService _priorityService;
         private IIssueService _issueService;
+        private IProjectService _projectService;
 
         private Sprint _selectedSprint;
         private User _selectedAssignee;
@@ -38,12 +39,14 @@ namespace JiraEX.ViewModel
 
         Task<IssueList> issueTask;
 
-        public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
+        public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
+            IIssueService issueService, IProjectService projectService)
         {
             this._parent = parent;
 
             this._priorityService = priorityService;
             this._issueService = issueService;
+            this._projectService = projectService;
 
             this.PriorityList = new ObservableCollection<Priority>();
             this.StatusList = new ObservableCollection<Status>();
@@ -96,18 +99,23 @@ namespace JiraEX.ViewModel
 
             foreach(Project p in projectList)
             {
-                Task<StatusList> statusTask = this._projectService.GetAllStatusesAsync(p.Key);
+                Task<StatusList> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
 
                 var statusList = await statusTask as StatusList;
 
-                foreach(Status s in statusList.Statuses)
+                foreach(Status s in statusList[0].Statuses)
                 {
-                    foreach(Status st in this.StatusList)
+                    if (this.StatusList.Count > 0)
                     {
-                        if (!s.Name.Equals(st.Name))
+                        Status contains = this.StatusList.FirstOrDefault(status => status.Name.Equals(s.Name));
+
+                        if (contains == null)
                         {
                             this.StatusList.Add(s);
                         }
+                    } else
+                    {
+                        this.StatusList.Add(s);
                     }
                 }
             }

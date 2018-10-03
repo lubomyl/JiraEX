@@ -25,11 +25,12 @@ namespace JiraEX.View
 
         private AdvancedSearchViewModel _viewModel;
 
-        public AdvancedSearchView(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
+        public AdvancedSearchView(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
+            IIssueService issueService, IProjectService projectService)
         {
             InitializeComponent();
 
-            this._viewModel = new AdvancedSearchViewModel(parent, priorityService, issueService);
+            this._viewModel = new AdvancedSearchViewModel(parent, priorityService, issueService, projectService);
             this.DataContext = this._viewModel;
         }
 
