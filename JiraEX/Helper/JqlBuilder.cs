@@ -18,6 +18,7 @@ namespace JiraEX.Helper
             
             ProcessPriorities(priorities);
             ProcessStatuses(statuses);
+            ProcessProjects(projects);
             ProcessSearchText(searchText);
 
             return jql;
@@ -25,9 +26,7 @@ namespace JiraEX.Helper
 
         private static void ProcessPriorities(Priority[] priorities)
         {
-            int counter = 0;
-
-            if (priorities.Length > 0)
+            if (priorities.Any(priority => priority.CheckedStatus))
             {
                 AppendParameterNameIn("priority");
 
@@ -35,25 +34,17 @@ namespace JiraEX.Helper
                 {
                     if (p.CheckedStatus)
                     {
-                        counter++;
                         AddParameterValueIn(p.Name);
                     }
                 }
 
                 CloseParameterValuesIn();
-
-                if (counter == 0)
-                {
-                    jql = "";
-                }
             }
         }
 
         private static void ProcessStatuses(Status[] statuses)
         {
-            int counter = 0;
-
-            if (statuses.Length > 0)
+            if (statuses.Any(status => status.CheckedStatus))
             {
                 AppendParameterNameIn("status");
 
@@ -61,17 +52,29 @@ namespace JiraEX.Helper
                 {
                     if (s.CheckedStatus)
                     {
-                        counter++;
                         AddParameterValueIn(s.Name);
                     }
                 }
 
                 CloseParameterValuesIn();
+            }
+        }
 
-                if (counter == 0)
+        private static void ProcessProjects(Project[] projects)
+        {
+            if (projects.Any(project => project.CheckedStatus))
+            {
+                AppendParameterNameIn("project");
+
+                foreach (Project p in projects)
                 {
-                    jql = "";
+                    if (p.CheckedStatus)
+                    {
+                        AddParameterValueIn(p.Name);
+                    }
                 }
+
+                CloseParameterValuesIn();
             }
         }
 

@@ -23,7 +23,6 @@ namespace JiraEX.ViewModel
 
         private Sprint _selectedSprint;
         private User _selectedAssignee;
-        private Project _selectedProject;
         private string _searchText;
 
         private ObservableCollection<Sprint> _sprintList;
@@ -36,6 +35,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand CheckedPriorityCommand { get; set; }
         public DelegateCommand CheckedStatusCommand { get; set; }
+        public DelegateCommand CheckedProjectCommand { get; set; }
 
         Task<IssueList> issueTask;
 
@@ -50,19 +50,22 @@ namespace JiraEX.ViewModel
 
             this.PriorityList = new ObservableCollection<Priority>();
             this.StatusList = new ObservableCollection<Status>();
+            this.ProjectList = new ObservableCollection<Project>();
             this.IssueList = new ObservableCollection<Issue>();
 
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
             this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
+            this.CheckedProjectCommand = new DelegateCommand(CheckedProject);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
             GetStatusesAsync();
+            GetProjectsAsync();
         }
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), this.StatusList.ToArray(), null, this.SearchText);
+            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -122,6 +125,20 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetProjectsAsync()
+        {
+            Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
+
+            var projectList = await projectTask as ProjectList;
+
+            this.ProjectList.Clear();
+
+            foreach (Project p in projectList)
+            {
+                this.ProjectList.Add(p);
+            }
+        }
+
         private void CheckedPriority(object sender)
         {
             Priority priority = sender as Priority;
@@ -132,6 +149,13 @@ namespace JiraEX.ViewModel
         private void CheckedStatus(object sender)
         {
             Status status = sender as Status;
+
+            GetIssuesAsync();
+        }
+
+        private void CheckedProject(object sender)
+        {
+            Project project = sender as Project;
 
             GetIssuesAsync();
         }
@@ -163,16 +187,6 @@ namespace JiraEX.ViewModel
             {
                 this._selectedAssignee = value;
                 OnPropertyChanged("SelectedAssignee");
-            }
-        }
-
-        public Project SelectedProject
-        {
-            get { return this._selectedProject; }
-            set
-            {
-                this._selectedProject = value;
-                OnPropertyChanged("SelectedProject");
             }
         }
 
