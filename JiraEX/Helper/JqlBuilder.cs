@@ -12,12 +12,13 @@ namespace JiraEX.Helper
 
         private static string jql = "";
 
-        public static string Build(Sprint[] sprints, bool isAssignedToMe, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
+        public static string Build(Sprint[] sprints, bool isAssignedToMe, bool isUnassigned, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
         {
             jql = "";
 
             ProcessSprints(sprints);
             ProcessAssignedToMe(isAssignedToMe);
+            ProcessUnassigned(isUnassigned);
             ProcessPriorities(priorities);
             ProcessStatuses(statuses);
             ProcessProjects(projects);
@@ -50,6 +51,16 @@ namespace JiraEX.Helper
             {
                 AppendParameterNameIn("assignee");
                 AddParameterValueAssignedUser("currentUser()");
+                CloseParameterValuesIn();
+            }
+        }
+
+        private static void ProcessUnassigned(bool isUnassigned)
+        {
+            if (isUnassigned)
+            {
+                AppendParameterNameIn("assignee");
+                AddParameterValueAssignedUser("EMPTY");
                 CloseParameterValuesIn();
             }
         }

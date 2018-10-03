@@ -25,77 +25,108 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             
             <!-- Sprints -->
-            <ComboBox StaysOpenOnEdit="True" 
-                                    ItemsSource="{Binding SprintList}"
-                                    Margin="0 0 5 0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                                Content="{Binding Name}" 
-                                                IsChecked="{Binding CheckedStatus}" 
-                                                CommandParameter="{Binding}">
-                        </CheckBox>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Sprints:</Label>
+            
+                <ComboBox StaysOpenOnEdit="True" 
+                                        ItemsSource="{Binding SprintList}"
+                                        Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                    Content="{Binding Name}" 
+                                                    IsChecked="{Binding CheckedStatus}" 
+                                                    CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            
             <!-- Projects -->
-            <ComboBox StaysOpenOnEdit="True" 
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Projects:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
                                     ItemsSource="{Binding ProjectList}"
                                     Margin="0 0 5 0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Command="{Binding DataContext.CheckedProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                 Content="{Binding Name}" 
                                                 IsChecked="{Binding CheckedStatus}" 
                                                 CommandParameter="{Binding}">
-                        </CheckBox>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
 
             <!-- Priorities -->
-            <ComboBox StaysOpenOnEdit="True" 
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Priorities:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
                                     ItemsSource="{Binding PriorityList}"
                                     Margin="0 0 5 0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                 Content="{Binding Name}" 
                                                 IsChecked="{Binding CheckedStatus}" 
                                                 CommandParameter="{Binding}">
-                        </CheckBox>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
 
-            <!-- Assigned to me -->
-            <CheckBox IsChecked="{Binding IsAssignedToMe}" />
-            <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me." Margin="0 0 5 0"/>
+            <StackPanel Orientation="Horizontal">
+                <!-- Assigned to me -->
+                <StackPanel Margin="0 0 5 0" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IsAssignedToMe}" Margin="0 0 3 0"/>
+                    <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me" />
+                </StackPanel>
+
+                <!-- Unassigned -->
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IsUnassigned}" Margin="0 0 3 0"/>
+                    <TextBlock Style="{StaticResource PlainText}" Text="Unassigned"/>
+                </StackPanel>
+            </StackPanel>
 
             <!-- Statuses -->
-            <ComboBox StaysOpenOnEdit="True" 
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Statuses:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
                                     ItemsSource="{Binding StatusList}"
                                     Margin="0 0 5 0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                 Content="{Binding Name}" 
                                                 IsChecked="{Binding CheckedStatus}" 
                                                 CommandParameter="{Binding}">
-                        </CheckBox>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
             <!-- Containing text -->
-            <TextBox Text="{Binding SearchText}"
-                     TextWrapping="Wrap"
-                     VerticalAlignment="Center"/>
-            
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Text:</Label>
+
+                <TextBox Text="{Binding SearchText}"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Center"
+                         Width="150"/>
+            </StackPanel>
+
         </StackPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />

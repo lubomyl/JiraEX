@@ -26,6 +26,7 @@ namespace JiraEX.ViewModel
         private string _searchText;
 
         private bool _isAssignedToMe;
+        private bool _isUnassigned;
 
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Priority> _priorityList;
@@ -74,7 +75,8 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
+            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.IsUnassigned, 
+                this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -233,6 +235,18 @@ namespace JiraEX.ViewModel
                 GetIssuesAsync();
             }
         }
+
+        public bool IsUnassigned
+        {
+            get { return this._isUnassigned; }
+            set
+            {
+                this._isUnassigned = value;
+                OnPropertyChanged("IsUnassigned");
+                GetIssuesAsync();
+            }
+        }
+
         public string SearchText
         {
             get { return this._searchText; }
