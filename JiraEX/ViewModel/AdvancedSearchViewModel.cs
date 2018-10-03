@@ -23,7 +23,6 @@ namespace JiraEX.ViewModel
 
         private Sprint _selectedSprint;
         private User _selectedAssignee;
-        private Status _selectedStatus;
         private Project _selectedProject;
         private string _searchText;
 
@@ -36,6 +35,7 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Issue> _issueList;
 
         public DelegateCommand CheckedPriorityCommand { get; set; }
+        public DelegateCommand CheckedStatusCommand { get; set; }
 
         Task<IssueList> issueTask;
 
@@ -53,6 +53,7 @@ namespace JiraEX.ViewModel
             this.IssueList = new ObservableCollection<Issue>();
 
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
+            this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
@@ -61,7 +62,7 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), null, null, this.SearchText);
+            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), this.StatusList.ToArray(), null, this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -128,6 +129,13 @@ namespace JiraEX.ViewModel
             GetIssuesAsync();
         }
 
+        private void CheckedStatus(object sender)
+        {
+            Status status = sender as Status;
+
+            GetIssuesAsync();
+        }
+
         public void OnItemSelected(Issue issue)
         {
             this._parent.ShowIssueDetail(issue, null);
@@ -155,16 +163,6 @@ namespace JiraEX.ViewModel
             {
                 this._selectedAssignee = value;
                 OnPropertyChanged("SelectedAssignee");
-            }
-        }
-
-        public Status SelectedStatus
-        {
-            get { return this._selectedStatus; }
-            set
-            {
-                this._selectedStatus = value;
-                OnPropertyChanged("SelectedStatus");
             }
         }
 

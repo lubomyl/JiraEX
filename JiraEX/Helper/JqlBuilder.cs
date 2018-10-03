@@ -17,6 +17,7 @@ namespace JiraEX.Helper
             jql = "";
             
             ProcessPriorities(priorities);
+            ProcessStatuses(statuses);
             ProcessSearchText(searchText);
 
             return jql;
@@ -36,6 +37,32 @@ namespace JiraEX.Helper
                     {
                         counter++;
                         AddParameterValueIn(p.Name);
+                    }
+                }
+
+                CloseParameterValuesIn();
+
+                if (counter == 0)
+                {
+                    jql = "";
+                }
+            }
+        }
+
+        private static void ProcessStatuses(Status[] statuses)
+        {
+            int counter = 0;
+
+            if (statuses.Length > 0)
+            {
+                AppendParameterNameIn("status");
+
+                foreach (Status s in statuses)
+                {
+                    if (s.CheckedStatus)
+                    {
+                        counter++;
+                        AddParameterValueIn(s.Name);
                     }
                 }
 
@@ -85,10 +112,10 @@ namespace JiraEX.Helper
         {
             if(jql[jql.Length - 1] == '(')
             {
-                jql += value;
+                jql += "\"" + value + "\"";
             } else
             {
-                jql += "," + value;
+                jql += "," + "\"" + value + "\"";
             }
         }
 

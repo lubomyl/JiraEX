@@ -12,5 +12,7 @@ namespace JiraRESTClient.Model
         public string Id { get; set; }
         public string Name { get; set; }
 
+        public bool CheckedStatus { get; set; }
+
     }
 }

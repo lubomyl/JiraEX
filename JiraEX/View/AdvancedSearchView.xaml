@@ -48,8 +48,7 @@
             <!-- Priorities -->
             <ComboBox StaysOpenOnEdit="True" 
                                     ItemsSource="{Binding PriorityList}"
-                                    Margin="0 0 5 0"
-                                    Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource TrueToVisibleConverter}}">
+                                    Margin="0 0 5 0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
@@ -71,12 +70,18 @@
             </ComboBox>
 
             <!-- Statuses -->
-            <ComboBox ItemsSource="{Binding StatusList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedStatus}">
+            <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding StatusList}"
+                                    Margin="0 0 5 0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                        </CheckBox>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
             
             <!-- Containing text -->
