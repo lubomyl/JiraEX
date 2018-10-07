@@ -15,5 +15,7 @@ namespace JiraRESTClient.Model
         public string ProjectTypeKey { get; set; }
         public List<IssueType> CreatableIssueTypesList { get; set; }
 
+        public bool CheckedStatus { get; set; }
+
     }
 }

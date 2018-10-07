@@ -12,21 +12,62 @@ namespace JiraEX.Helper
 
         private static string jql = "";
 
-        public static string Build(Sprint[] sprints, User[] assignees, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
+        public static string Build(Sprint[] sprints, bool isAssignedToMe, bool isUnassigned, Priority[] priorities, Status[] statuses, Project[] projects, string searchText)
         {
             jql = "";
-            
+
+            ProcessSprints(sprints);
+            ProcessAssignedToMe(isAssignedToMe);
+            ProcessUnassigned(isUnassigned);
             ProcessPriorities(priorities);
+            ProcessStatuses(statuses);
+            ProcessProjects(projects);
             ProcessSearchText(searchText);
 
             return jql;
         }
 
+        private static void ProcessSprints(Sprint[] sprints)
+        {
+            if (sprints.Any(sprint => sprint.CheckedStatus))
+            {
+                AppendParameterNameIn("sprint");
+
+                foreach (Sprint s in sprints)
+                {
+                    if (s.CheckedStatus)
+                    {
+                        AddParameterValueIn(s.Id);
+                    }
+                }
+
+                CloseParameterValuesIn();
+            }
+        }
+
+        private static void ProcessAssignedToMe(bool isAssignedToMe)
+        {
+            if (isAssignedToMe)
+            {
+                AppendParameterNameIn("assignee");
+                AddParameterValueAssignedUser("currentUser()");
+                CloseParameterValuesIn();
+            }
+        }
+
+        private static void ProcessUnassigned(bool isUnassigned)
+        {
+            if (isUnassigned)
+            {
+                AppendParameterNameIn("assignee");
+                AddParameterValueAssignedUser("EMPTY");
+                CloseParameterValuesIn();
+            }
+        }
+
         private static void ProcessPriorities(Priority[] priorities)
         {
-            int counter = 0;
-
-            if (priorities.Length > 0)
+            if (priorities.Any(priority => priority.CheckedStatus))
             {
                 AppendParameterNameIn("priority");
 
@@ -34,17 +75,47 @@ namespace JiraEX.Helper
                 {
                     if (p.CheckedStatus)
                     {
-                        counter++;
                         AddParameterValueIn(p.Name);
                     }
                 }
 
                 CloseParameterValuesIn();
+            }
+        }
 
-                if (counter == 0)
+        private static void ProcessStatuses(Status[] statuses)
+        {
+            if (statuses.Any(status => status.CheckedStatus))
+            {
+                AppendParameterNameIn("status");
+
+                foreach (Status s in statuses)
                 {
-                    jql = "";
+                    if (s.CheckedStatus)
+                    {
+                        AddParameterValueIn(s.Name);
+                    }
                 }
+
+                CloseParameterValuesIn();
+            }
+        }
+
+        private static void ProcessProjects(Project[] projects)
+        {
+            if (projects.Any(project => project.CheckedStatus))
+            {
+                AppendParameterNameIn("project");
+
+                foreach (Project p in projects)
+                {
+                    if (p.CheckedStatus)
+                    {
+                        AddParameterValueIn(p.Name);
+                    }
+                }
+
+                CloseParameterValuesIn();
             }
         }
 
@@ -85,8 +156,20 @@ namespace JiraEX.Helper
         {
             if(jql[jql.Length - 1] == '(')
             {
-                jql += value;
+                jql += "\"" + value + "\"";
             } else
+            {
+                jql += "," + "\"" + value + "\"";
+            }
+        }
+
+        private static void AddParameterValueAssignedUser(string value)
+        {
+            if (jql[jql.Length - 1] == '(')
+            {
+                jql += value;
+            }
+            else
             {
                 jql += "," + value;
             }

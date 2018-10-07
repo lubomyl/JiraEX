@@ -19,44 +19,64 @@ namespace JiraEX.ViewModel
 
         private IPriorityService _priorityService;
         private IIssueService _issueService;
+        private IProjectService _projectService;
+        private ISprintService _sprintService;
+        private IBoardService _boardService;
 
-        private Sprint _selectedSprint;
-        private User _selectedAssignee;
-        private Status _selectedStatus;
-        private Project _selectedProject;
         private string _searchText;
 
+        private bool _isAssignedToMe;
+        private bool _isUnassigned;
+
         private ObservableCollection<Sprint> _sprintList;
-        private ObservableCollection<User> _assigneeList;
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
         private ObservableCollection<Project> _projectList;
+        private List<BoardProject> _boardList;
 
         private ObservableCollection<Issue> _issueList;
 
         public DelegateCommand CheckedPriorityCommand { get; set; }
+        public DelegateCommand CheckedStatusCommand { get; set; }
+        public DelegateCommand CheckedProjectCommand { get; set; }
+        public DelegateCommand CheckedSprintCommand { get; set; }
 
         Task<IssueList> issueTask;
 
-        public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, IIssueService issueService)
+        public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
+            IIssueService issueService, IProjectService projectService, ISprintService sprintService, IBoardService boardService)
         {
             this._parent = parent;
 
             this._priorityService = priorityService;
             this._issueService = issueService;
+            this._projectService = projectService;
+            this._sprintService = sprintService;
+            this._boardService = boardService;
 
             this.PriorityList = new ObservableCollection<Priority>();
+            this.StatusList = new ObservableCollection<Status>();
+            this.ProjectList = new ObservableCollection<Project>();
             this.IssueList = new ObservableCollection<Issue>();
+            this._boardList = new List<BoardProject>();
+            this.SprintList = new ObservableCollection<Sprint>();
 
             this.CheckedPriorityCommand = new DelegateCommand(CheckedPriority);
+            this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
+            this.CheckedProjectCommand = new DelegateCommand(CheckedProject);
+            this.CheckedSprintCommand = new DelegateCommand(CheckedSprint);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
+            GetStatusesAsync();
+            GetProjectsAsync();
+            GetBoardsAsync();
         }
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(null, null, this.PriorityList.ToArray(), null, null, this.SearchText);
+            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.IsUnassigned, 
+                this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
@@ -84,9 +104,113 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private async void GetStatusesAsync()
+        {
+            Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
+
+            var projectList = await projectTask as ProjectList;
+
+            this.StatusList.Clear();
+
+            foreach(Project p in projectList)
+            {
+                Task<StatusList> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
+
+                var statusList = await statusTask as StatusList;
+
+                foreach(Status s in statusList[0].Statuses)
+                {
+                    if (this.StatusList.Count > 0)
+                    {
+                        Status contains = this.StatusList.FirstOrDefault(status => status.Name.Equals(s.Name));
+
+                        if (contains == null)
+                        {
+                            this.StatusList.Add(s);
+                        }
+                    } else
+                    {
+                        this.StatusList.Add(s);
+                    }
+                }
+            }
+        }
+
+        private async void GetProjectsAsync()
+        {
+            Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
+
+            var projectList = await projectTask as ProjectList;
+
+            this.ProjectList.Clear();
+
+            foreach (Project p in projectList)
+            {
+                this.ProjectList.Add(p);
+            }
+        }
+
+        private async void GetBoardsAsync()
+        {
+            Task<BoardProjectList> boardsTask = this._boardService.GetAllBoardsAsync();
+            var boardsList = await boardsTask as BoardProjectList;
+
+            this._boardList.Clear();
+
+            foreach (BoardProject b in boardsList.Values)
+            {
+                this._boardList.Add(b);
+            }
+
+            GetSprintsAsync();
+        }
+
+        private async void GetSprintsAsync()
+        {
+            this.SprintList.Clear();
+
+            foreach (BoardProject bp in this._boardList)
+            {
+                Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(bp.Id);
+                var sprintsList = await sprintsTask as SprintList;
+
+                if (sprintsList != null)
+                {
+                    foreach (Sprint s in sprintsList.Values)
+                    {
+                        if (!this.SprintList.Any(sprint => sprint.Id == s.Id))
+                        {
+                            this.SprintList.Add(s);
+                        }
+                    }
+                }
+            }
+        }
+
         private void CheckedPriority(object sender)
         {
             Priority priority = sender as Priority;
+
+            GetIssuesAsync();
+        }
+
+        private void CheckedStatus(object sender)
+        {
+            Status status = sender as Status;
+
+            GetIssuesAsync();
+        }
+
+        private void CheckedProject(object sender)
+        {
+            Project project = sender as Project;
+
+            GetIssuesAsync();
+        }
+
+        private void CheckedSprint(object sender)
+        {
+            Sprint sprint = sender as Sprint;
 
             GetIssuesAsync();
         }
@@ -101,43 +225,25 @@ namespace JiraEX.ViewModel
             this._parent.SetPanelTitles("JiraEX", "Advanced search");
         }
 
-        public Sprint SelectedSprint
+        public bool IsAssignedToMe
         {
-            get { return this._selectedSprint; }
+            get { return this._isAssignedToMe; }
             set
             {
-                this._selectedSprint = value;
-                OnPropertyChanged("SelectedSprint");
+                this._isAssignedToMe = value;
+                OnPropertyChanged("IsAssignedToMe");
+                GetIssuesAsync();
             }
         }
 
-        public User SelectedAssignee
+        public bool IsUnassigned
         {
-            get { return this._selectedAssignee; }
+            get { return this._isUnassigned; }
             set
             {
-                this._selectedAssignee = value;
-                OnPropertyChanged("SelectedAssignee");
-            }
-        }
-
-        public Status SelectedStatus
-        {
-            get { return this._selectedStatus; }
-            set
-            {
-                this._selectedStatus = value;
-                OnPropertyChanged("SelectedStatus");
-            }
-        }
-
-        public Project SelectedProject
-        {
-            get { return this._selectedProject; }
-            set
-            {
-                this._selectedProject = value;
-                OnPropertyChanged("SelectedProject");
+                this._isUnassigned = value;
+                OnPropertyChanged("IsUnassigned");
+                GetIssuesAsync();
             }
         }
 
@@ -159,16 +265,6 @@ namespace JiraEX.ViewModel
             {
                 this._sprintList = value;
                 OnPropertyChanged("SprintList");
-            }
-        }
-
-        public ObservableCollection<User> AssigneeList
-        {
-            get { return this._assigneeList; }
-            set
-            {
-                this._assigneeList = value;
-                OnPropertyChanged("AssigneeList");
             }
         }
 

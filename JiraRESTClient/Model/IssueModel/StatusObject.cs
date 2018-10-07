@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class Status
+    public class StatusOjbect
     {
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-
-        public bool CheckedStatus { get; set; }
+        public List<Status> Statuses { get; set; }
 
     }
 }
