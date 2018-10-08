@@ -17,6 +17,7 @@ namespace JiraEX.Main
         public const int COMMAND_HOME_ID = 0x0129;
         public const int COMMAND_CONNECTION_ID = 0x0132;
         public const int COMMAND_FILTERS_ID = 0x0134;
+        public const int COMMAND_ADVANCED_SEARCH_ID = 0x0135;
 
         public const int JIRA_TOOLBAR_ID = 0x1000;
         public const int JIRA_COMMAND_ID = 0x0101;

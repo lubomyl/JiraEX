@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="JiraEX.View.AdvancedSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            
+            <!-- Sprints -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Sprints:</Label>
+            
+                <ComboBox StaysOpenOnEdit="True" 
+                                        ItemsSource="{Binding SprintList}"
+                                        Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                    Content="{Binding Name}" 
+                                                    IsChecked="{Binding CheckedStatus}" 
+                                                    CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            
+            <!-- Projects -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Projects:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding ProjectList}"
+                                    Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Priorities -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Priorities:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding PriorityList}"
+                                    Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <!-- Assigned to me -->
+                <StackPanel Margin="0 0 5 0" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IsAssignedToMe}" Margin="0 0 3 0"/>
+                    <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me" />
+                </StackPanel>
+
+                <!-- Unassigned -->
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IsUnassigned}" Margin="0 0 3 0"/>
+                    <TextBlock Style="{StaticResource PlainText}" Text="Unassigned"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Statuses -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Statuses:</Label>
+
+                <ComboBox StaysOpenOnEdit="True" 
+                                    ItemsSource="{Binding StatusList}"
+                                    Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Containing text -->
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LabelFaded}">Text:</Label>
+
+                <TextBox Text="{Binding SearchText}"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Center"
+                         Width="150"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
+
+        <Grid>
+            <ListBox ItemsSource="{Binding IssueList}"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         MouseDoubleClick="IssueSelected_MouseDoubleClick">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                        <Setter Property="BorderBrush" Value="#FF2D2D30"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Vertical" Margin="8 0 8 0">
+
+                                <Grid Margin="0 3 0 3">
+                                    <DockPanel LastChildFill="False" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Style="{StaticResource TitleText}" Opacity="0.5"/>
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                            <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
+                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
+                                            </Border>
+                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Priority.Name, Mode=OneWay}" Text="{Binding Fields.Priority.Name, Mode=OneWay}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Grid>
+
+                                <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </DockPanel>
+</UserControl>
+    

@@ -127,11 +127,14 @@ namespace JiraEX.ViewModel
             attachmentService, userService, boardService, projectService);
 
             this.Issue = issue;
+            this._project = this._issue.Fields.Project;
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetAssigneesAsync();
             GetLabelsAsync();
+            GetBoardsAsync();
+            GetCreatableIssueTypes();
 
             GetEditablePropertiesAsync();
             
@@ -585,9 +588,8 @@ namespace JiraEX.ViewModel
 
             this._project = this._issue.Fields.Project;
 
-            UpdateAttachments();
-            GetCreatableIssueTypes();
             CheckEmptyFields();
+            UpdateAttachments();
         }
 
         private void UpdateAttachments()
