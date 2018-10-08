@@ -47,7 +47,8 @@ namespace JiraEX.ViewModel
                 if (!it.Subtask)
                 {
                     this.TypesList.Add(it);
-                } else
+                }
+                else
                 {
                     this._subTask = it;
                 }

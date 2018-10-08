@@ -25,7 +25,7 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" >
             
             <!-- Sprints -->
             <StackPanel Orientation="Horizontal">
@@ -127,7 +127,7 @@
                          Width="150"/>
             </StackPanel>
 
-        </StackPanel>
+        </WrapPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
 
