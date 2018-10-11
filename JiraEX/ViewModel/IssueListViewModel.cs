@@ -24,12 +24,19 @@ namespace JiraEX.ViewModel
 
         private Project _project;
 
+        private bool _isEditingAttributes;
+
         private ObservableCollection<Issue> _issueList;
+        private ObservableCollection<MyAttribute> _attributesList;
 
         private string _subtitle;
         private bool _canCreateIssue = false;
 
         public DelegateCommand CreateIssueCommand { get; private set; }
+
+        public DelegateCommand CheckedAttributeCommand { get; set; }
+        public DelegateCommand EditAttributesCommand { get; set; }
+        public DelegateCommand CancelEditAttributesCommand { get; set; }
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
@@ -38,8 +45,15 @@ namespace JiraEX.ViewModel
             this._parent = parent;
 
             this.IssueList = new ObservableCollection<Issue>();
+            AttributesList = new ObservableCollection<MyAttribute>();
 
             this.CreateIssueCommand = new DelegateCommand(RedirectCreateIssue);
+
+            this.CheckedAttributeCommand = new DelegateCommand(CheckedAttribute);
+            this.EditAttributesCommand = new DelegateCommand(EditAttributes);
+            this.CancelEditAttributesCommand = new DelegateCommand(CancelEditAttributes);
+
+            InitializeAttributes();
 
             OleMenuCommandService service = JiraPackage.Mcs;
         }
@@ -110,6 +124,39 @@ namespace JiraEX.ViewModel
         {
         }
 
+        private void CheckedAttribute(object sender)
+        {
+            OnPropertyChanged("SelectedAttributes");
+
+            RefreshShowedAttributes();
+        }
+
+        private void RefreshShowedAttributes()
+        {
+
+        }
+
+        private void EditAttributes(object sender)
+        {
+            this.IsEditingAttributes = true;
+        }
+
+        private void CancelEditAttributes(object sernder)
+        {
+            this.IsEditingAttributes = false;
+        }
+
+        private void InitializeAttributes()
+        {
+            this.AttributesList.Add(new MyAttribute("Description", true));
+            this.AttributesList.Add(new MyAttribute("Type", true));
+            this.AttributesList.Add(new MyAttribute("Status", true));
+            this.AttributesList.Add(new MyAttribute("Created", false));
+            this.AttributesList.Add(new MyAttribute("Updated", false));
+            this.AttributesList.Add(new MyAttribute("Assignee", false));
+            
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", this._subtitle);
@@ -121,6 +168,12 @@ namespace JiraEX.ViewModel
             set { this._issueList = value; }
         }
 
+        public ObservableCollection<MyAttribute> AttributesList
+        {
+            get { return this._attributesList; }
+            set { this._attributesList = value; }
+        }
+
         public bool CanCreateIssue
         {
             get { return this._canCreateIssue; }
@@ -128,6 +181,46 @@ namespace JiraEX.ViewModel
             {
                 this._canCreateIssue = value;
                 OnPropertyChanged("CanCreateIssue");
+            }
+        }
+
+        public bool IsEditingAttributes
+        {
+            get { return this._isEditingAttributes; }
+            set
+            {
+                this._isEditingAttributes = value;
+                OnPropertyChanged("IsEditingAttributes");
+            }
+        }
+
+        public string SelectedAttributes
+        {
+            get
+            {
+                string ret = "";
+
+                foreach (MyAttribute ma in this.AttributesList)
+                {
+                    if (ma.CheckedStatus)
+                    {
+                        if (!ret.Equals(""))
+                        {
+                            ret += ", " + ma.Name;
+                        }
+                        else
+                        {
+                            ret += ma.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
             }
         }
     }

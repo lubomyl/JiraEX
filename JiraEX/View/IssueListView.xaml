@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:JiraEX.View"
              xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d"
@@ -18,12 +19,53 @@
 					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <controls:NullToVisibilityConverter x:Key="NullToVisibleConverter" />
+            <controls:NullToVisibilityConverter x:Key="NotNullToVisibleConverter" IsReversed="True" />
             <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
             <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <DockPanel>
+
+        <!-- Attributes to show -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Label Style="{StaticResource LabelFaded}">Attributes:</Label>
+
+            <Grid>
+                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                        Visibility="{Binding IsEditingAttributes, Converter={StaticResource FalseToVisibleConverter}}">
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAttributes, Mode=OneWay}" Text="{Binding SelectedAttributes, Mode=OneWay}">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding EditAttributesCommand}" MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                </Border>
+
+                <ComboBox StaysOpenOnEdit="True" 
+                                Visibility="{Binding IsEditingAttributes, Converter={StaticResource TrueToVisibleConverter}}"
+                                ItemsSource="{Binding AttributesList}"
+                                Margin="0 0 5 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding DataContext.CheckedAttributeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                Content="{Binding Name}" 
+                                                IsChecked="{Binding CheckedStatus}" 
+                                                CommandParameter="{Binding}">
+                            </CheckBox>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding CancelEditAttributesCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+
+        <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
+        
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
             <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
                        Margin="8 0 0 0" Style="{StaticResource PlainText}">
@@ -58,14 +100,41 @@
                                             <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
                                                 <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
                                             </Border>
-                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
                                                 <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Priority.Name, Mode=OneWay}" Text="{Binding Fields.Priority.Name, Mode=OneWay}" />
+                                            </Border>
+                                            <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
+                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Fields.IssueType.Name, Mode=OneWay}" />
                                             </Border>
                                         </StackPanel>
                                     </DockPanel>
                                 </Grid>
 
                                 <TextBlock Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Style="{StaticResource LabelFaded}">Created</Label>
+                                    <TextBlock Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Created, Mode=OneWay}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Style="{StaticResource LabelFaded}">Created</Label>
+                                    <TextBlock Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Updated, Mode=OneWay}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
+                                    <TextBlock Visibility="{Binding Fields.Assignee, Converter={StaticResource NullToVisibleConverter}}"
+                                               Style="{StaticResource PlainText}" Text="None" 
+                                               Margin="0 0 5 0"/>
+                                    
+                                    <TextBlock Visibility="{Binding Fields.Assignee, Converter={StaticResource NotNullToVisibleConverter}}"
+                                               Style="{StaticResource TitleText}" Text="{Binding Fields.Assignee.DisplayName}" 
+                                               Margin="0 0 5 0"/>
+
+                                    <TextBlock Visibility="{Binding Fields.Assignee, Converter={StaticResource NotNullToVisibleConverter}}"
+                                               Style="{StaticResource PlainText}" Text="{Binding Fields.Assignee.Name, StringFormat=(@{0})}" />
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
