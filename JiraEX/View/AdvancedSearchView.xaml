@@ -122,7 +122,7 @@
         <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="8 0 8 0">
             <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Text:</Label>
 
-            <TextBox Text="{Binding SearchText}"
+            <TextBox Text="{Binding SearchText, Delay=500, UpdateSourceTrigger=PropertyChanged}"
                     TextWrapping="Wrap"
                     VerticalAlignment="Center"
                     Width="Auto"/>
