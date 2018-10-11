@@ -50,19 +50,36 @@
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Projects:</Label>
 
-                <ComboBox StaysOpenOnEdit="True" 
-                                    ItemsSource="{Binding ProjectList}"
-                                    Margin="0 0 5 0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Command="{Binding DataContext.CheckedProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                                Content="{Binding Name}" 
-                                                IsChecked="{Binding CheckedStatus}" 
-                                                CommandParameter="{Binding}">
-                            </CheckBox>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                        Visibility="{Binding IsEditingProjects, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedProjects, Mode=OneWay}" Text="{Binding SelectedProjects, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditProjectsCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+
+                    <ComboBox StaysOpenOnEdit="True" 
+                            Visibility="{Binding IsEditingProjects, Converter={StaticResource TrueToVisibleConverter}}"
+                            ItemsSource="{Binding ProjectList}"
+                            Margin="0 0 5 0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding DataContext.CheckedProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                                    Content="{Binding Name}" 
+                                                    IsChecked="{Binding CheckedStatus}" 
+                                                    CommandParameter="{Binding}">
+                                </CheckBox>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditProjectsCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
             </StackPanel>
 
             <!-- Priorities -->

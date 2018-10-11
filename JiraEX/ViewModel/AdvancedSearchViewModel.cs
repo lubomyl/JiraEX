@@ -28,6 +28,8 @@ namespace JiraEX.ViewModel
         private bool _isAssignedToMe;
         private bool _isUnassigned;
 
+        private bool _isEditingProjects;
+
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
@@ -40,6 +42,9 @@ namespace JiraEX.ViewModel
         public DelegateCommand CheckedStatusCommand { get; set; }
         public DelegateCommand CheckedProjectCommand { get; set; }
         public DelegateCommand CheckedSprintCommand { get; set; }
+
+        public DelegateCommand EditProjectsCommand { get; set; }
+        public DelegateCommand CancelEditProjectsCommand { get; set; }
 
         Task<IssueList> issueTask;
 
@@ -65,6 +70,9 @@ namespace JiraEX.ViewModel
             this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
             this.CheckedProjectCommand = new DelegateCommand(CheckedProject);
             this.CheckedSprintCommand = new DelegateCommand(CheckedSprint);
+
+            this.EditProjectsCommand = new DelegateCommand(EditProjects);
+            this.CancelEditProjectsCommand = new DelegateCommand(CancelEditProjects);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
@@ -205,6 +213,8 @@ namespace JiraEX.ViewModel
         {
             Project project = sender as Project;
 
+            OnPropertyChanged("SelectedProjects");
+
             GetIssuesAsync();
         }
 
@@ -218,6 +228,16 @@ namespace JiraEX.ViewModel
         public void OnItemSelected(Issue issue)
         {
             this._parent.ShowIssueDetail(issue, null);
+        }
+
+        private void EditProjects(object sender)
+        {
+            this.IsEditingProjects = true;
+        }
+
+        private void CancelEditProjects(object sender)
+        {
+            this.IsEditingProjects = false;
         }
 
         public void SetPanelTitles()
@@ -305,6 +325,44 @@ namespace JiraEX.ViewModel
             {
                 this._issueList = value;
                 OnPropertyChanged("IssueList");
+            }
+        }
+
+        public string SelectedProjects
+        {
+            get
+            {
+                string ret = "";
+
+                foreach(Project p in this.ProjectList)
+                {
+                    if (p.CheckedStatus)
+                    {
+                        if (!ret.Equals("")) {
+                            ret += ", " + p.Name;
+                        } else
+                        {
+                            ret += p.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
+            }
+        }
+
+        public bool IsEditingProjects
+        {
+            get { return this._isEditingProjects; }
+            set
+            {
+                this._isEditingProjects = value;
+                OnPropertyChanged("IsEditingProjects");
             }
         }
     }
