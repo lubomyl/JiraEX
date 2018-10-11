@@ -25,7 +25,7 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" >
+        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8 0 8 0">
             
             <!-- Sprints -->
             <StackPanel Orientation="Horizontal">
@@ -84,20 +84,6 @@
                 </ComboBox>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal">
-                <!-- Assigned to me -->
-                <StackPanel Margin="0 0 5 0" Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding IsAssignedToMe}" Margin="0 0 3 0"/>
-                    <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me" />
-                </StackPanel>
-
-                <!-- Unassigned -->
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding IsUnassigned}" Margin="0 0 3 0"/>
-                    <TextBlock Style="{StaticResource PlainText}" Text="Unassigned"/>
-                </StackPanel>
-            </StackPanel>
-
             <!-- Statuses -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Statuses:</Label>
@@ -116,18 +102,33 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </StackPanel>
+        </WrapPanel>
 
-            <!-- Containing text -->
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource LabelFaded}">Text:</Label>
-
-                <TextBox Text="{Binding SearchText}"
-                         TextWrapping="Wrap"
-                         VerticalAlignment="Center"
-                         Width="150"/>
+        <WrapPanel DockPanel.Dock="Top" Margin="8 0 8 0">
+            <!-- Assigned to me -->
+            <StackPanel Margin="5 0 5 0" Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding IsAssignedToMe}" Margin="0 0 3 0"/>
+                <TextBlock Style="{StaticResource PlainText}" Text="Assigned to me" />
             </StackPanel>
 
+                <!-- Unassigned -->
+            <StackPanel Margin="5 0 5 0" Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding IsUnassigned}" Margin="0 0 3 0"/>
+                <TextBlock Style="{StaticResource PlainText}" Text="Unassigned"/>
+            </StackPanel>
         </WrapPanel>
+
+        <!-- Containing text -->
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="8 0 8 0">
+            <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Text:</Label>
+
+            <TextBox Text="{Binding SearchText}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    Width="Auto"/>
+        </DockPanel>
+
+        
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
 
