@@ -9,7 +9,7 @@ namespace JiraRESTClient.Model
     public class IssueFields
     {
 
-        public IssueType Issuetype { get; set; }
+        public IssueType IssueType { get; set; }
 
         public Sprint Sprint { get; set; }
         public Project Project { get; set; }

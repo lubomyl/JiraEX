@@ -215,8 +215,6 @@ namespace JiraEX.ViewModel
 
         private void CheckedPriority(object sender)
         {
-            Priority priority = sender as Priority;
-
             OnPropertyChanged("SelectedPriorities");
 
             GetIssuesAsync();
@@ -224,8 +222,6 @@ namespace JiraEX.ViewModel
 
         private void CheckedStatus(object sender)
         {
-            Status status = sender as Status;
-
             OnPropertyChanged("SelectedStatuses");
 
             GetIssuesAsync();
@@ -233,8 +229,6 @@ namespace JiraEX.ViewModel
 
         private void CheckedProject(object sender)
         {
-            Project project = sender as Project;
-
             OnPropertyChanged("SelectedProjects");
 
             GetIssuesAsync();
@@ -242,8 +236,6 @@ namespace JiraEX.ViewModel
 
         private void CheckedSprint(object sender)
         {
-            Sprint sprint = sender as Sprint;
-
             OnPropertyChanged("SelectedSprints");
 
             GetIssuesAsync();

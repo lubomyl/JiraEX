@@ -1038,7 +1038,7 @@ namespace JiraEX.ViewModel
         {
             get
             {
-                return this._issue.Fields.Issuetype.Subtask;
+                return this._issue.Fields.IssueType.Subtask;
             }
             set
             {
