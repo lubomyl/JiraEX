@@ -30,20 +30,37 @@
             <!-- Sprints -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Sprints:</Label>
-            
-                <ComboBox StaysOpenOnEdit="True" 
-                                        ItemsSource="{Binding SprintList}"
-                                        Margin="0 0 5 0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                        Visibility="{Binding IsEditingSprints, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedSprints, Mode=OneWay}" Text="{Binding SelectedSprints, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditSprintsCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+
+                    <ComboBox StaysOpenOnEdit="True" 
+                                Visibility="{Binding IsEditingSprints, Converter={StaticResource TrueToVisibleConverter}}"
+                                ItemsSource="{Binding SprintList}"
+                                Margin="0 0 5 0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding DataContext.CheckedSprintCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                     Content="{Binding Name}" 
                                                     IsChecked="{Binding CheckedStatus}" 
                                                     CommandParameter="{Binding}">
-                            </CheckBox>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditSprintsCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
             </StackPanel>
             
             <!-- Projects -->
@@ -86,38 +103,72 @@
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Priorities:</Label>
 
-                <ComboBox StaysOpenOnEdit="True" 
-                                    ItemsSource="{Binding PriorityList}"
-                                    Margin="0 0 5 0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                        Visibility="{Binding IsEditingPriorities, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriorities, Mode=OneWay}" Text="{Binding SelectedPriorities, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditPrioritiesCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+
+                    <ComboBox StaysOpenOnEdit="True" 
+                                Visibility="{Binding IsEditingPriorities, Converter={StaticResource TrueToVisibleConverter}}"
+                                ItemsSource="{Binding PriorityList}"
+                                Margin="0 0 5 0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding DataContext.CheckedPriorityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                 Content="{Binding Name}" 
                                                 IsChecked="{Binding CheckedStatus}" 
                                                 CommandParameter="{Binding}">
-                            </CheckBox>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditPrioritiesCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
             </StackPanel>
 
             <!-- Statuses -->
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource LabelFaded}">Statuses:</Label>
 
-                <ComboBox StaysOpenOnEdit="True" 
-                                    ItemsSource="{Binding StatusList}"
-                                    Margin="0 0 5 0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                <Grid>
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                        Visibility="{Binding IsEditingStatuses, Converter={StaticResource FalseToVisibleConverter}}">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedStatuses, Mode=OneWay}" Text="{Binding SelectedStatuses, Mode=OneWay}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditStatusesCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+
+                    <ComboBox StaysOpenOnEdit="True" 
+                            Visibility="{Binding IsEditingStatuses, Converter={StaticResource TrueToVisibleConverter}}"
+                            ItemsSource="{Binding StatusList}"
+                            Margin="0 0 5 0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding DataContext.CheckedStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                                 Content="{Binding Name}" 
                                                 IsChecked="{Binding CheckedStatus}" 
                                                 CommandParameter="{Binding}">
-                            </CheckBox>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding CancelEditStatusesCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
             </StackPanel>
         </WrapPanel>
 
