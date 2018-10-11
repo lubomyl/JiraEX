@@ -28,6 +28,11 @@ namespace JiraEX.ViewModel
         private bool _isAssignedToMe;
         private bool _isUnassigned;
 
+        private bool _isEditingProjects;
+        private bool _isEditingSprints;
+        private bool _isEditingPriorities;
+        private bool _isEditingStatuses;
+
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Status> _statusList;
@@ -40,6 +45,15 @@ namespace JiraEX.ViewModel
         public DelegateCommand CheckedStatusCommand { get; set; }
         public DelegateCommand CheckedProjectCommand { get; set; }
         public DelegateCommand CheckedSprintCommand { get; set; }
+
+        public DelegateCommand EditProjectsCommand { get; set; }
+        public DelegateCommand CancelEditProjectsCommand { get; set; }
+        public DelegateCommand EditSprintsCommand { get; set; }
+        public DelegateCommand CancelEditSprintsCommand { get; set; }
+        public DelegateCommand EditPrioritiesCommand { get; set; }
+        public DelegateCommand CancelEditPrioritiesCommand { get; set; }
+        public DelegateCommand EditStatusesCommand { get; set; }
+        public DelegateCommand CancelEditStatusesCommand { get; set; }
 
         Task<IssueList> issueTask;
 
@@ -65,6 +79,18 @@ namespace JiraEX.ViewModel
             this.CheckedStatusCommand = new DelegateCommand(CheckedStatus);
             this.CheckedProjectCommand = new DelegateCommand(CheckedProject);
             this.CheckedSprintCommand = new DelegateCommand(CheckedSprint);
+
+            this.EditProjectsCommand = new DelegateCommand(EditProjects);
+            this.CancelEditProjectsCommand = new DelegateCommand(CancelEditProjects);
+
+            this.EditSprintsCommand = new DelegateCommand(EditSprints);
+            this.CancelEditSprintsCommand = new DelegateCommand(CancelEditSprints);
+
+            this.EditPrioritiesCommand = new DelegateCommand(EditPriorities);
+            this.CancelEditPrioritiesCommand = new DelegateCommand(CancelEditPriorities);
+
+            this.EditStatusesCommand = new DelegateCommand(EditStatuses);
+            this.CancelEditStatusesCommand = new DelegateCommand(CancelEditStatuses);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
@@ -191,12 +217,16 @@ namespace JiraEX.ViewModel
         {
             Priority priority = sender as Priority;
 
+            OnPropertyChanged("SelectedPriorities");
+
             GetIssuesAsync();
         }
 
         private void CheckedStatus(object sender)
         {
             Status status = sender as Status;
+
+            OnPropertyChanged("SelectedStatuses");
 
             GetIssuesAsync();
         }
@@ -205,6 +235,8 @@ namespace JiraEX.ViewModel
         {
             Project project = sender as Project;
 
+            OnPropertyChanged("SelectedProjects");
+
             GetIssuesAsync();
         }
 
@@ -212,12 +244,54 @@ namespace JiraEX.ViewModel
         {
             Sprint sprint = sender as Sprint;
 
+            OnPropertyChanged("SelectedSprints");
+
             GetIssuesAsync();
         }
 
         public void OnItemSelected(Issue issue)
         {
             this._parent.ShowIssueDetail(issue, null);
+        }
+
+        private void EditProjects(object sender)
+        {
+            this.IsEditingProjects = true;
+        }
+
+        private void CancelEditProjects(object sender)
+        {
+            this.IsEditingProjects = false;
+        }
+
+        private void EditSprints(object sender)
+        {
+            this.IsEditingSprints = true;
+        }
+
+        private void CancelEditSprints(object sender)
+        {
+            this.IsEditingSprints = false;
+        }
+
+        private void EditPriorities(object sender)
+        {
+            this.IsEditingPriorities = true;
+        }
+
+        private void CancelEditPriorities(object sender)
+        {
+            this.IsEditingPriorities = false;
+        }
+
+        private void EditStatuses(object sender)
+        {
+            this.IsEditingStatuses = true;
+        }
+
+        private void CancelEditStatuses(object sender)
+        {
+            this.IsEditingStatuses = false;
         }
 
         public void SetPanelTitles()
@@ -305,6 +379,166 @@ namespace JiraEX.ViewModel
             {
                 this._issueList = value;
                 OnPropertyChanged("IssueList");
+            }
+        }
+
+        public bool IsEditingProjects
+        {
+            get { return this._isEditingProjects; }
+            set
+            {
+                this._isEditingProjects = value;
+                OnPropertyChanged("IsEditingProjects");
+            }
+        }
+
+        public bool IsEditingSprints
+        {
+            get { return this._isEditingSprints; }
+            set
+            {
+                this._isEditingSprints= value;
+                OnPropertyChanged("IsEditingSprints");
+            }
+        }
+
+        public bool IsEditingPriorities
+        {
+            get { return this._isEditingPriorities; }
+            set
+            {
+                this._isEditingPriorities = value;
+                OnPropertyChanged("IsEditingPriorities");
+            }
+        }
+
+        public bool IsEditingStatuses
+        {
+            get { return this._isEditingStatuses; }
+            set
+            {
+                this._isEditingStatuses = value;
+                OnPropertyChanged("IsEditingStatuses");
+            }
+        }
+
+        public string SelectedProjects
+        {
+            get
+            {
+                string ret = "";
+
+                foreach (Project p in this.ProjectList)
+                {
+                    if (p.CheckedStatus)
+                    {
+                        if (!ret.Equals(""))
+                        {
+                            ret += ", " + p.Name;
+                        }
+                        else
+                        {
+                            ret += p.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
+            }
+        }
+
+        public string SelectedSprints
+        {
+            get
+            {
+                string ret = "";
+
+                foreach (Sprint s in this.SprintList)
+                {
+                    if (s.CheckedStatus)
+                    {
+                        if (!ret.Equals(""))
+                        {
+                            ret += ", " + s.Name;
+                        }
+                        else
+                        {
+                            ret += s.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
+            }
+        }
+
+        public string SelectedPriorities
+        {
+            get
+            {
+                string ret = "";
+
+                foreach (Priority p in this.PriorityList)
+                {
+                    if (p.CheckedStatus)
+                    {
+                        if (!ret.Equals(""))
+                        {
+                            ret += ", " + p.Name;
+                        }
+                        else
+                        {
+                            ret += p.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
+            }
+        }
+
+        public string SelectedStatuses
+        {
+            get
+            {
+                string ret = "";
+
+                foreach (Status s in this.StatusList)
+                {
+                    if (s.CheckedStatus)
+                    {
+                        if (!ret.Equals(""))
+                        {
+                            ret += ", " + s.Name;
+                        }
+                        else
+                        {
+                            ret += s.Name;
+                        }
+                    }
+                }
+
+                if (ret.Equals(""))
+                {
+                    ret = "None";
+                }
+
+                return ret;
             }
         }
     }

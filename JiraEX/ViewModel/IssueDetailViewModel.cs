@@ -127,7 +127,15 @@ namespace JiraEX.ViewModel
             attachmentService, userService, boardService, projectService);
 
             this.Issue = issue;
-            this._project = this._issue.Fields.Project;
+
+            if (project == null)
+            {
+                this._project = this._issue.Fields.Project;
+            }
+            else
+            {
+                this._project = project;
+            }
 
             GetPrioritiesAsync();
             GetTransitionsAsync();
@@ -585,8 +593,6 @@ namespace JiraEX.ViewModel
         private async void UpdateIssueAsync()
         {
             this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
-
-            this._project = this._issue.Fields.Project;
 
             CheckEmptyFields();
             UpdateAttachments();
