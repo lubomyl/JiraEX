@@ -128,12 +128,37 @@ namespace JiraEX.ViewModel
         {
             OnPropertyChanged("SelectedAttributes");
 
-            RefreshShowedAttributes();
+            RefreshShowedAttributes(sender);
         }
 
-        private void RefreshShowedAttributes()
+        private void RefreshShowedAttributes(object sender)
         {
+            MyAttribute attribute = sender as MyAttribute;
 
+            switch (attribute.Name)
+            {
+                case "Type":
+                    OnPropertyChanged("TypeAttribute");
+                    break;
+                case "Status":
+                    OnPropertyChanged("StatusAttribute");
+                    break;
+                case "Created":
+                    OnPropertyChanged("CreatedAttribute");
+                    break;
+                case "Updated":
+                    OnPropertyChanged("UpdatedAttribute");
+                    break;
+                case "Assignee":
+                    OnPropertyChanged("AssigneeAttribute");
+                    break;
+                case "Summary":
+                    OnPropertyChanged("SummaryAttribute");
+                    break;
+                case "Priority":
+                    OnPropertyChanged("PriorityAttribute");
+                    break;
+            }
         }
 
         private void EditAttributes(object sender)
@@ -147,14 +172,14 @@ namespace JiraEX.ViewModel
         }
 
         private void InitializeAttributes()
-        {
-            this.AttributesList.Add(new MyAttribute("Description", true));
+        {   
             this.AttributesList.Add(new MyAttribute("Type", true));
             this.AttributesList.Add(new MyAttribute("Status", true));
             this.AttributesList.Add(new MyAttribute("Created", false));
             this.AttributesList.Add(new MyAttribute("Updated", false));
             this.AttributesList.Add(new MyAttribute("Assignee", false));
-            
+            this.AttributesList.Add(new MyAttribute("Summary", true));
+            this.AttributesList.Add(new MyAttribute("Priority", true));
         }
 
         public void SetPanelTitles()
@@ -222,6 +247,41 @@ namespace JiraEX.ViewModel
 
                 return ret;
             }
+        }
+
+        public bool TypeAttribute
+        {
+            get { return this.AttributesList[0].CheckedStatus; }
+        }
+
+        public bool StatusAttribute
+        {
+            get { return this.AttributesList[1].CheckedStatus; }
+        }
+
+        public bool CreatedAttribute
+        {
+            get { return this.AttributesList[2].CheckedStatus; }
+        }
+
+        public bool UpdatedAttribute
+        {
+            get { return this.AttributesList[3].CheckedStatus; }
+        }
+
+        public bool AssigneeAttribute
+        {
+            get { return this.AttributesList[4].CheckedStatus; }
+        }
+
+        public bool SummaryAttribute
+        {
+            get { return this.AttributesList[5].CheckedStatus; }
+        }
+
+        public bool PriorityAttribute
+        {
+            get { return this.AttributesList[6].CheckedStatus; }
         }
     }
 }
