@@ -74,7 +74,7 @@
                                Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
 
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" />
                 </Border>
 
                 <Grid>
@@ -94,6 +94,11 @@
                                 Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
                                 SelectedValue="{Binding Path=Name}"
                                 SelectedItem="{Binding SelectedTransition}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
@@ -123,6 +128,11 @@
                                 Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
                                 SelectedValue="{Binding Path=Name}"
                                 SelectedItem="{Binding SelectedPriority}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
@@ -269,6 +279,11 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditAssigneeCommand}"/>
@@ -305,6 +320,11 @@
                             Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"
                             SelectedValue="{Binding Path=Name}"
                             SelectedItem="{Binding SelectedSprint}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditSprintCommand}"/>
@@ -362,6 +382,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditLabelsCommand}"/>
@@ -420,6 +445,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditFixVersionsCommand}"/>
@@ -479,6 +509,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditAffectsVersionsCommand}"/>
