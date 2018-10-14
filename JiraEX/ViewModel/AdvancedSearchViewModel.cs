@@ -55,6 +55,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand EditStatusesCommand { get; set; }
         public DelegateCommand CancelEditStatusesCommand { get; set; }
 
+        public DelegateCommand ClearFiltersCommand { get; set; }
+
         Task<IssueList> issueTask;
 
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
@@ -91,6 +93,8 @@ namespace JiraEX.ViewModel
 
             this.EditStatusesCommand = new DelegateCommand(EditStatuses);
             this.CancelEditStatusesCommand = new DelegateCommand(CancelEditStatuses);
+
+            this.ClearFiltersCommand = new DelegateCommand(ClearFilters);
 
             GetIssuesAsync();
             GetPrioritiesAsync();
@@ -264,6 +268,19 @@ namespace JiraEX.ViewModel
         private void CancelEditSprints(object sender)
         {
             this.IsEditingSprints = false;
+        }
+
+        private void ClearFilters(object sender)
+        {
+            this.ProjectList.ToList().ForEach(p => { p.CheckedStatus = false; });
+            this.SprintList.ToList().ForEach(s => { s.CheckedStatus = false; });
+            this.StatusList.ToList().ForEach(s => { s.CheckedStatus = false; });
+            this.PriorityList.ToList().ForEach(p => { p.CheckedStatus = false; });
+
+            OnPropertyChanged("ProjectList");
+            OnPropertyChanged("SelectedProjects");
+
+            GetIssuesAsync();
         }
 
         private void EditPriorities(object sender)

@@ -216,10 +216,19 @@
                     Width="Auto"/>
         </DockPanel>
 
-        
-
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
 
+        <!-- Clear filters 
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <TextBlock Margin="8 0 0 0" Style="{StaticResource PlainText}">
+                        <Hyperlink Command="{Binding ClearFiltersCommand}" 
+                                    CommandParameter="{Binding}">
+                            Clear filters
+                        </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        -->
+        
         <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
                          BorderThickness="0"

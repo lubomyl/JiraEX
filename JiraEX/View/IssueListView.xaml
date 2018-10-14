@@ -71,7 +71,8 @@
         </StackPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
-        
+
+
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
             <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
                        Margin="8 0 0 0" Style="{StaticResource PlainText}">
@@ -82,7 +83,7 @@
             </TextBlock>
         </StackPanel>
 
-        <Grid x:Name="free_context">
+        <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
                          BorderThickness="0"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
