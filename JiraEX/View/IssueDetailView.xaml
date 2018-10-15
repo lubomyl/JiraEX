@@ -172,15 +172,65 @@
                             </Hyperlink>
                 </TextBlock>
 
-                <TextBlock Style="{StaticResource PlainText}"
+                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0"
                                Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
                             <Hyperlink Command="{Binding CreateSubTaskCommand}" 
                                         CommandParameter="{Binding}">
                                 Sub-task...
                             </Hyperlink>
                 </TextBlock>
+
+                <TextBlock Style="{StaticResource PlainText}">
+                            <Hyperlink Command="{Binding LinkIssueCommand}" 
+                                        CommandParameter="{Binding}">
+                                Link issue...
+                            </Hyperlink>
+                </TextBlock>
             </StackPanel>
 
+            <!-- Create linked issue -->
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsLinkingIssue, Converter={StaticResource TrueToVisibleConverter}}">
+                <!-- link type -->
+                <ComboBox ItemsSource="{Binding LinkTypesList}"
+                            Margin="0 0 5 0"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding Path=Name}"
+                            SelectedItem="{Binding SelectedLinkType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+
+                <!-- issue -->
+                <ComboBox ItemsSource="{Binding IssueList}"
+                            Margin="0 0 5 0"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding Path=Key}"
+                            SelectedItem="{Binding SelectedLinkIssue}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+            </StackPanel>
+            
             <Separator Margin="-8,5,-8,0"
                        Style="{StaticResource PaneHorizontalSeparator}" />
 
