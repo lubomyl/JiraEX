@@ -259,5 +259,14 @@ namespace JiraRESTClient.Service.Implementation
                 this._baseService.PostResourceContent(resource, Encoding.UTF8.GetBytes(linkString));
             });
         }
+
+        public Task DeleteLinkedIssue(string linkId)
+        {
+            return Task.Run(() => {
+                var resource = $"issueLink/{linkId}";
+
+                this._baseService.DeleteResource(resource);
+            });
+        }
     }
 }

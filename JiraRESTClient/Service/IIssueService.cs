@@ -57,5 +57,7 @@ namespace JiraRESTClient.Service
         Task<IssueLinkTypeList> GetAllIssueLinkTypes();
 
         Task LinkIssue(string inwardIssueKey, string outwardIssueKey, string linkName);
+
+        Task DeleteLinkedIssue(string linkId);
     }
 }

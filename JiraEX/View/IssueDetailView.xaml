@@ -611,8 +611,12 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Type.Inward}" Margin="0 0 10 0"/>
-                                <TextBlock Text="{Binding InwardIssue.Key}" Style="{StaticResource PlainText}"/>
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Type.Inward, Mode=OneWay}" Text="{Binding Type.Inward, Mode=OneWay}" />
+                                </Border>
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding InwardIssue.Key, Mode=OneWay}" Text="{Binding InwardIssue.Key, Mode=OneWay}" />
+                                </Border>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -635,8 +639,19 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Type.Outward}" Margin="0 0 10 0"/>
-                                <TextBlock Text="{Binding OutwardIssue.Key}" Style="{StaticResource PlainText}"/>
+                                
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DataContext.DeleteLinkedIssueCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
+                                            CommandParameter="{Binding}"
+                                            Content="Delete" 
+                                            Height="20"/>
+                                
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Type.Outward, Mode=OneWay}" Text="{Binding Type.Outward, Mode=OneWay}" />
+                                </Border>
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding OutwardIssue.Key, Mode=OneWay}" Text="{Binding OutwardIssue.Key, Mode=OneWay}" />
+                                </Border>
+                                
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

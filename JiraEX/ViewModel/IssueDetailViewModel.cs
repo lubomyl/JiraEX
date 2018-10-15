@@ -128,6 +128,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand ConfirmLinkIssueCommand { get; set; }
         public DelegateCommand CancelLinkIssueCommand { get; set; }
 
+        public DelegateCommand DeleteLinkedIssueCommand { get; set; }
+
         public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
@@ -308,8 +310,16 @@ namespace JiraEX.ViewModel
             this.LinkIssueCommand = new DelegateCommand(LinkIssue);
             this.ConfirmLinkIssueCommand = new DelegateCommand(ConfirmLinkIssue);
             this.CancelLinkIssueCommand = new DelegateCommand(CancelLinkIssue);
+
+            this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
         }
 
+        private void DeleteLinkedIssue(object sender)
+        {
+            IssueLink il = sender as IssueLink;
+
+            this._issueService.DeleteLinkedIssue(il.Id);
+        }
 
         private void LinkIssue(object sender)
         {
