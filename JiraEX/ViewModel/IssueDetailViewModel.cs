@@ -79,6 +79,8 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Board> _boardList;
         private ObservableCollection<Issue> _issueList;
         private ObservableCollection<IssueLinkTypeSplitted> _issueLinkTypeList;
+        private ObservableCollection<IssueLink> _inwardLinkedIssueList;
+        private ObservableCollection<IssueLink> _outwardLinkedIssueList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -126,8 +128,8 @@ namespace JiraEX.ViewModel
         public DelegateCommand ConfirmLinkIssueCommand { get; set; }
         public DelegateCommand CancelLinkIssueCommand { get; set; }
 
-        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project, 
-            IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService, 
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
+            IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._parent = parent;
@@ -156,10 +158,12 @@ namespace JiraEX.ViewModel
             GetCreatableIssueTypes();
 
             GetEditablePropertiesAsync();
-            
+
             UpdateIssueAsync();
 
             SetPanelTitles();
+
+            SeparateLinkedIssueTypes();
         }
 
         private void CheckSubTaskCreatable()
@@ -258,6 +262,8 @@ namespace JiraEX.ViewModel
             this._boardList = new ObservableCollection<Board>();
             this._issueList = new ObservableCollection<Issue>();
             this._issueLinkTypeList = new ObservableCollection<IssueLinkTypeSplitted>();
+            this._inwardLinkedIssueList = new ObservableCollection<IssueLink>();
+            this._outwardLinkedIssueList = new ObservableCollection<IssueLink>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -320,6 +326,8 @@ namespace JiraEX.ViewModel
             { 
                 this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
             }
+
+            this.IsLinkingIssue = false;
         }
 
         private void CancelLinkIssue(object sender)
@@ -621,6 +629,22 @@ namespace JiraEX.ViewModel
             {
                 FetchFixVersionsList();
             }
+        }
+
+        private void SeparateLinkedIssueTypes()
+        {
+            foreach(IssueLink il in this._issue.Fields.IssueLinks)
+            {
+                if(il.InwardIssue != null)
+                {
+                    this.InwardLinkedIssueList.Add(il);
+                } else
+                {
+                    this.OutwardLinkedIssueList.Add(il);
+                }
+            }
+
+            this.AffectsVersionsList = null;
         }
 
         private void FetchAffectsVersionsList()
@@ -1296,5 +1320,24 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public ObservableCollection<IssueLink> InwardLinkedIssueList
+        {
+            get { return this._inwardLinkedIssueList; }
+            set
+            {
+                this._inwardLinkedIssueList = value;
+                OnPropertyChanged("InvardLinkedIssueList");
+            }
+        }
+
+        public ObservableCollection<IssueLink> OutwardLinkedIssueList
+        {
+            get { return this._outwardLinkedIssueList; }
+            set
+            {
+                this._outwardLinkedIssueList = value;
+                OnPropertyChanged("OutwardLinkedIssueList");
+            }
+        }
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="Model\IssueModel\IssueLinkTypeSplitted.cs" />
     <Compile Include="Model\IssueModel\LabelsList.cs" />
     <Compile Include="Model\IssueModel\LabelSuggestion.cs" />
+    <Compile Include="Model\IssueModel\IssueLink.cs" />
     <Compile Include="Model\IssueModel\StatusList.cs" />
     <Compile Include="Model\IssueModel\StatusObject.cs" />
     <Compile Include="Model\IssueModel\Version.cs" />
