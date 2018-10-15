@@ -62,6 +62,8 @@ namespace JiraEX.ViewModel
         private Transition _selectedTransition;
         private User _selectedAssignee;
         private Sprint _selectedSprint;
+        private Issue _selectedLinkIssue;
+        private IssueLinkTypeSplitted _selectedLinkType;
 
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
@@ -310,7 +312,14 @@ namespace JiraEX.ViewModel
 
         private void ConfirmLinkIssue(object sender)
         {
-            this._issueService.LinkIssue("inwardKey", "outwardKey", "nameXY");
+            if (this._selectedLinkType.Type.Equals("inwards"))
+            {
+                this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
+            }
+            else
+            { 
+                this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+            }
         }
 
         private void CancelLinkIssue(object sender)
@@ -1102,6 +1111,26 @@ namespace JiraEX.ViewModel
                 OnPropertyChanged("SelectedSprint");
 
                 this.IsEditingSprint = false;
+            }
+        }
+
+        public Issue SelectedLinkIssue
+        {
+            get { return this._selectedLinkIssue; }
+            set
+            {
+                this._selectedLinkIssue = value;
+                OnPropertyChanged("SelectedLinkIssue");
+            }
+        }
+
+        public IssueLinkTypeSplitted SelectedLinkType
+        {
+            get { return this._selectedLinkType; }
+            set
+            {
+                this._selectedLinkType = value;
+                OnPropertyChanged("SelectedLinkType");
             }
         }
 

@@ -245,10 +245,10 @@ namespace JiraRESTClient.Service.Implementation
                                             "\"type\": { " +
                                                 $"\"name\":\"{linkName}\"" +
                                             "}," +
-                                            "\"inwardissue\": { " +
+                                            "\"inwardIssue\": { " +
                                                 $"\"key\":\"{inwardIssueKey}\"" +
                                             "}," +
-                                            "\"outwardissue\": { " +
+                                            "\"outwardIssue\": { " +
                                                 $"\"key\":\"{outwardIssueKey}\"" +
                                             "}" +
                                     "}";
