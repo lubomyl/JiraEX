@@ -310,7 +310,7 @@ namespace JiraEX.ViewModel
 
         private void ConfirmLinkIssue(object sender)
         {
-
+            this._issueService.LinkIssue("inwardKey", "outwardKey", "nameXY");
         }
 
         private void CancelLinkIssue(object sender)
