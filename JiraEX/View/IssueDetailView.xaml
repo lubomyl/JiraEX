@@ -590,6 +590,12 @@
 
             </StackPanel>
 
+            <!-- Linked issues -->
+            <StackPanel Orientation="Vertical">
+                <Label Style="{StaticResource LabelFaded}">Links:</Label>
+
+            </StackPanel>
+
             <!-- Attachments -->
             <StackPanel Orientation="Vertical" 
                             Visibility="{Binding HaveAttachments, Converter={StaticResource TrueToVisibleConverter}}">

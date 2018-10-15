@@ -312,7 +312,7 @@ namespace JiraEX.ViewModel
 
         private void ConfirmLinkIssue(object sender)
         {
-            if (this._selectedLinkType.Type.Equals("inwards"))
+            if (this._selectedLinkType.Type.Equals("inward"))
             {
                 this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
             }
