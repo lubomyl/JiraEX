@@ -22,6 +22,8 @@ namespace JiraRESTClient.Service
         /// <param name="projectKey">Short string representing Jira Project.</param>
         Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey);
 
+        Task<IssueList> GetAllIssues();
+
         Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, string sprintId);
 
         Task<IssueList> GetAllIssuesOfBoardAsync(string boardId);

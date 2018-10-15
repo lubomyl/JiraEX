@@ -189,47 +189,64 @@
             </StackPanel>
 
             <!-- Create linked issue -->
-            <StackPanel Orientation="Horizontal" Visibility="{Binding IsLinkingIssue, Converter={StaticResource TrueToVisibleConverter}}">
-                <!-- link type -->
-                <ComboBox ItemsSource="{Binding LinkTypesList}"
-                            Margin="0 0 5 0"
-                            SelectedValuePath="Id"
-                            SelectedValue="{Binding Path=Name}"
-                            SelectedItem="{Binding SelectedLinkType}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                </ComboBox>
+            <StackPanel Orientation="Vertical" Visibility="{Binding IsLinkingIssue, Converter={StaticResource TrueToVisibleConverter}}">
 
-                <!-- issue -->
-                <ComboBox ItemsSource="{Binding IssueList}"
-                            Margin="0 0 5 0"
-                            SelectedValuePath="Id"
-                            SelectedValue="{Binding Path=Key}"
-                            SelectedItem="{Binding SelectedLinkIssue}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                </ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <!-- link type -->
+                    <ComboBox ItemsSource="{Binding LinkTypesList}"
+                                Margin="0 0 5 0"
+                                SelectedValuePath="Id"
+                                SelectedValue="{Binding Path=Name}"
+                                SelectedItem="{Binding SelectedLinkType}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+
+                    <!-- issue -->
+                    <ComboBox ItemsSource="{Binding IssueList}"
+                                Margin="0 0 5 0"
+                                SelectedValuePath="Id"
+                                SelectedValue="{Binding Path=Key}"
+                                SelectedItem="{Binding SelectedLinkIssue}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ConfirmLinkIssueCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Save" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="0 10 5 10"/>
+
+                    <Button Command="{Binding CancelLinkIssueCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="0 10 0 10"/>
+                </StackPanel>
             </StackPanel>
+
+            
             
             <Separator Margin="-8,5,-8,0"
                        Style="{StaticResource PaneHorizontalSeparator}" />
@@ -261,18 +278,17 @@
                         Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
             </Grid>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}">
                 <Button Command="{Binding ConfirmEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
                         Content="Save" 
                         HorizontalAlignment="Left"
-                        Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
+                        Height="25" Width="75" Margin="0 0 5 10"/>
 
                 <Button Command="{Binding CancelEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                            Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
                             Content="Cancel" 
                             HorizontalAlignment="Left"
-                            Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
+                            Height="25" Width="75" Margin="0 0 0 10"/>
             </StackPanel>
 
             <!-- Sub-task/s -->

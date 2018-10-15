@@ -219,5 +219,14 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetResource<IssueList>(resource);
             });
         }
+
+        public Task<IssueList> GetAllIssues()
+        {
+            return Task.Run(() => {
+                var resource = $"search";
+
+                return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
     }
 }
