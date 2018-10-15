@@ -314,11 +314,13 @@ namespace JiraEX.ViewModel
             this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
         }
 
-        private void DeleteLinkedIssue(object sender)
+        private async void DeleteLinkedIssue(object sender)
         {
             IssueLink il = sender as IssueLink;
 
-            this._issueService.DeleteLinkedIssue(il.Id);
+            await this._issueService.DeleteLinkedIssue(il.Id);
+
+            UpdateIssueAsync();
         }
 
         private void LinkIssue(object sender)
@@ -326,18 +328,20 @@ namespace JiraEX.ViewModel
             this.IsLinkingIssue = true;
         }
 
-        private void ConfirmLinkIssue(object sender)
+        private async void ConfirmLinkIssue(object sender)
         {
-            if (this._selectedLinkType.Type.Equals("inward"))
+            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
             {
-                this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
+                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
             }
             else
             { 
-                this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
             }
 
             this.IsLinkingIssue = false;
+
+            UpdateIssueAsync();
         }
 
         private void CancelLinkIssue(object sender)
@@ -643,6 +647,9 @@ namespace JiraEX.ViewModel
 
         private void SeparateLinkedIssueTypes()
         {
+            this.InwardLinkedIssueList.Clear();
+            this.OutwardLinkedIssueList.Clear();
+
             foreach(IssueLink il in this._issue.Fields.IssueLinks)
             {
                 if(il.InwardIssue != null)
@@ -653,8 +660,6 @@ namespace JiraEX.ViewModel
                     this.OutwardLinkedIssueList.Add(il);
                 }
             }
-
-            this.AffectsVersionsList = null;
         }
 
         private void FetchAffectsVersionsList()
@@ -710,6 +715,7 @@ namespace JiraEX.ViewModel
 
             CheckEmptyFields();
             UpdateAttachments();
+            SeparateLinkedIssueTypes();
         }
 
         private void UpdateAttachments()
@@ -1336,7 +1342,7 @@ namespace JiraEX.ViewModel
             set
             {
                 this._inwardLinkedIssueList = value;
-                OnPropertyChanged("InvardLinkedIssueList");
+                OnPropertyChanged("InwardLinkedIssueList");
             }
         }
 
