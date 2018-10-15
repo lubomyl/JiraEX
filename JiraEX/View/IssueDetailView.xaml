@@ -594,6 +594,53 @@
             <StackPanel Orientation="Vertical">
                 <Label Style="{StaticResource LabelFaded}">Links:</Label>
 
+                <ListBox ItemsSource="{Binding InwardLinkedIssueList}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="AttachmentSelected_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Type.Inward}" Margin="0 0 10 0"/>
+                                <TextBlock Text="{Binding InwardIssue.Key}" Style="{StaticResource PlainText}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox ItemsSource="{Binding OutwardLinkedIssueList}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="AttachmentSelected_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PlainText}" Text="{Binding Type.Outward}" Margin="0 0 10 0"/>
+                                <TextBlock Text="{Binding OutwardIssue.Key}" Style="{StaticResource PlainText}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
 
             <!-- Attachments -->
