@@ -56,6 +56,11 @@
                             </CheckBox>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding CancelEditAttributesCommand}"/>
@@ -66,7 +71,8 @@
         </StackPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
-        
+
+
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
             <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
                        Margin="8 0 0 0" Style="{StaticResource PlainText}">
@@ -77,7 +83,7 @@
             </TextBlock>
         </StackPanel>
 
-        <Grid x:Name="free_context">
+        <Grid>
             <ListBox ItemsSource="{Binding IssueList}"
                          BorderThickness="0"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"

@@ -74,7 +74,7 @@
                                Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
 
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" Text="{Binding Issue.Fields.Issuetype.Name, Mode=OneWay}" />
+                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" />
                 </Border>
 
                 <Grid>
@@ -94,6 +94,11 @@
                                 Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
                                 SelectedValue="{Binding Path=Name}"
                                 SelectedItem="{Binding SelectedTransition}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
@@ -123,6 +128,11 @@
                                 Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
                                 SelectedValue="{Binding Path=Name}"
                                 SelectedItem="{Binding SelectedPriority}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
@@ -162,15 +172,84 @@
                             </Hyperlink>
                 </TextBlock>
 
-                <TextBlock Style="{StaticResource PlainText}"
+                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0"
                                Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
                             <Hyperlink Command="{Binding CreateSubTaskCommand}" 
                                         CommandParameter="{Binding}">
                                 Sub-task...
                             </Hyperlink>
                 </TextBlock>
+
+                <TextBlock Style="{StaticResource PlainText}">
+                            <Hyperlink Command="{Binding LinkIssueCommand}" 
+                                        CommandParameter="{Binding}">
+                                Link issue...
+                            </Hyperlink>
+                </TextBlock>
             </StackPanel>
 
+            <!-- Create linked issue -->
+            <StackPanel Orientation="Vertical" 
+                        Margin="0 10 0 0"
+                        Visibility="{Binding IsLinkingIssue, Converter={StaticResource TrueToVisibleConverter}}">
+
+                <StackPanel Orientation="Horizontal">
+                    <!-- link type -->
+                    <ComboBox ItemsSource="{Binding IssueLinkTypesList}"
+                                Margin="0 0 5 0"
+                                SelectedValuePath="Id"
+                                SelectedValue="{Binding Path=RelationName}"
+                                SelectedItem="{Binding SelectedLinkType}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding RelationName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+
+                    <!-- issue -->
+                    <ComboBox ItemsSource="{Binding IssueList}"
+                                Margin="0 0 5 0"
+                                SelectedValuePath="Id"
+                                SelectedValue="{Binding Path=Key}"
+                                SelectedItem="{Binding SelectedLinkIssue}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ConfirmLinkIssueCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Save" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="0 10 5 10"/>
+
+                    <Button Command="{Binding CancelLinkIssueCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Cancel" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="0 10 0 10"/>
+                </StackPanel>
+            </StackPanel>
+
+            
+            
             <Separator Margin="-8,5,-8,0"
                        Style="{StaticResource PaneHorizontalSeparator}" />
 
@@ -201,18 +280,17 @@
                         Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"/>
             </Grid>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}">
                 <Button Command="{Binding ConfirmEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
                         Content="Save" 
                         HorizontalAlignment="Left"
-                        Height="25" x:Name="ConfirmEditDescription" Width="75" Margin="0 0 5 10"/>
+                        Height="25" Width="75" Margin="0 0 5 10"/>
 
                 <Button Command="{Binding CancelEditDescriptionCommand}" CommandParameter="{Binding ElementName=This}"
-                            Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}"
                             Content="Cancel" 
                             HorizontalAlignment="Left"
-                            Height="25" x:Name="CancelEditDescription" Width="75" Margin="0 0 0 10"/>
+                            Height="25" Width="75" Margin="0 0 0 10"/>
             </StackPanel>
 
             <!-- Sub-task/s -->
@@ -269,6 +347,11 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditAssigneeCommand}"/>
@@ -305,6 +388,11 @@
                             Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"
                             SelectedValue="{Binding Path=Name}"
                             SelectedItem="{Binding SelectedSprint}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditSprintCommand}"/>
@@ -362,6 +450,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditLabelsCommand}"/>
@@ -420,6 +513,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditFixVersionsCommand}"/>
@@ -479,6 +577,11 @@
                                 </CheckBox>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding CancelEditAffectsVersionsCommand}"/>
@@ -487,6 +590,83 @@
                     </ComboBox>
                 </Grid>
 
+            </StackPanel>
+
+            <!-- Linked issues -->
+            <StackPanel Orientation="Vertical">
+                <Label Style="{StaticResource LabelFaded}">Links:</Label>
+
+                <ListBox ItemsSource="{Binding InwardLinkedIssueList}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="AttachmentSelected_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 5 0" 
+                                        Command="{Binding DataContext.DeleteLinkedIssueCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
+                                        CommandParameter="{Binding}"
+                                        Content="Delete" 
+                                        Height="20"/>
+                                
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Type.Inward, Mode=OneWay}" Text="{Binding Type.Inward, Mode=OneWay}" />
+                                </Border>
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding InwardIssue.Key, Mode=OneWay}" Text="{Binding InwardIssue.Key, Mode=OneWay}" />
+                                </Border>
+                                
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox ItemsSource="{Binding OutwardLinkedIssueList}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="AttachmentSelected_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 5 0"
+                                        Command="{Binding DataContext.DeleteLinkedIssueCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
+                                        CommandParameter="{Binding}"
+                                        Content="Delete" 
+                                        Height="20"/>
+                                
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Type.Outward, Mode=OneWay}" Text="{Binding Type.Outward, Mode=OneWay}" />
+                                </Border>
+                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding OutwardIssue.Key, Mode=OneWay}" Text="{Binding OutwardIssue.Key, Mode=OneWay}" />
+                                </Border>
+                                
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
 
             <!-- Attachments -->

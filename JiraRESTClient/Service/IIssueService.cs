@@ -22,6 +22,8 @@ namespace JiraRESTClient.Service
         /// <param name="projectKey">Short string representing Jira Project.</param>
         Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey);
 
+        Task<IssueList> GetAllIssues();
+
         Task<IssueList> GetAllIssuesOfBoardOfSprintAsync(string boardId, string sprintId);
 
         Task<IssueList> GetAllIssuesOfBoardAsync(string boardId);
@@ -51,5 +53,11 @@ namespace JiraRESTClient.Service
         Task<FilterList> GetAllFiltersAsync();
 
         Task<IssueList> GetAllIssuesByJqlAsync(string jql);
+
+        Task<IssueLinkTypeList> GetAllIssueLinkTypes();
+
+        Task LinkIssue(string inwardIssueKey, string outwardIssueKey, string linkName);
+
+        Task DeleteLinkedIssue(string linkId);
     }
 }

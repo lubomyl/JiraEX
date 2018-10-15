@@ -30,6 +30,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingAffectsVersion = false;
         private bool _isEditingLabels = false;
         private bool _isEditingSprint = false;
+        private bool _isLinkingIssue = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -61,6 +62,8 @@ namespace JiraEX.ViewModel
         private Transition _selectedTransition;
         private User _selectedAssignee;
         private Sprint _selectedSprint;
+        private Issue _selectedLinkIssue;
+        private IssueLinkTypeSplitted _selectedLinkType;
 
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
@@ -74,6 +77,10 @@ namespace JiraEX.ViewModel
         private ObservableCollection<JiraRESTClient.Model.LabelSuggestion> _labelList;
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Board> _boardList;
+        private ObservableCollection<Issue> _issueList;
+        private ObservableCollection<IssueLinkTypeSplitted> _issueLinkTypeList;
+        private ObservableCollection<IssueLink> _inwardLinkedIssueList;
+        private ObservableCollection<IssueLink> _outwardLinkedIssueList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -117,8 +124,14 @@ namespace JiraEX.ViewModel
         public DelegateCommand CancelEditLabelsCommand { get; set; }
         public DelegateCommand CheckedLabelsCommand { get; set; }
 
-        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project, 
-            IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService, 
+        public DelegateCommand LinkIssueCommand { get; set; }
+        public DelegateCommand ConfirmLinkIssueCommand { get; set; }
+        public DelegateCommand CancelLinkIssueCommand { get; set; }
+
+        public DelegateCommand DeleteLinkedIssueCommand { get; set; }
+
+        public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
+            IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._parent = parent;
@@ -137,6 +150,8 @@ namespace JiraEX.ViewModel
                 this._project = project;
             }
 
+            GetIssuesAsync();
+            GetIssueLinkTypesAsync();
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetAssigneesAsync();
@@ -145,10 +160,12 @@ namespace JiraEX.ViewModel
             GetCreatableIssueTypes();
 
             GetEditablePropertiesAsync();
-            
+
             UpdateIssueAsync();
 
             SetPanelTitles();
+
+            SeparateLinkedIssueTypes();
         }
 
         private void CheckSubTaskCreatable()
@@ -245,6 +262,10 @@ namespace JiraEX.ViewModel
             this._labelList = new ObservableCollection<JiraRESTClient.Model.LabelSuggestion>();
             this._sprintList = new ObservableCollection<Sprint>();
             this._boardList = new ObservableCollection<Board>();
+            this._issueList = new ObservableCollection<Issue>();
+            this._issueLinkTypeList = new ObservableCollection<IssueLinkTypeSplitted>();
+            this._inwardLinkedIssueList = new ObservableCollection<IssueLink>();
+            this._outwardLinkedIssueList = new ObservableCollection<IssueLink>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -285,6 +306,47 @@ namespace JiraEX.ViewModel
             this.EditLabelsCommand = new DelegateCommand(EnableEditLabels);
             this.CancelEditLabelsCommand = new DelegateCommand(CancelEditLabels);
             this.CheckedLabelsCommand = new DelegateCommand(CheckedLabel);
+
+            this.LinkIssueCommand = new DelegateCommand(LinkIssue);
+            this.ConfirmLinkIssueCommand = new DelegateCommand(ConfirmLinkIssue);
+            this.CancelLinkIssueCommand = new DelegateCommand(CancelLinkIssue);
+
+            this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
+        }
+
+        private async void DeleteLinkedIssue(object sender)
+        {
+            IssueLink il = sender as IssueLink;
+
+            await this._issueService.DeleteLinkedIssue(il.Id);
+
+            UpdateIssueAsync();
+        }
+
+        private void LinkIssue(object sender)
+        {
+            this.IsLinkingIssue = true;
+        }
+
+        private async void ConfirmLinkIssue(object sender)
+        {
+            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
+            {
+                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+            }
+            else
+            { 
+                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
+            }
+
+            this.IsLinkingIssue = false;
+
+            UpdateIssueAsync();
+        }
+
+        private void CancelLinkIssue(object sender)
+        {
+            this.IsLinkingIssue = false;
         }
 
         private async void CheckedLabel(object sender)
@@ -379,6 +441,46 @@ namespace JiraEX.ViewModel
             }
 
             UpdateIssueAsync();
+        }
+
+        private async void GetIssuesAsync()
+        {
+            Task<IssueList> issueTask = this._issueService.GetAllIssues();
+
+            var issueList = await issueTask as IssueList;
+
+            this.IssueList.Clear();
+
+            foreach (Issue i in issueList.Issues)
+            {
+                this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetIssueLinkTypesAsync()
+        {
+            Task<IssueLinkTypeList> issueLinkTypeTask = this._issueService.GetAllIssueLinkTypes();
+
+            var issueLinkTypeList = await issueLinkTypeTask as IssueLinkTypeList;
+
+            this.IssueList.Clear();
+
+            foreach (IssueLinkType i in issueLinkTypeList.IssueLinkTypes)
+            {
+                if (!i.Inward.Equals(i.Outward))
+                {
+                    IssueLinkTypeSplitted iltsInward = new IssueLinkTypeSplitted(i.Id, i.Name, i.Inward, "inward");
+                    IssueLinkTypeSplitted iltsOutward = new IssueLinkTypeSplitted(i.Id, i.Name, i.Outward, "outward");
+
+                    this.IssueLinkTypesList.Add(iltsInward);
+                    this.IssueLinkTypesList.Add(iltsOutward);
+                } else
+                {
+                    IssueLinkTypeSplitted ilts = new IssueLinkTypeSplitted(i.Id, i.Name, i.Inward, null);
+
+                    this.IssueLinkTypesList.Add(ilts);
+                }
+            }
         }
 
         private async void GetPrioritiesAsync()
@@ -543,6 +645,23 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private void SeparateLinkedIssueTypes()
+        {
+            this.InwardLinkedIssueList.Clear();
+            this.OutwardLinkedIssueList.Clear();
+
+            foreach(IssueLink il in this._issue.Fields.IssueLinks)
+            {
+                if(il.InwardIssue != null)
+                {
+                    this.InwardLinkedIssueList.Add(il);
+                } else
+                {
+                    this.OutwardLinkedIssueList.Add(il);
+                }
+            }
+        }
+
         private void FetchAffectsVersionsList()
         {
             this.AffectsVersionsList.Clear();
@@ -596,6 +715,7 @@ namespace JiraEX.ViewModel
 
             CheckEmptyFields();
             UpdateAttachments();
+            SeparateLinkedIssueTypes();
         }
 
         private void UpdateAttachments()
@@ -863,6 +983,16 @@ namespace JiraEX.ViewModel
             return ret;
         }
 
+        public bool IsLinkingIssue
+        {
+            get { return this._isLinkingIssue; }
+            set
+            {
+                this._isLinkingIssue = value;
+                OnPropertyChanged("IsLinkingIssue");
+            }
+        }
+
         public Issue Issue
         {
             get { return this._issue; }
@@ -973,6 +1103,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public ObservableCollection<Issue> IssueList
+        {
+            get { return this._issueList; }
+            set
+            {
+                this._issueList = value;
+                OnPropertyChanged("IssueList");
+            }
+        }
+
         public User SelectedAssignee
         {
             get { return this._selectedAssignee; }
@@ -1011,6 +1151,26 @@ namespace JiraEX.ViewModel
                 OnPropertyChanged("SelectedSprint");
 
                 this.IsEditingSprint = false;
+            }
+        }
+
+        public Issue SelectedLinkIssue
+        {
+            get { return this._selectedLinkIssue; }
+            set
+            {
+                this._selectedLinkIssue = value;
+                OnPropertyChanged("SelectedLinkIssue");
+            }
+        }
+
+        public IssueLinkTypeSplitted SelectedLinkType
+        {
+            get { return this._selectedLinkType; }
+            set
+            {
+                this._selectedLinkType = value;
+                OnPropertyChanged("SelectedLinkType");
             }
         }
 
@@ -1166,5 +1326,34 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public ObservableCollection<IssueLinkTypeSplitted> IssueLinkTypesList
+        {
+            get { return this._issueLinkTypeList; }
+            set
+            {
+                this._issueLinkTypeList = value;
+                OnPropertyChanged("IssueLinkTypesList");
+            }
+        }
+
+        public ObservableCollection<IssueLink> InwardLinkedIssueList
+        {
+            get { return this._inwardLinkedIssueList; }
+            set
+            {
+                this._inwardLinkedIssueList = value;
+                OnPropertyChanged("InwardLinkedIssueList");
+            }
+        }
+
+        public ObservableCollection<IssueLink> OutwardLinkedIssueList
+        {
+            get { return this._outwardLinkedIssueList; }
+            set
+            {
+                this._outwardLinkedIssueList = value;
+                OnPropertyChanged("OutwardLinkedIssueList");
+            }
+        }
     }
 }

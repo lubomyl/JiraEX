@@ -64,8 +64,12 @@
     <Compile Include="Model\Editable\FixVersionsEditableProperty.cs" />
     <Compile Include="Model\IssueModel\Filter.cs" />
     <Compile Include="Model\IssueModel\FilterList.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkType.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkTypeList.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkTypeSplitted.cs" />
     <Compile Include="Model\IssueModel\LabelsList.cs" />
     <Compile Include="Model\IssueModel\LabelSuggestion.cs" />
+    <Compile Include="Model\IssueModel\IssueLink.cs" />
     <Compile Include="Model\IssueModel\StatusList.cs" />
     <Compile Include="Model\IssueModel\StatusObject.cs" />
     <Compile Include="Model\IssueModel\Version.cs" />
