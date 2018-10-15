@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class IssueListTypeList
+    public class IssueLinkTypeList
     {
 
         public List<IssueLinkType> IssueLinkTypes { get; set; }

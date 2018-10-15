@@ -76,6 +76,7 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Board> _boardList;
         private ObservableCollection<Issue> _issueList;
+        private ObservableCollection<IssueLinkType> _issueLinkTypeList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -144,6 +145,7 @@ namespace JiraEX.ViewModel
             }
 
             GetIssuesAsync();
+            GetIssueLinkTypesAsync();
             GetPrioritiesAsync();
             GetTransitionsAsync();
             GetAssigneesAsync();
@@ -253,6 +255,7 @@ namespace JiraEX.ViewModel
             this._sprintList = new ObservableCollection<Sprint>();
             this._boardList = new ObservableCollection<Board>();
             this._issueList = new ObservableCollection<Issue>();
+            this._issueLinkTypeList = new ObservableCollection<IssueLinkType>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -420,6 +423,20 @@ namespace JiraEX.ViewModel
             foreach (Issue i in issueList.Issues)
             {
                 this.IssueList.Add(i);
+            }
+        }
+
+        private async void GetIssueLinkTypesAsync()
+        {
+            Task<IssueLinkTypeList> issueLinkTypeTask = this._issueService.GetAllIssueLinkTypes();
+
+            var issueLinkTypeList = await issueLinkTypeTask as IssueLinkTypeList;
+
+            this.IssueList.Clear();
+
+            foreach (IssueLinkType i in issueLinkTypeList.IssueLinkTypes)
+            {
+                this.IssueLinkTypesList.Add(i);
             }
         }
 
@@ -1225,6 +1242,16 @@ namespace JiraEX.ViewModel
             {
                 this._labelList = value;
                 OnPropertyChanged("LabelsList");
+            }
+        }
+
+        public ObservableCollection<IssueLinkType> IssueLinkTypesList
+        {
+            get { return this._issueLinkTypeList; }
+            set
+            {
+                this._issueLinkTypeList = value;
+                OnPropertyChanged("IssueLinkTypesList");
             }
         }
 

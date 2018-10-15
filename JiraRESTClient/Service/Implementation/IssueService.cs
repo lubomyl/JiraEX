@@ -228,5 +228,14 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetResource<IssueList>(resource);
             });
         }
+
+        public Task<IssueLinkTypeList> GetAllIssueLinkTypes()
+        {
+            return Task.Run(() => {
+                var resource = $"issueLinkType";
+
+                return this._baseService.GetResource<IssueLinkTypeList>(resource);
+            });
+        }
     }
 }
