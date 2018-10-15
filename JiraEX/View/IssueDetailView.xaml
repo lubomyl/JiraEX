@@ -196,12 +196,12 @@
                     <ComboBox ItemsSource="{Binding IssueLinkTypesList}"
                                 Margin="0 0 5 0"
                                 SelectedValuePath="Id"
-                                SelectedValue="{Binding Path=Name}"
+                                SelectedValue="{Binding Path=RelationName}"
                                 SelectedItem="{Binding SelectedLinkType}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding Name}" />
+                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding RelationName}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>

@@ -76,7 +76,7 @@ namespace JiraEX.ViewModel
         private ObservableCollection<Sprint> _sprintList;
         private ObservableCollection<Board> _boardList;
         private ObservableCollection<Issue> _issueList;
-        private ObservableCollection<IssueLinkType> _issueLinkTypeList;
+        private ObservableCollection<IssueLinkTypeSplitted> _issueLinkTypeList;
 
         private EditablePropertiesFields _editablePropertiesFields;
 
@@ -255,7 +255,7 @@ namespace JiraEX.ViewModel
             this._sprintList = new ObservableCollection<Sprint>();
             this._boardList = new ObservableCollection<Board>();
             this._issueList = new ObservableCollection<Issue>();
-            this._issueLinkTypeList = new ObservableCollection<IssueLinkType>();
+            this._issueLinkTypeList = new ObservableCollection<IssueLinkTypeSplitted>();
 
             this.EditSummaryCommand = new DelegateCommand(EnableEditSummary);
             this.ConfirmEditSummaryCommand = new DelegateCommand(ConfirmEditSummary);
@@ -436,7 +436,19 @@ namespace JiraEX.ViewModel
 
             foreach (IssueLinkType i in issueLinkTypeList.IssueLinkTypes)
             {
-                this.IssueLinkTypesList.Add(i);
+                if (!i.Inward.Equals(i.Outward))
+                {
+                    IssueLinkTypeSplitted iltsInward = new IssueLinkTypeSplitted(i.Id, i.Name, i.Inward, "inward");
+                    IssueLinkTypeSplitted iltsOutward = new IssueLinkTypeSplitted(i.Id, i.Name, i.Outward, "outward");
+
+                    this.IssueLinkTypesList.Add(iltsInward);
+                    this.IssueLinkTypesList.Add(iltsOutward);
+                } else
+                {
+                    IssueLinkTypeSplitted ilts = new IssueLinkTypeSplitted(i.Id, i.Name, i.Inward, null);
+
+                    this.IssueLinkTypesList.Add(ilts);
+                }
             }
         }
 
@@ -1245,7 +1257,7 @@ namespace JiraEX.ViewModel
             }
         }
 
-        public ObservableCollection<IssueLinkType> IssueLinkTypesList
+        public ObservableCollection<IssueLinkTypeSplitted> IssueLinkTypesList
         {
             get { return this._issueLinkTypeList; }
             set
