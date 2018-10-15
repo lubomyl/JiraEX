@@ -219,5 +219,45 @@ namespace JiraRESTClient.Service.Implementation
                 return this._baseService.GetResource<IssueList>(resource);
             });
         }
+
+        public Task<IssueList> GetAllIssues()
+        {
+            return Task.Run(() => {
+                var resource = $"search";
+
+                return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
+
+        public Task<IssueLinkTypeList> GetAllIssueLinkTypes()
+        {
+            return Task.Run(() => {
+                var resource = $"issueLinkType";
+
+                return this._baseService.GetResource<IssueLinkTypeList>(resource);
+            });
+        }
+
+        public Task LinkIssue(string inwardIssueKey, string outwardIssueKey, string linkName)
+        {
+            return Task.Run(() => {
+                string linkString = "{" +
+                                            "\"type\": { " +
+                                                $"\"name\":\"{linkName}\"" +
+                                            "}," +
+                                            "\"inwardIssue\": { " +
+                                                $"\"key\":\"{inwardIssueKey}\"" +
+                                            "}," +
+                                            "\"outwardIssue\": { " +
+                                                $"\"key\":\"{outwardIssueKey}\"" +
+                                            "}" +
+                                    "}";
+
+
+                var resource = "issueLink";
+
+                this._baseService.PostResourceContent(resource, Encoding.UTF8.GetBytes(linkString));
+            });
+        }
     }
 }

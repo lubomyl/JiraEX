@@ -64,6 +64,9 @@
     <Compile Include="Model\Editable\FixVersionsEditableProperty.cs" />
     <Compile Include="Model\IssueModel\Filter.cs" />
     <Compile Include="Model\IssueModel\FilterList.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkType.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkTypeList.cs" />
+    <Compile Include="Model\IssueModel\IssueLinkTypeSplitted.cs" />
     <Compile Include="Model\IssueModel\LabelsList.cs" />
     <Compile Include="Model\IssueModel\LabelSuggestion.cs" />
     <Compile Include="Model\IssueModel\StatusList.cs" />
@@ -89,6 +92,7 @@
     <Compile Include="Model\IssueModel\TransitionList.cs" />
     <Compile Include="Model\IssueModel\User.cs" />
     <Compile Include="Model\IssueModel\UserList.cs" />
+    <Compile Include="Model\MyAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\IAttachmentService.cs" />
     <Compile Include="Service\IBoardService.cs" />
