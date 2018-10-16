@@ -70,8 +70,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ViewModel\CreateIssueViewModelTests.cs" />
+    <Compile Include="ViewModel\CreateIssueViewModelUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\FilterListViewModelUnitTests.cs" />
     <Compile Include="ViewModel\ProjectListViewModelUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>

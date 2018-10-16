@@ -11,7 +11,7 @@ using JiraRESTClient.Service;
 namespace JiraEX.UnitTests.ViewModel
 {
     [TestClass]
-    public class CreateIssueViewModelTests
+    public class CreateIssueViewModelUnitTests
     {
         Mock<Project> _mockProject;
         Mock<IJiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
