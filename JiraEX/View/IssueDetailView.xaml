@@ -593,7 +593,8 @@
             </StackPanel>
 
             <!-- Linked issues -->
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" 
+                        Visibility="{Binding HaveLinks, Converter={StaticResource TrueToVisibleConverter}}">
                 <Label Style="{StaticResource LabelFaded}">Links:</Label>
 
                 <ListBox ItemsSource="{Binding InwardLinkedIssueList}"

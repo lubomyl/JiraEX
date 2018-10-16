@@ -43,6 +43,7 @@ namespace JiraEX.ViewModel
         private bool _isLabelsEmpty = true;
         private bool _isFixVersionsEmpty = true;
         private bool _isAffectsVersionsEmpty = true;
+        private bool _haveLinks = false;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
@@ -170,7 +171,7 @@ namespace JiraEX.ViewModel
 
         private void CheckSubTaskCreatable()
         {
-            foreach(IssueType it in this._project.CreatableIssueTypesList)
+            foreach (IssueType it in this._project.CreatableIssueTypesList)
             {
                 if (it.Subtask)
                 {
@@ -220,9 +221,9 @@ namespace JiraEX.ViewModel
             } else
             {
                 this.IsLabelsEmpty = true;
-            } 
+            }
 
-            if(this._issue.Fields.FixVersions.Count > 0)
+            if (this._issue.Fields.FixVersions.Count > 0)
             {
                 this.IsFixVersionsEmpty = false;
             }
@@ -231,7 +232,7 @@ namespace JiraEX.ViewModel
                 this.IsFixVersionsEmpty = true;
             }
 
-            if(this._issue.Fields.Versions.Count > 0)
+            if (this._issue.Fields.Versions.Count > 0)
             {
                 this.IsAffectsVersionsEmpty = false;
             } else
@@ -335,7 +336,7 @@ namespace JiraEX.ViewModel
                 await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
             }
             else
-            { 
+            {
                 await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
             }
 
@@ -413,7 +414,7 @@ namespace JiraEX.ViewModel
         {
             using (var client = new WebClient())
             {
-                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", 
+                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
                     "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
                 client.DownloadFileAsync(new System.Uri(attachment.Content), downloadFolderPath + "\\" + attachment.Filename);
                 Process.Start("shell:Downloads");
@@ -453,7 +454,10 @@ namespace JiraEX.ViewModel
 
             foreach (Issue i in issueList.Issues)
             {
-                this.IssueList.Add(i);
+                if (this._issue.Id != i.Id)
+                {
+                    this.IssueList.Add(i);
+                }
             }
         }
 
@@ -495,7 +499,7 @@ namespace JiraEX.ViewModel
             {
                 this.PriorityList.Add(p);
 
-                if(p.Id == this._issue.Fields.Priority.Id)
+                if (p.Id == this._issue.Fields.Priority.Id)
                 {
                     this.SelectedPriority = p;
                 }
@@ -544,7 +548,7 @@ namespace JiraEX.ViewModel
                 }
             }
 
-            if(this.SelectedAssignee == null)
+            if (this.SelectedAssignee == null)
             {
                 this.SelectedAssignee = this.AssigneeList[0];
             }
@@ -600,8 +604,8 @@ namespace JiraEX.ViewModel
 
             this.LabelsList.Clear();
 
-            foreach(JiraRESTClient.Model.LabelSuggestion l in labelsList.Suggestions) { 
-            
+            foreach (JiraRESTClient.Model.LabelSuggestion l in labelsList.Suggestions) {
+
                 foreach (string label in this.Issue.Fields.Labels)
                 {
                     if (label.Equals(l.Label))
@@ -650,15 +654,24 @@ namespace JiraEX.ViewModel
             this.InwardLinkedIssueList.Clear();
             this.OutwardLinkedIssueList.Clear();
 
-            foreach(IssueLink il in this._issue.Fields.IssueLinks)
+            foreach (IssueLink il in this._issue.Fields.IssueLinks)
             {
-                if(il.InwardIssue != null)
+                if (il.InwardIssue != null)
                 {
                     this.InwardLinkedIssueList.Add(il);
                 } else
                 {
                     this.OutwardLinkedIssueList.Add(il);
                 }
+            }
+
+            if (this.InwardLinkedIssueList.Count > 0 || this.OutwardLinkedIssueList.Count > 0)
+            {
+                this.HaveLinks = true;
+            }
+            else
+            {
+                this.HaveLinks = false;
             }
         }
 
@@ -1243,6 +1256,16 @@ namespace JiraEX.ViewModel
             {
                 this._haveAttachments = value;
                 OnPropertyChanged("HaveAttachments");
+            }
+        }
+
+        public bool HaveLinks
+        {
+            get { return this._haveLinks; }
+            set
+            {
+                this._haveLinks = value;
+                OnPropertyChanged("HaveLinks");
             }
         }
 
