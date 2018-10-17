@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel;
+﻿using JiraEX.Common;
+using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -32,6 +33,8 @@ namespace JiraEX.View
             InitializeComponent();
 
             this._viewModel = new CreateIssueViewModel(parent, project, issueService);
+            this._viewModel.MessageBoxRequest += new EventHandler<MvvmMessageBoxEventArgs>(MessageBoxRequest);
+
             this.DataContext = this._viewModel;
         }
 
@@ -42,6 +45,11 @@ namespace JiraEX.View
 
             this._viewModel = new CreateIssueViewModel(parent, parentIssue, project, issueService);
             this.DataContext = this._viewModel;
+        }
+
+        void MessageBoxRequest(object sender, MvvmMessageBoxEventArgs e)
+        {
+            e.Show();
         }
     }
 }
