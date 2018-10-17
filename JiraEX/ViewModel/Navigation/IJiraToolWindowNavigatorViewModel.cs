@@ -32,5 +32,9 @@ namespace JiraEX.ViewModel.Navigation
         void SetPanelTitles(string title, string subtitle);
 
         void ShowIssuesOfFilter(Filter filter);
+
+        void StartLoading();
+
+        void StopLoading();
     }
 }

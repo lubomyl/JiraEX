@@ -47,6 +47,8 @@ namespace JiraEX.ViewModel.Navigation
         private string _title;
         private string _subtitle;
 
+        private bool _isLoading;
+
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
         {
             this._parent = parent;
@@ -233,6 +235,16 @@ namespace JiraEX.ViewModel.Navigation
             this.Subtitle = subtitle;
         }
 
+        public void StartLoading()
+        {
+            this.IsLoading = true;
+        }
+
+        public void StopLoading()
+        {
+            this.IsLoading = false;
+        }
+
         public object SelectedView
         {
             get { return _selectedView; }
@@ -240,7 +252,7 @@ namespace JiraEX.ViewModel.Navigation
             {
                 this._selectedView = value;
                 var selView = ((UserControl)this._selectedView).DataContext as ITitleable;
-                selView.SetPanelTitles();
+                selView.SetPanelTitles();  
 
                 OnPropertyChanged("SelectedView");
             }
@@ -263,6 +275,16 @@ namespace JiraEX.ViewModel.Navigation
             {
                 this._subtitle = value;
                 OnPropertyChanged("Subtitle");
+            }
+        }
+
+        public bool IsLoading
+        {
+            get { return this._isLoading; }
+            set
+            {
+                this._isLoading = value;
+                OnPropertyChanged("IsLoading");
             }
         }
     }
