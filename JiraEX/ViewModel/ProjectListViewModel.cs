@@ -51,6 +51,8 @@ namespace JiraEX.ViewModel
 
         private async void GetProjectsAsync()
         {
+            this._parent.StartLoading();
+
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
             var projectList = await projectTask as ProjectList;
@@ -79,6 +81,8 @@ namespace JiraEX.ViewModel
             {
                 this.NoProjects = true;
             }
+
+            this._parent.StopLoading();
         }
 
         public void OnItemSelected(object sender)
