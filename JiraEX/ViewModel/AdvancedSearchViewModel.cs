@@ -59,7 +59,6 @@ namespace JiraEX.ViewModel
 
         private Task<IssueList> issueTask;
 
-        private int _numberOfLoadings = 0;
         private int _totalNumberOfLoadings = 5;
 
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 

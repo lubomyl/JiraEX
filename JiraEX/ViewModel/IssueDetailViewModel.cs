@@ -131,6 +131,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteLinkedIssueCommand { get; set; }
 
+        private int _totalNumberOfLoadings = 10;
+
         public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
@@ -158,8 +160,7 @@ namespace JiraEX.ViewModel
             GetAssigneesAsync();
             GetLabelsAsync();
             GetBoardsAsync();
-            GetCreatableIssueTypes();
-
+            GetCreatableIssueTypesAsync();
             GetEditablePropertiesAsync();
 
             UpdateIssueAsync();
@@ -315,43 +316,23 @@ namespace JiraEX.ViewModel
             this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
         }
 
-        private async void DeleteLinkedIssue(object sender)
+        private async void ShowIssue(object sender)
         {
-            IssueLink il = sender as IssueLink;
+            this._parent.StartLoading();
 
-            await this._issueService.DeleteLinkedIssue(il.Id);
+            Issue issue = sender as Issue;
 
-            UpdateIssueAsync();
+            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
+
+            this._parent.ShowIssueDetail(completeIssue, this._project);
         }
 
-        private void LinkIssue(object sender)
-        {
-            this.IsLinkingIssue = true;
-        }
-
-        private async void ConfirmLinkIssue(object sender)
-        {
-            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
-            {
-                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
-            }
-            else
-            {
-                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
-            }
-
-            this.IsLinkingIssue = false;
-
-            UpdateIssueAsync();
-        }
-
-        private void CancelLinkIssue(object sender)
-        {
-            this.IsLinkingIssue = false;
-        }
+        #region Checks on combobox
 
         private async void CheckedLabel(object sender)
         {
+            this._parent.StartLoading();
+
             JiraRESTClient.Model.LabelSuggestion label = sender as JiraRESTClient.Model.LabelSuggestion;
 
             if (label.CheckedStatus)
@@ -368,6 +349,8 @@ namespace JiraEX.ViewModel
 
         private async void CheckedFixVersion(object sender)
         {
+            this._parent.StartLoading();
+
             JiraRESTClient.Model.Version version = sender as JiraRESTClient.Model.Version;
 
             if (version.CheckedStatus) {
@@ -382,6 +365,8 @@ namespace JiraEX.ViewModel
 
         private async void CheckedAffectsVersion(object sender)
         {
+            this._parent.StartLoading();
+
             JiraRESTClient.Model.Version version = sender as JiraRESTClient.Model.Version;
 
             if (version.CheckedStatus)
@@ -396,56 +381,32 @@ namespace JiraEX.ViewModel
             UpdateIssueAsync();
         }
 
-        private async void ShowIssue(object sender)
+        #endregion
+
+        #region Async GET calls
+
+        private async void GetCreatableIssueTypesAsync()
         {
-            Issue issue = sender as Issue;
+            this._parent.StartLoading();
 
-            var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
+            var projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
 
-            this._parent.ShowIssueDetail(completeIssue, this._project);
-        }
-
-        private void CreateSubTask(object sender)
-        {
-            this._parent.ShowCreateIssue(this._issue, this._project);
-        }
-
-        internal void DownloadAttachment(Attachment attachment)
-        {
-            using (var client = new WebClient())
+            foreach (ProjectCreatable pc in projectCreatableList.Projects)
             {
-                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
-                    "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
-                client.DownloadFileAsync(new System.Uri(attachment.Content), downloadFolderPath + "\\" + attachment.Filename);
-                Process.Start("shell:Downloads");
-            }
-        }
-
-        private async void DeleteAttachment(object sender)
-        {
-            Attachment attachment = sender as Attachment;
-
-            await this._attachmentService.DeleteAttachmentByIdAsync(attachment.Id);
-
-            UpdateIssueAsync();
-        }
-
-        private async void UploadAttachmentFromFileBrowser(object sender)
-        {
-            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
-            fileDialog.Title = "Select attachment";
-
-            if (fileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string sSelectedPath = fileDialog.FileName;
-                await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+                if (this._project.Id.Equals(pc.Id))
+                {
+                    this._project.CreatableIssueTypesList = pc.Issuetypes;
+                }
             }
 
-            UpdateIssueAsync();
+            CheckSubTaskCreatable();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssuesAsync()
         {
+            this._parent.StartLoading();
+
             Task<IssueList> issueTask = this._issueService.GetAllIssues();
 
             var issueList = await issueTask as IssueList;
@@ -459,10 +420,14 @@ namespace JiraEX.ViewModel
                     this.IssueList.Add(i);
                 }
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssueLinkTypesAsync()
         {
+            this._parent.StartLoading();
+
             Task<IssueLinkTypeList> issueLinkTypeTask = this._issueService.GetAllIssueLinkTypes();
 
             var issueLinkTypeList = await issueLinkTypeTask as IssueLinkTypeList;
@@ -485,10 +450,14 @@ namespace JiraEX.ViewModel
                     this.IssueLinkTypesList.Add(ilts);
                 }
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetPrioritiesAsync()
         {
+            this._parent.StartLoading();
+
             Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
 
             var priorityList = await priorityTask as PriorityList;
@@ -504,10 +473,14 @@ namespace JiraEX.ViewModel
                     this.SelectedPriority = p;
                 }
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetTransitionsAsync()
         {
+            this._parent.StartLoading();
+
             Task<TransitionList> transitionTask = this._transitionService.GetAllTransitionsForIssueByIssueKey(this._issue.Key);
 
             var transitionList = await transitionTask as TransitionList;
@@ -523,10 +496,14 @@ namespace JiraEX.ViewModel
                     this.SelectedTransition = t;
                 }
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetAssigneesAsync()
         {
+            this._parent.StartLoading();
+
             Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKey(this._issue.Key);
 
             var userList = await userTask as UserList;
@@ -554,10 +531,14 @@ namespace JiraEX.ViewModel
             }
 
             this._isInitializingAssignees = false;
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetBoardsAsync()
         {
+            this._parent.StartLoading();
+
             Task<BoardList> boardsTask = this._boardService.GetAllBoardsByProjectKeyAsync(this._project.Key);
             var boardsList = await boardsTask as BoardList;
 
@@ -569,10 +550,14 @@ namespace JiraEX.ViewModel
             }
 
             GetSprintsAsync();
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetSprintsAsync()
         {
+            this._parent.StartLoading();
+
             Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(this.BoardList[0].Id);
             var sprintsList = await sprintsTask as SprintList;
 
@@ -595,10 +580,14 @@ namespace JiraEX.ViewModel
             }
 
             this._isInitializingSprints = false;
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetLabelsAsync()
         {
+            this._parent.StartLoading();
+
             Task<LabelsList> labelsTask = this._issueService.GetAllLabelsAsync("");
             var labelsList = await labelsTask as LabelsList;
 
@@ -619,10 +608,14 @@ namespace JiraEX.ViewModel
 
                 this.LabelsList.Add(l);
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetEditablePropertiesAsync()
         {
+            this._parent.StartLoading();
+
             Task<EditableProperties> editablePropertiesTask = this._issueService.GetAllEditablePropertiesAsync(this._issue.Key);
 
             var editableProperties = await editablePropertiesTask as EditableProperties;
@@ -630,7 +623,13 @@ namespace JiraEX.ViewModel
             this._editablePropertiesFields = editableProperties.Fields;
 
             CheckEditableProperties();
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
+
+        #endregion
+
+        #region Synchronous operations
 
         private void CheckEditableProperties()
         {
@@ -715,20 +714,38 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void UpdatePriorityAsync()
+        #endregion
+
+        #region Update calls
+
+        private async void ConfirmEditSummary(object parameter)
         {
-            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "priority", this.SelectedPriority);
+            this._parent.StartLoading();
+
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "summary", this._issue.Fields.Summary);
+
+            UpdateIssueAsync();
+
+            this.IsEditingSummary = false;
+        }
+
+        private async void ConfirmEditDescription(object parameter)
+        {
+            this._parent.StartLoading();
+
+            this.IsEditingDescription = false;
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "description", this._issue.Fields.Description);
 
             UpdateIssueAsync();
         }
 
-        private async void UpdateIssueAsync()
+        private async void UpdatePriorityAsync()
         {
-            this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
+            this._parent.StartLoading();
 
-            CheckEmptyFields();
-            UpdateAttachments();
-            SeparateLinkedIssueTypes();
+            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "priority", this.SelectedPriority);
+
+            UpdateIssueAsync();
         }
 
         private void UpdateAttachments()
@@ -741,23 +758,61 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void GetCreatableIssueTypes()
+        private async void UpdateIssueAsync()
         {
-            var projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
+            this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
 
-            foreach (ProjectCreatable pc in projectCreatableList.Projects)
+            CheckEmptyFields();
+            UpdateAttachments();
+            SeparateLinkedIssueTypes();
+
+            this.CheckTotalNumberOfActiveLoadings();
+        }
+
+        #endregion
+
+        #region Operations with Issue
+
+        private void CreateSubTask(object sender)
+        {
+            this._parent.StartLoading();
+
+            this._parent.ShowCreateIssue(this._issue, this._project);
+        }
+
+        private async void DeleteLinkedIssue(object sender)
+        {
+            this._parent.StartLoading();
+
+            IssueLink il = sender as IssueLink;
+
+            await this._issueService.DeleteLinkedIssue(il.Id);
+
+            UpdateIssueAsync();
+        }
+
+        private async void ConfirmLinkIssue(object sender)
+        {
+            this._parent.StartLoading();
+
+            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
             {
-                if (this._project.Id.Equals(pc.Id))
-                {
-                    this._project.CreatableIssueTypesList = pc.Issuetypes;
-                }
+                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+            }
+            else
+            {
+                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
             }
 
-            CheckSubTaskCreatable();
+            this.IsLinkingIssue = false;
+
+            UpdateIssueAsync();
         }
 
         private async void DoTransitionAsync()
         {
+            this._parent.StartLoading();
+
             await this._transitionService.DoTransitionAsync(this._issue.Key, this.SelectedTransition);
 
             UpdateIssueAsync();
@@ -765,6 +820,8 @@ namespace JiraEX.ViewModel
 
         private async void AssignAsync()
         {
+            this._parent.StartLoading();
+
             await this._issueService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
 
             UpdateIssueAsync();
@@ -772,24 +829,83 @@ namespace JiraEX.ViewModel
 
         private async void UpdateSprint()
         {
+            this._parent.StartLoading();
+
             await this._issueService.MoveIssueToSprintAsync(this.Issue.Key, this.SelectedSprint.Id);
 
             UpdateIssueAsync();
         }
 
+        internal void DownloadAttachment(Attachment attachment)
+        {
+            this._parent.StartLoading();
+
+            using (var client = new WebClient())
+            {
+                string downloadFolderPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
+                    "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+                client.DownloadFileAsync(new System.Uri(attachment.Content), downloadFolderPath + "\\" + attachment.Filename);
+                Process.Start("shell:Downloads");
+            }
+
+            this.CheckTotalNumberOfActiveLoadings();
+        }
+
+        private async void DeleteAttachment(object sender)
+        {
+            this._parent.StartLoading();
+
+            Attachment attachment = sender as Attachment;
+
+            await this._attachmentService.DeleteAttachmentByIdAsync(attachment.Id);
+
+            UpdateIssueAsync();
+        }
+
+        private async void UploadAttachmentFromFileBrowser(object sender)
+        {
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
+            fileDialog.Title = "Select attachment";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                this._parent.StartLoading();
+
+                string sSelectedPath = fileDialog.FileName;
+                await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+            }
+
+            UpdateIssueAsync();
+        }
+
+        #endregion
+
+        private void CheckTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings--;
+
+            if (this._totalNumberOfLoadings <= 0)
+            {
+                this._parent.StopLoading();
+            }
+        }
+
+        #region Visibility controls
+
+        private void LinkIssue(object sender)
+        {
+            this.IsLinkingIssue = true;
+        }
+
+        private void CancelLinkIssue(object sender)
+        {
+            this.IsLinkingIssue = false;
+        }
+
         private void EnableEditSummary(object parameter)
         {
             this.IsEditingSummary = true;
-        }
-
-        private async void ConfirmEditSummary(object parameter)
-        {
-            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "summary", this._issue.Fields.Summary);
-
-            UpdateIssueAsync();
-
-            this.IsEditingSummary = false;
-        }
+        }        
 
         private void CancelEditSummary(object parameter)
         {
@@ -799,14 +915,6 @@ namespace JiraEX.ViewModel
         private void EnableEditDescription(object parameter)
         {
             this.IsEditingDescription = true;
-        }
-
-        private async void ConfirmEditDescription(object parameter)
-        {
-            this.IsEditingDescription = false;
-            await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "description", this._issue.Fields.Description);
-
-            UpdateIssueAsync();
         }
 
         private void CancelEditDescription(object parameter)
@@ -883,6 +991,8 @@ namespace JiraEX.ViewModel
         {
             this.IsEditingLabels = false;
         }
+
+        #endregion
 
         public void SetPanelTitles()
         {
