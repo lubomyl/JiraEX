@@ -407,7 +407,7 @@ namespace JiraEX.ViewModel
 
         private void CreateSubTask(object sender)
         {
-            this._parent.CreateIssue(this._issue, this._project);
+            this._parent.ShowCreateIssue(this._issue, this._project);
         }
 
         internal void DownloadAttachment(Attachment attachment)

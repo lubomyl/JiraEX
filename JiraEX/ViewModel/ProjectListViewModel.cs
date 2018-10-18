@@ -61,7 +61,7 @@ namespace JiraEX.ViewModel
             {
                 foreach (Project p in projectList)
                 {
-                    
+
                     //Fetching Creatable IssueTypes for each project
                     foreach (ProjectCreatable pc in this._projectCreatableList.Projects)
                     {
@@ -71,7 +71,7 @@ namespace JiraEX.ViewModel
                         }
                     }
                     //end fetching
-                    
+
                     this.ProjectList.Add(p);
                 }
             }

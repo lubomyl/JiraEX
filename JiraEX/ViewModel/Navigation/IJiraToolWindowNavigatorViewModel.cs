@@ -25,9 +25,9 @@ namespace JiraEX.ViewModel.Navigation
 
         void ShowIssueDetail(Issue issue, Project project);
 
-        void CreateIssue(Project project);
+        void ShowCreateIssue(Project project);
 
-        void CreateIssue(Issue parentIssue, Project project);
+        void ShowCreateIssue(Issue parentIssue, Project project);
 
         void SetPanelTitles(string title, string subtitle);
 

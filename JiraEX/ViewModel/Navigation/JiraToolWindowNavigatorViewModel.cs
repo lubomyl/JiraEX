@@ -70,6 +70,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowConnection(object sender, EventArgs e)
         {
+            this.StopLoading();
+
             try
             {
                 string accessToken = UserSettingsHelper.ReadFromUserSettings("JiraAccessToken");
@@ -94,6 +96,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowBeforeSignIn()
         {
+            this.StopLoading();
+
             if (this._beforeSignInView == null)
             {
                 this._beforeSignInView = new BeforeSignInView(this, this._oAuthService);
@@ -108,6 +112,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowAfterSignIn()
         {
+            this.StopLoading();
+
             if (this._afterSignInView == null)
             {
                 this._afterSignInView = new AfterSignInView(this, this._userService, this._oAuthService);
@@ -122,6 +128,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
+            this.StopLoading();
+
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
 
             SelectedView = this._oAuthVerifierConfirmationView;
@@ -129,6 +137,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowProjects(object sender, EventArgs e)
         {
+            this.StopLoading();
+
             if (this._projectListView == null)
             {
                 this._projectListView = new ProjectListView(this, this._projectService, this._boardService);
@@ -143,6 +153,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfProject(Project project)
         {
+            this.StopLoading();
+
             this._issueListView = new IssueListView(this, this._issueService, project);
 
             SelectedView = this._issueListView;
@@ -150,6 +162,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssuesOfFilter(Filter filter)
         {
+            this.StopLoading();
+
             this._issueListView = new IssueListView(this, this._issueService, this._sprintService, filter.Jql);
 
             SelectedView = this._issueListView;
@@ -157,6 +171,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowIssueDetail(Issue issue, Project project)
         {
+            this.StopLoading();
+
             this._issueDetailView = new IssueDetailView(this, issue, project, 
                 this._issueService, this._priorityService, this._transitionService,
                 this._attachmentService, this._userService, this._boardService, this._projectService);
@@ -164,16 +180,20 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._issueDetailView;
         }
 
-        public void CreateIssue(Project project)
+        public void ShowCreateIssue(Project project)
         {
+            this.StopLoading();
+
             this._createIssueView = new CreateIssueView(this, project, this._issueService);
 
             SelectedView = this._createIssueView;
         }
 
         //sub-task overload
-        public void CreateIssue(Issue parentIssue, Project project)
+        public void ShowCreateIssue(Issue parentIssue, Project project)
         {
+            this.StopLoading();
+
             this._createIssueView = new CreateIssueView(this, parentIssue, project, this._issueService);
 
             SelectedView = this._createIssueView;
@@ -181,6 +201,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowFilters(object sender, EventArgs e)
         {
+            this.StopLoading();
+
             if (this._filtersListView == null)
             {
                 this._filtersListView = new FiltersListView(this, this._issueService);
@@ -195,6 +217,8 @@ namespace JiraEX.ViewModel.Navigation
 
         public void ShowAdvancedSearch(object sender, EventArgs e)
         {
+            this.StopLoading();
+
             if (this._advancedSearchView == null)
             {
                 this._advancedSearchView = new AdvancedSearchView(this, this._priorityService, this._issueService, this._projectService,

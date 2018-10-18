@@ -84,7 +84,7 @@ namespace JiraEX.ViewModel
 
         private void RedirectCreateIssue(object sender)
         {
-            this._parent.CreateIssue(this._project);
+            this._parent.ShowCreateIssue(this._project);
         }
 
         private async void GetIssuesAsync()
