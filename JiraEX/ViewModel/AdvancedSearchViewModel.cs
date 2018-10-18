@@ -57,7 +57,10 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand ClearFiltersCommand { get; set; }
 
-        Task<IssueList> issueTask;
+        private Task<IssueList> issueTask;
+
+        private int _numberOfLoadings = 0;
+        private int _totalNumberOfLoadings = 5;
 
         public AdvancedSearchViewModel(IJiraToolWindowNavigatorViewModel parent, IPriorityService priorityService, 
             IIssueService issueService, IProjectService projectService, ISprintService sprintService, IBoardService boardService)
@@ -105,7 +108,9 @@ namespace JiraEX.ViewModel
 
         private async void GetIssuesAsync()
         {
-            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.IsUnassigned, 
+            this._parent.StartLoading();
+
+            string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.IsUnassigned,
                 this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
@@ -118,10 +123,14 @@ namespace JiraEX.ViewModel
             {
                 this.IssueList.Add(i);
             }
+
+            CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetPrioritiesAsync()
         {
+            this._parent.StartLoading();
+
             Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
 
             var priorityList = await priorityTask as PriorityList;
@@ -132,10 +141,14 @@ namespace JiraEX.ViewModel
             {
                 this.PriorityList.Add(p);
             }
+
+            CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetStatusesAsync()
         {
+            this._parent.StartLoading();
+
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
             var projectList = await projectTask as ProjectList;
@@ -164,10 +177,14 @@ namespace JiraEX.ViewModel
                     }
                 }
             }
+
+            CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetProjectsAsync()
         {
+            this._parent.StartLoading();
+
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
             var projectList = await projectTask as ProjectList;
@@ -178,10 +195,14 @@ namespace JiraEX.ViewModel
             {
                 this.ProjectList.Add(p);
             }
+
+            CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetBoardsAsync()
         {
+            this._parent.StartLoading();
+
             Task<BoardProjectList> boardsTask = this._boardService.GetAllBoardsAsync();
             var boardsList = await boardsTask as BoardProjectList;
 
@@ -197,6 +218,8 @@ namespace JiraEX.ViewModel
 
         private async void GetSprintsAsync()
         {
+            this._parent.StartLoading();
+
             this.SprintList.Clear();
 
             foreach (BoardProject bp in this._boardList)
@@ -214,6 +237,18 @@ namespace JiraEX.ViewModel
                         }
                     }
                 }
+            }
+
+            CheckTotalNumberOfActiveLoadings();
+        }
+
+        private void CheckTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings--;
+
+            if (this._totalNumberOfLoadings <= 0)
+            {
+                this._parent.StopLoading();
             }
         }
 
