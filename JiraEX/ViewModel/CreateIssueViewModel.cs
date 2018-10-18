@@ -85,6 +85,8 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmCreateIssue(object sender)
         {
+            this._parent.StartLoading();
+
             Issue fullyCreatedIssue = null;
 
             if (this.IsCreatingSubTask) {
