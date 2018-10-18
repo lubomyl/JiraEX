@@ -36,6 +36,8 @@ namespace JiraEX.ViewModel
 
         private async void GetFiltersAsync()
         {
+            this._parent.StartLoading();
+
             Task<FilterList> filterTask = this._issueService.GetAllFiltersAsync();
 
             var filterList = await filterTask as FilterList;
@@ -51,6 +53,8 @@ namespace JiraEX.ViewModel
             {
                 this.NoFilters = true;
             }
+
+            this._parent.StopLoading();
         }
 
         public void OnItemSelected(object sender)

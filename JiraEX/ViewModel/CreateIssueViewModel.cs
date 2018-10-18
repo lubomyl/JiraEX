@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JiraEX.ViewModel
 {
@@ -84,6 +85,8 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmCreateIssue(object sender)
         {
+            this._parent.StartLoading();
+
             Issue fullyCreatedIssue = null;
 
             if (this.IsCreatingSubTask) {
@@ -103,6 +106,8 @@ namespace JiraEX.ViewModel
 
         private void CancelCreateIssue(object sender)
         {
+            CancelCreateIssueDialog();
+
             if (this._parentIssue != null)
             {
                 this._parent.ShowIssueDetail(this._parentIssue, this._project);
@@ -110,6 +115,19 @@ namespace JiraEX.ViewModel
             else
             {
                 this._parent.ShowIssuesOfProject(this._project);
+            }
+        }
+
+        protected void CancelCreateIssueDialog()
+        {
+            MessageBox_Show(ProcessCancelCreateIssueDialogSelection, "Are you sure you want cancel?", "Alert", MessageBoxButton.YesNo);
+        }
+
+        public void ProcessCancelCreateIssueDialogSelection(MessageBoxResult result)
+        {
+            if (result == MessageBoxResult.Yes)
+            {
+                // Do something
             }
         }
 

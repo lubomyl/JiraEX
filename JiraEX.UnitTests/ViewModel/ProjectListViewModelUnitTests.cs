@@ -82,6 +82,13 @@ namespace JiraEX.UnitTests.ViewModel
             Assert.IsTrue(this._viewModel.NoProjects);
         }
 
+        [TestMethod]
+        public void NoProjects_State_True_If_ProjectList_Is_Not_Empty()
+        {
+            Assert.AreEqual(this._viewModel.ProjectList.Count, NUMBER_OF_PROJECTS);
+            Assert.IsFalse(this._viewModel.NoProjects);
+        }
+
         private void Add_Ten_Projects()
         {
             this._mockProjectList.Object.Clear();

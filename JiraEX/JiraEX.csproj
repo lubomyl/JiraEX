@@ -52,6 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Common\MvvmMessageBoxEventArgs.cs" />
     <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\JqlBuilder.cs" />
@@ -113,6 +114,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">

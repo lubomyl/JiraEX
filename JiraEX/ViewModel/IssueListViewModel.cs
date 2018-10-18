@@ -84,11 +84,13 @@ namespace JiraEX.ViewModel
 
         private void RedirectCreateIssue(object sender)
         {
-            this._parent.CreateIssue(this._project);
+            this._parent.ShowCreateIssue(this._project);
         }
 
         private async void GetIssuesAsync()
         {
+            this._parent.StartLoading();
+
             Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
 
             var issueList = await issueTask as IssueList;
@@ -99,10 +101,14 @@ namespace JiraEX.ViewModel
             {
                 this.IssueList.Add(i);
             }
+
+            this._parent.StopLoading();
         }
 
         private async void GetIssuesAsync(string filter)
         {
+            this._parent.StartLoading();
+
             Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
 
             var issueList = await issueTask as IssueList;
@@ -113,6 +119,8 @@ namespace JiraEX.ViewModel
             {
                 this.IssueList.Add(i);
             }
+
+            this._parent.StopLoading();
         }
 
         public void OnItemSelected(Issue issue)
