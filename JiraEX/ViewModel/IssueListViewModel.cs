@@ -1,4 +1,5 @@
 ﻿using ConfluenceEX.Command;
+using ConfluenceEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -16,13 +17,14 @@ using System.Windows.Controls;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueListViewModel : ViewModelBase, ITitleable
+    public class IssueListViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private IIssueService _issueService;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
         private Project _project;
+        private string _filter;
 
         private bool _isEditingAttributes;
 
@@ -64,6 +66,8 @@ namespace JiraEX.ViewModel
             this._subtitle = this._project.Name;
             this.CanCreateIssue = true;
 
+            this._parent.SetRefreshCommand(RefreshIssues);
+
             GetIssuesAsync();
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
@@ -74,12 +78,27 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, string filter) : this(parent, issueService)
         {
-            GetIssuesAsync(filter);
+            this._filter = filter;
+
             this._subtitle = filter;
+
+            this._parent.SetRefreshCommand(RefreshFilteredIssues);
+
+            GetIssuesAsync(filter);
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
+        }
+
+        private void RefreshIssues(object sender, EventArgs e)
+        {
+            GetIssuesAsync();
+        }
+
+        private void RefreshFilteredIssues(object sender, EventArgs e)
+        {
+            GetIssuesAsync(this._filter);
         }
 
         private void RedirectCreateIssue(object sender)
@@ -147,24 +166,31 @@ namespace JiraEX.ViewModel
             {
                 case "Type":
                     OnPropertyChanged("TypeAttribute");
+                    UserSettingsHelper.WriteToUserSettings("TypeAttribute", this.AttributesList[0].CheckedStatus);
                     break;
                 case "Status":
                     OnPropertyChanged("StatusAttribute");
+                    UserSettingsHelper.WriteToUserSettings("StatusAttribute", this.AttributesList[1].CheckedStatus);
                     break;
                 case "Created":
                     OnPropertyChanged("CreatedAttribute");
+                    UserSettingsHelper.WriteToUserSettings("CreatedAttribute", this.AttributesList[2].CheckedStatus);
                     break;
                 case "Updated":
                     OnPropertyChanged("UpdatedAttribute");
+                    UserSettingsHelper.WriteToUserSettings("UpdatedAttribute", this.AttributesList[3].CheckedStatus);
                     break;
                 case "Assignee":
                     OnPropertyChanged("AssigneeAttribute");
+                    UserSettingsHelper.WriteToUserSettings("AssigneeAttribute", this.AttributesList[4].CheckedStatus);
                     break;
                 case "Summary":
                     OnPropertyChanged("SummaryAttribute");
+                    UserSettingsHelper.WriteToUserSettings("SummaryAttribute", this.AttributesList[5].CheckedStatus);
                     break;
                 case "Priority":
                     OnPropertyChanged("PriorityAttribute");
+                    UserSettingsHelper.WriteToUserSettings("PriorityAttribute", this.AttributesList[6].CheckedStatus);
                     break;
             }
         }
@@ -181,18 +207,31 @@ namespace JiraEX.ViewModel
 
         private void InitializeAttributes()
         {   
-            this.AttributesList.Add(new MyAttribute("Type", true));
-            this.AttributesList.Add(new MyAttribute("Status", true));
-            this.AttributesList.Add(new MyAttribute("Created", false));
-            this.AttributesList.Add(new MyAttribute("Updated", false));
-            this.AttributesList.Add(new MyAttribute("Assignee", false));
-            this.AttributesList.Add(new MyAttribute("Summary", true));
-            this.AttributesList.Add(new MyAttribute("Priority", true));
+            this.AttributesList.Add(new MyAttribute("Type", UserSettingsHelper.ReadBoolFromUserSettings("TypeAttribute")));
+            this.AttributesList.Add(new MyAttribute("Status", UserSettingsHelper.ReadBoolFromUserSettings("StatusAttribute")));
+            this.AttributesList.Add(new MyAttribute("Created", UserSettingsHelper.ReadBoolFromUserSettings("CreatedAttribute")));
+            this.AttributesList.Add(new MyAttribute("Updated", UserSettingsHelper.ReadBoolFromUserSettings("UpdatedAttribute")));
+            this.AttributesList.Add(new MyAttribute("Assignee", UserSettingsHelper.ReadBoolFromUserSettings("AssigneeAttribute")));
+            this.AttributesList.Add(new MyAttribute("Summary", UserSettingsHelper.ReadBoolFromUserSettings("SummaryAttribute")));
+            this.AttributesList.Add(new MyAttribute("Priority", UserSettingsHelper.ReadBoolFromUserSettings("PriorityAttribute")));
         }
 
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", this._subtitle);
+        }
+
+        public void Reinitialize()
+        {
+            if (this._filter != null)
+            {
+                this._parent.SetRefreshCommand(RefreshFilteredIssues);
+                GetIssuesAsync(this._filter);
+            } else
+            {
+                this._parent.SetRefreshCommand(RefreshIssues);
+                GetIssuesAsync();
+            }
         }
 
         public ObservableCollection<Issue> IssueList

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class ProjectListViewModel : ViewModelBase, ITitleable
+    public class ProjectListViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private IProjectService _projectService;
         private IBoardService _boardService;
@@ -37,6 +37,8 @@ namespace JiraEX.ViewModel
             this._boardService = boardService;
 
             this._parent = parent;
+            this._parent.SetRefreshCommand(RefreshProjects);
+
             this.ProjectList = new ObservableCollection<Project>();
 
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
@@ -49,9 +51,16 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
         }
 
+        private void RefreshProjects(object sender, EventArgs e)
+        {
+            GetProjectsAsync();
+        }
+
         private async void GetProjectsAsync()
         {
             this._parent.StartLoading();
+
+            this.ProjectList.Clear();
 
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
@@ -99,6 +108,13 @@ namespace JiraEX.ViewModel
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", "Projects");
+        }
+
+        public void Reinitialize()
+        {
+            this._parent.SetRefreshCommand(RefreshProjects);
+
+            GetProjectsAsync();
         }
 
         public ObservableCollection<Project> ProjectList

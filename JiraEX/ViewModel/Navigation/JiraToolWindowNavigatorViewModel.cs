@@ -1,4 +1,5 @@
 ﻿using ConfluenceEX.Helper;
+using ConfluenceEX.ViewModel.Navigation;
 using DevDefined.OAuth.Framework;
 using JiraEX.Main;
 using JiraEX.View;
@@ -42,6 +43,10 @@ namespace JiraEX.ViewModel.Navigation
         private FiltersListView _filtersListView;
         private AdvancedSearchView _advancedSearchView;
 
+        private CommandID toolbarMenuCommandRefreshID;
+
+        private HistoryNavigator _historyNavigator;
+
         private OleMenuCommandService _service;
 
         private string _title;
@@ -53,6 +58,8 @@ namespace JiraEX.ViewModel.Navigation
         {
             this._parent = parent;
 
+            this._historyNavigator = new HistoryNavigator();
+            
             this._service = JiraPackage.Mcs;
 
             this._userService = new UserService();
@@ -74,9 +81,9 @@ namespace JiraEX.ViewModel.Navigation
 
             try
             {
-                string accessToken = UserSettingsHelper.ReadFromUserSettings("JiraAccessToken");
-                string accessTokenSecret = UserSettingsHelper.ReadFromUserSettings("JiraAccessTokenSecret");
-                string baseUrl = UserSettingsHelper.ReadFromUserSettings("JiraBaseUrl");
+                string accessToken = UserSettingsHelper.ReadStringFromUserSettings("JiraAccessToken");
+                string accessTokenSecret = UserSettingsHelper.ReadStringFromUserSettings("JiraAccessTokenSecret");
+                string baseUrl = UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl");
 
                 if (accessToken != null && accessTokenSecret != null && baseUrl != null)
                 {
@@ -97,6 +104,11 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowBeforeSignIn()
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this._historyNavigator.ClearStack();
 
             if (this._beforeSignInView == null)
             {
@@ -113,15 +125,22 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowAfterSignIn()
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
             if (this._afterSignInView == null)
             {
                 this._afterSignInView = new AfterSignInView(this, this._userService, this._oAuthService);
+                this._historyNavigator.AddView(this._afterSignInView);
 
                 SelectedView = this._afterSignInView;
             }
             else
             {
+                this._historyNavigator.AddView(this._afterSignInView);
+
                 SelectedView = _afterSignInView;
             }
         }
@@ -129,6 +148,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
 
@@ -138,15 +158,19 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowProjects(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             if (this._projectListView == null)
             {
                 this._projectListView = new ProjectListView(this, this._projectService, this._boardService);
+                this._historyNavigator.AddView(this._projectListView);
 
                 SelectedView = this._projectListView;
             }
             else
             {
+                this._historyNavigator.AddView(this._projectListView);
+
                 SelectedView = this._projectListView;
             }
         }
@@ -154,8 +178,10 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssuesOfProject(Project project)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueListView = new IssueListView(this, this._issueService, project);
+            this._historyNavigator.AddView(this._issueListView);
 
             SelectedView = this._issueListView;
         }
@@ -163,8 +189,10 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssuesOfFilter(Filter filter)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueListView = new IssueListView(this, this._issueService, this._sprintService, filter.Jql);
+            this._historyNavigator.AddView(this._issueListView);
 
             SelectedView = this._issueListView;
         }
@@ -172,10 +200,12 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssueDetail(Issue issue, Project project)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueDetailView = new IssueDetailView(this, issue, project, 
                 this._issueService, this._priorityService, this._transitionService,
                 this._attachmentService, this._userService, this._boardService, this._projectService);
+            this._historyNavigator.AddView(this._issueDetailView);
 
             SelectedView = this._issueDetailView;
         }
@@ -183,8 +213,10 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowCreateIssue(Project project)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._createIssueView = new CreateIssueView(this, project, this._issueService);
+            this._historyNavigator.AddView(this._createIssueView);
 
             SelectedView = this._createIssueView;
         }
@@ -193,8 +225,10 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowCreateIssue(Issue parentIssue, Project project)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._createIssueView = new CreateIssueView(this, parentIssue, project, this._issueService);
+            this._historyNavigator.AddView(this._createIssueView);
 
             SelectedView = this._createIssueView;
         }
@@ -202,33 +236,51 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowFilters(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
-            if (this._filtersListView == null)
-            {
-                this._filtersListView = new FiltersListView(this, this._issueService);
+            this._filtersListView = new FiltersListView(this, this._issueService);
+            this._historyNavigator.AddView(this._filtersListView);
 
-                SelectedView = this._filtersListView;
-            }
-            else
-            {
-                SelectedView = this._filtersListView;
-            }
+            SelectedView = this._filtersListView;
         }
 
         public void ShowAdvancedSearch(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
-            if (this._advancedSearchView == null)
+            this._advancedSearchView = new AdvancedSearchView(this, this._priorityService, this._issueService, this._projectService,
+                this._sprintService, this._boardService);
+            this._historyNavigator.AddView(this._advancedSearchView);
+
+            SelectedView = this._advancedSearchView;
+        }
+
+        private void GoBack(object sender, EventArgs e)
+        {
+            if (this._historyNavigator.CanGoBack())
             {
-                this._advancedSearchView = new AdvancedSearchView(this, this._priorityService, this._issueService, this._projectService,
-                    this._sprintService, this._boardService);
+                this.SelectedView = this._historyNavigator.GetBackView();
+                var selView = ((UserControl)this._selectedView).DataContext;
 
-                SelectedView = this._advancedSearchView;
+                if (selView is IReinitializable)
+                {
+                    (selView as IReinitializable).Reinitialize();
+                }
             }
-            else
+        }
+
+        private void GoForward(object sender, EventArgs e)
+        {
+            if (this._historyNavigator.CanGoForward())
             {
-                SelectedView = this._advancedSearchView;
+                this.SelectedView = this._historyNavigator.GetForwardView();
+                var selView = ((UserControl)this._selectedView).DataContext;
+
+                if (selView is IReinitializable)
+                {
+                    (selView as IReinitializable).Reinitialize();
+                }
             }
         }
 
@@ -237,19 +289,48 @@ namespace JiraEX.ViewModel.Navigation
             if (service != null)
             {
                 CommandID toolbarMenuCommandHomeID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_HOME_ID);
+                CommandID toolbarMenuCommandBackID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_BACK_ID);
+                CommandID toolbarMenuCommandForwardID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FORWARD_ID);
                 CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+                toolbarMenuCommandRefreshID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_REFRESH_ID);
                 CommandID toolbarMenuCommandFiltersID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FILTERS_ID);
                 CommandID toolbarMenuCommandAdvancedSearchID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
+                MenuCommand onToolbarMenuCommandBackClick = new MenuCommand(GoBack, toolbarMenuCommandBackID);
+                MenuCommand onToolbarMenuCommandForwardClick = new MenuCommand(GoForward, toolbarMenuCommandForwardID);
                 MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(null, toolbarMenuCommandRefreshID);
                 MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
                 MenuCommand onToolbarMenuCommandAdvancedSearClick = new MenuCommand(ShowAdvancedSearch, toolbarMenuCommandAdvancedSearchID);
 
                 service.AddCommand(onToolbarMenuCommandHomeClick);
+                service.AddCommand(onToolbarMenuCommandBackClick);
+                service.AddCommand(onToolbarMenuCommandForwardClick);
                 service.AddCommand(onToolbarMenuCommandConnectionClick);
+                service.AddCommand(onToolbarMenuCommandRefreshClick);
                 service.AddCommand(onToolbarMenuCommandFiltersClick);
                 service.AddCommand(onToolbarMenuCommandAdvancedSearClick);
+            }
+        }
+
+        public void SetRefreshCommand(EventHandler command)
+        {
+            this._service.RemoveCommand(this._service.FindCommand(toolbarMenuCommandRefreshID));
+
+            MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(command, toolbarMenuCommandRefreshID);
+
+            this._service.AddCommand(onToolbarMenuCommandRefreshClick);
+        }
+
+        private void EnableCommand(bool enable, OleMenuCommandService service, int commandGuid)
+        {
+            if (service != null)
+            {
+                CommandID toolbarMenuCommandID = new CommandID(Guids.guidJiraToolbarMenu, commandGuid);
+                MenuCommand onToolbarMenuCommandClick = service.FindCommand(toolbarMenuCommandID);
+
+                onToolbarMenuCommandClick.Enabled = enable;
             }
         }
 
@@ -276,7 +357,25 @@ namespace JiraEX.ViewModel.Navigation
             {
                 this._selectedView = value;
                 var selView = ((UserControl)this._selectedView).DataContext as ITitleable;
-                selView.SetPanelTitles();  
+                selView.SetPanelTitles();
+
+                if (this._historyNavigator.CanGoBack())
+                {
+                    this.EnableCommand(true, _service, Guids.COMMAND_BACK_ID);
+                }
+                else
+                {
+                    this.EnableCommand(false, _service, Guids.COMMAND_BACK_ID);
+                }
+
+                if (this._historyNavigator.CanGoForward())
+                {
+                    this.EnableCommand(true, _service, Guids.COMMAND_FORWARD_ID);
+                }
+                else
+                {
+                    this.EnableCommand(false, _service, Guids.COMMAND_FORWARD_ID);
+                }
 
                 OnPropertyChanged("SelectedView");
             }

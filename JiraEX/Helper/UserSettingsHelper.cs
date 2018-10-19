@@ -20,16 +20,42 @@ namespace ConfluenceEX.Helper
             _userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
         }
 
-        public static string ReadFromUserSettings(string propertyName)
+        public static string ReadStringFromUserSettings(string propertyName)
         {
-            string ret = _userSettingsStore.GetString("External Tools", propertyName);
+            try
+            {
+                string ret = _userSettingsStore.GetString("External Tools", propertyName);
 
-            return ret;
+                return ret;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static bool ReadBoolFromUserSettings(string propertyName)
+        {
+            try
+            {
+                bool ret = _userSettingsStore.GetBoolean("External Tools", propertyName);
+
+                return ret;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
 
         public static void WriteToUserSettings(string propertyName, string value)
         {
             _userSettingsStore.SetString("External Tools", propertyName, value);
+        }
+
+        public static void WriteToUserSettings(string propertyName, bool value)
+        {
+            _userSettingsStore.SetBoolean("External Tools", propertyName, value);
         }
 
         public static void DeletePropertyFromUserSettings(string propertyName)

@@ -19,7 +19,7 @@ using System.Windows.Forms;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueDetailViewModel : ViewModelBase, ITitleable
+    public class IssueDetailViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
@@ -138,6 +138,7 @@ namespace JiraEX.ViewModel
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._parent = parent;
+            this._parent.SetRefreshCommand(RefreshIssueDetails);
 
             Initialize(issueService, priorityService, transitionService,
             attachmentService, userService, boardService, projectService);
@@ -168,6 +169,13 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
 
             SeparateLinkedIssueTypes();
+        }
+
+        private void RefreshIssueDetails(object sender, EventArgs e)
+        {
+            this._parent.StartLoading();
+
+            UpdateIssueAsync();
         }
 
         private void CheckSubTaskCreatable()
@@ -563,19 +571,22 @@ namespace JiraEX.ViewModel
 
             this.SprintList.Clear();
 
-            foreach (Sprint s in sprintsList.Values)
+            if (sprintsList != null)
             {
-                if (!s.State.Equals("closed"))
+                foreach (Sprint s in sprintsList.Values)
                 {
-                    if (this.Issue.Fields.Sprint != null)
+                    if (!s.State.Equals("closed"))
                     {
-                        if (s.Id == this.Issue.Fields.Sprint.Id)
+                        if (this.Issue.Fields.Sprint != null)
                         {
-                            this.SelectedSprint = s;
+                            if (s.Id == this.Issue.Fields.Sprint.Id)
+                            {
+                                this.SelectedSprint = s;
+                            }
                         }
-                    }
 
-                    this.SprintList.Add(s);
+                        this.SprintList.Add(s);
+                    }
                 }
             }
 
@@ -793,20 +804,23 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmLinkIssue(object sender)
         {
-            this._parent.StartLoading();
-
-            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
+            if (this._selectedLinkType != null && this._selectedLinkIssue != null)
             {
-                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
-            }
-            else
-            {
-                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
-            }
+                this._parent.StartLoading();
 
-            this.IsLinkingIssue = false;
+                if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
+                {
+                    await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+                }
+                else
+                {
+                    await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
+                }
 
-            UpdateIssueAsync();
+                this.IsLinkingIssue = false;
+
+                UpdateIssueAsync();
+            }
         }
 
         private async void DoTransitionAsync()
@@ -1104,6 +1118,13 @@ namespace JiraEX.ViewModel
             }
 
             return ret;
+        }
+
+        public void Reinitialize()
+        {
+            this._parent.SetRefreshCommand(RefreshIssueDetails);
+
+            UpdateIssueAsync();
         }
 
         public bool IsLinkingIssue
