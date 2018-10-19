@@ -77,6 +77,7 @@
     <Compile Include="ViewModel\IssueDetailViewModel.cs" />
     <Compile Include="ViewModel\IssueListViewModel.cs" />
     <Compile Include="ViewModel\ITitleable.cs" />
+    <Compile Include="ViewModel\Navigation\HistoryNavigator.cs" />
     <Compile Include="ViewModel\Navigation\IJiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />

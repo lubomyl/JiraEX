@@ -563,19 +563,22 @@ namespace JiraEX.ViewModel
 
             this.SprintList.Clear();
 
-            foreach (Sprint s in sprintsList.Values)
+            if (sprintsList != null)
             {
-                if (!s.State.Equals("closed"))
+                foreach (Sprint s in sprintsList.Values)
                 {
-                    if (this.Issue.Fields.Sprint != null)
+                    if (!s.State.Equals("closed"))
                     {
-                        if (s.Id == this.Issue.Fields.Sprint.Id)
+                        if (this.Issue.Fields.Sprint != null)
                         {
-                            this.SelectedSprint = s;
+                            if (s.Id == this.Issue.Fields.Sprint.Id)
+                            {
+                                this.SelectedSprint = s;
+                            }
                         }
-                    }
 
-                    this.SprintList.Add(s);
+                        this.SprintList.Add(s);
+                    }
                 }
             }
 
@@ -793,7 +796,7 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmLinkIssue(object sender)
         {
-            if (this._selectedLinkType != null)
+            if (this._selectedLinkType != null && this._selectedLinkIssue != null)
             {
                 this._parent.StartLoading();
 
