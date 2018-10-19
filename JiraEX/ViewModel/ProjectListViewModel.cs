@@ -37,6 +37,8 @@ namespace JiraEX.ViewModel
             this._boardService = boardService;
 
             this._parent = parent;
+            this._parent.SetRefreshCommand(RefreshProjects);
+
             this.ProjectList = new ObservableCollection<Project>();
 
             this.ProjectSelectedCommand = new DelegateCommand(OnItemSelected);
@@ -49,9 +51,16 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
         }
 
+        private void RefreshProjects(object sender, EventArgs e)
+        {
+            GetProjectsAsync();
+        }
+
         private async void GetProjectsAsync()
         {
             this._parent.StartLoading();
+
+            this.ProjectList.Clear();
 
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 

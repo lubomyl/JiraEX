@@ -43,6 +43,8 @@ namespace JiraEX.ViewModel.Navigation
         private FiltersListView _filtersListView;
         private AdvancedSearchView _advancedSearchView;
 
+        private CommandID toolbarMenuCommandRefreshID;
+
         private HistoryNavigator _historyNavigator;
 
         private OleMenuCommandService _service;
@@ -102,6 +104,11 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowBeforeSignIn()
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this._historyNavigator.ClearStack();
 
             if (this._beforeSignInView == null)
             {
@@ -118,6 +125,10 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowAfterSignIn()
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
             if (this._afterSignInView == null)
             {
@@ -137,6 +148,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
 
@@ -146,6 +158,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowProjects(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             if (this._projectListView == null)
             {
@@ -165,6 +178,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssuesOfProject(Project project)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueListView = new IssueListView(this, this._issueService, project);
             this._historyNavigator.AddView(this._issueListView);
@@ -175,6 +189,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssuesOfFilter(Filter filter)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueListView = new IssueListView(this, this._issueService, this._sprintService, filter.Jql);
             this._historyNavigator.AddView(this._issueListView);
@@ -185,6 +200,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowIssueDetail(Issue issue, Project project)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._issueDetailView = new IssueDetailView(this, issue, project, 
                 this._issueService, this._priorityService, this._transitionService,
@@ -197,6 +213,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowCreateIssue(Project project)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._createIssueView = new CreateIssueView(this, project, this._issueService);
             this._historyNavigator.AddView(this._createIssueView);
@@ -208,6 +225,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowCreateIssue(Issue parentIssue, Project project)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._createIssueView = new CreateIssueView(this, parentIssue, project, this._issueService);
             this._historyNavigator.AddView(this._createIssueView);
@@ -218,6 +236,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowFilters(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._filtersListView = new FiltersListView(this, this._issueService);
             this._historyNavigator.AddView(this._filtersListView);
@@ -228,6 +247,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowAdvancedSearch(object sender, EventArgs e)
         {
             this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
             this._advancedSearchView = new AdvancedSearchView(this, this._priorityService, this._issueService, this._projectService,
                 this._sprintService, this._boardService);
@@ -260,6 +280,7 @@ namespace JiraEX.ViewModel.Navigation
                 CommandID toolbarMenuCommandBackID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_BACK_ID);
                 CommandID toolbarMenuCommandForwardID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FORWARD_ID);
                 CommandID toolbarMenuCommandConnectionID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_CONNECTION_ID);
+                toolbarMenuCommandRefreshID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_REFRESH_ID);
                 CommandID toolbarMenuCommandFiltersID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_FILTERS_ID);
                 CommandID toolbarMenuCommandAdvancedSearchID = new CommandID(Guids.guidJiraToolbarMenu, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
@@ -267,6 +288,7 @@ namespace JiraEX.ViewModel.Navigation
                 MenuCommand onToolbarMenuCommandBackClick = new MenuCommand(GoBack, toolbarMenuCommandBackID);
                 MenuCommand onToolbarMenuCommandForwardClick = new MenuCommand(GoForward, toolbarMenuCommandForwardID);
                 MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(null, toolbarMenuCommandRefreshID);
                 MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
                 MenuCommand onToolbarMenuCommandAdvancedSearClick = new MenuCommand(ShowAdvancedSearch, toolbarMenuCommandAdvancedSearchID);
 
@@ -274,9 +296,19 @@ namespace JiraEX.ViewModel.Navigation
                 service.AddCommand(onToolbarMenuCommandBackClick);
                 service.AddCommand(onToolbarMenuCommandForwardClick);
                 service.AddCommand(onToolbarMenuCommandConnectionClick);
+                service.AddCommand(onToolbarMenuCommandRefreshClick);
                 service.AddCommand(onToolbarMenuCommandFiltersClick);
                 service.AddCommand(onToolbarMenuCommandAdvancedSearClick);
             }
+        }
+
+        public void SetRefreshCommand(EventHandler command)
+        {
+            this._service.RemoveCommand(this._service.FindCommand(toolbarMenuCommandRefreshID));
+
+            MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(command, toolbarMenuCommandRefreshID);
+
+            this._service.AddCommand(onToolbarMenuCommandRefreshClick);
         }
 
         private void EnableCommand(bool enable, OleMenuCommandService service, int commandGuid)

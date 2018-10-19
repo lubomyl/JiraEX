@@ -18,6 +18,7 @@ namespace JiraEX.Main
         public const int COMMAND_BACK_ID = 0x0130;
         public const int COMMAND_FORWARD_ID = 0x0131;
         public const int COMMAND_CONNECTION_ID = 0x0132;
+        public const int COMMAND_REFRESH_ID = 0x0133;
         public const int COMMAND_FILTERS_ID = 0x0134;
         public const int COMMAND_ADVANCED_SEARCH_ID = 0x0135;
 
