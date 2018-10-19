@@ -1,4 +1,5 @@
 ﻿using ConfluenceEX.Command;
+using ConfluenceEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -147,24 +148,31 @@ namespace JiraEX.ViewModel
             {
                 case "Type":
                     OnPropertyChanged("TypeAttribute");
+                    UserSettingsHelper.WriteToUserSettings("TypeAttribute", this.AttributesList[0].CheckedStatus);
                     break;
                 case "Status":
                     OnPropertyChanged("StatusAttribute");
+                    UserSettingsHelper.WriteToUserSettings("StatusAttribute", this.AttributesList[1].CheckedStatus);
                     break;
                 case "Created":
                     OnPropertyChanged("CreatedAttribute");
+                    UserSettingsHelper.WriteToUserSettings("CreatedAttribute", this.AttributesList[2].CheckedStatus);
                     break;
                 case "Updated":
                     OnPropertyChanged("UpdatedAttribute");
+                    UserSettingsHelper.WriteToUserSettings("UpdatedAttribute", this.AttributesList[3].CheckedStatus);
                     break;
                 case "Assignee":
                     OnPropertyChanged("AssigneeAttribute");
+                    UserSettingsHelper.WriteToUserSettings("AssigneeAttribute", this.AttributesList[4].CheckedStatus);
                     break;
                 case "Summary":
                     OnPropertyChanged("SummaryAttribute");
+                    UserSettingsHelper.WriteToUserSettings("SummaryAttribute", this.AttributesList[5].CheckedStatus);
                     break;
                 case "Priority":
                     OnPropertyChanged("PriorityAttribute");
+                    UserSettingsHelper.WriteToUserSettings("PriorityAttribute", this.AttributesList[6].CheckedStatus);
                     break;
             }
         }
@@ -181,13 +189,13 @@ namespace JiraEX.ViewModel
 
         private void InitializeAttributes()
         {   
-            this.AttributesList.Add(new MyAttribute("Type", true));
-            this.AttributesList.Add(new MyAttribute("Status", true));
-            this.AttributesList.Add(new MyAttribute("Created", false));
-            this.AttributesList.Add(new MyAttribute("Updated", false));
-            this.AttributesList.Add(new MyAttribute("Assignee", false));
-            this.AttributesList.Add(new MyAttribute("Summary", true));
-            this.AttributesList.Add(new MyAttribute("Priority", true));
+            this.AttributesList.Add(new MyAttribute("Type", UserSettingsHelper.ReadBoolFromUserSettings("TypeAttribute")));
+            this.AttributesList.Add(new MyAttribute("Status", UserSettingsHelper.ReadBoolFromUserSettings("StatusAttribute")));
+            this.AttributesList.Add(new MyAttribute("Created", UserSettingsHelper.ReadBoolFromUserSettings("CreatedAttribute")));
+            this.AttributesList.Add(new MyAttribute("Updated", UserSettingsHelper.ReadBoolFromUserSettings("UpdatedAttribute")));
+            this.AttributesList.Add(new MyAttribute("Assignee", UserSettingsHelper.ReadBoolFromUserSettings("AssigneeAttribute")));
+            this.AttributesList.Add(new MyAttribute("Summary", UserSettingsHelper.ReadBoolFromUserSettings("SummaryAttribute")));
+            this.AttributesList.Add(new MyAttribute("Priority", UserSettingsHelper.ReadBoolFromUserSettings("PriorityAttribute")));
         }
 
         public void SetPanelTitles()

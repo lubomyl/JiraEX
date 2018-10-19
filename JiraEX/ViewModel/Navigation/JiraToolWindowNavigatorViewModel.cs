@@ -74,9 +74,9 @@ namespace JiraEX.ViewModel.Navigation
 
             try
             {
-                string accessToken = UserSettingsHelper.ReadFromUserSettings("JiraAccessToken");
-                string accessTokenSecret = UserSettingsHelper.ReadFromUserSettings("JiraAccessTokenSecret");
-                string baseUrl = UserSettingsHelper.ReadFromUserSettings("JiraBaseUrl");
+                string accessToken = UserSettingsHelper.ReadStringFromUserSettings("JiraAccessToken");
+                string accessTokenSecret = UserSettingsHelper.ReadStringFromUserSettings("JiraAccessTokenSecret");
+                string baseUrl = UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl");
 
                 if (accessToken != null && accessTokenSecret != null && baseUrl != null)
                 {

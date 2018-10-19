@@ -66,6 +66,8 @@ namespace JiraEX.ViewModel
                 UserSettingsHelper.WriteToUserSettings("JiraAccessToken", accessToken.Token);
                 UserSettingsHelper.WriteToUserSettings("JiraAccessTokenSecret", accessToken.TokenSecret);
 
+                WriteToUserSettingsIssueAttributes();
+
                 this._parent.ShowAfterSignIn();
                 this._timer.Stop();
             }
@@ -73,6 +75,17 @@ namespace JiraEX.ViewModel
             {
                 this.ErrorMessage = ex.Message;
             }
+        }
+
+        private void WriteToUserSettingsIssueAttributes()
+        {
+            UserSettingsHelper.WriteToUserSettings("TypeAttribute", true);
+            UserSettingsHelper.WriteToUserSettings("StatusAttribute", true);
+            UserSettingsHelper.WriteToUserSettings("CreatedAttribute", false);
+            UserSettingsHelper.WriteToUserSettings("UpdatedAttribute", false);
+            UserSettingsHelper.WriteToUserSettings("AssigneeAttribute", false);
+            UserSettingsHelper.WriteToUserSettings("SummaryAttribute", true);
+            UserSettingsHelper.WriteToUserSettings("PriorityAttribute", true);
         }
 
         public string OAuthVerificationCode

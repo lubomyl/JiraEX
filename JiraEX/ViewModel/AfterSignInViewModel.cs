@@ -72,7 +72,7 @@ namespace JiraEX.ViewModel
 
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", UserSettingsHelper.ReadFromUserSettings("JiraBaseUrl"));
+            this._parent.SetPanelTitles("JiraEX", UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl"));
         }
 
         public User AuthenticatedUser
