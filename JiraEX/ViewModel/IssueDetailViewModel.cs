@@ -808,7 +808,7 @@ namespace JiraEX.ViewModel
             {
                 this._parent.StartLoading();
 
-                if (this._selectedLinkType.Type.Equals("inward"))
+                if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
                 {
                     await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
                 }
