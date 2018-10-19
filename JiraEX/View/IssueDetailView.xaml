@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -195,44 +196,68 @@
 
                 <StackPanel Orientation="Horizontal">
                     <!-- link type -->
-                    <ComboBox ItemsSource="{Binding IssueLinkTypesList}"
+                    <Grid>
+
+                        <ComboBox x:Name="linkTypeComboBox" ItemsSource="{Binding IssueLinkTypesList}"
+                                MinWidth="{Binding Path=ActualWidth, ElementName=linkTypeText}"
                                 Margin="0 0 5 0"
                                 SelectedValuePath="Id"
                                 SelectedValue="{Binding Path=RelationName}"
                                 SelectedItem="{Binding SelectedLinkType}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding RelationName}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                    </ComboBox>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource PlainText}" Text="{Binding RelationName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+
+                        <TextBlock x:Name="linkTypeText"
+                            Width="80"
+                            Style="{StaticResource PlainTextFaded}"
+                            Visibility="{Binding SelectedItem, ElementName=linkTypeComboBox, Converter={StaticResource NullToVisibilityConverter}}"
+                            IsHitTestVisible="False"
+                            Text="Link type" />
+
+                    </Grid>
 
                     <!-- issue -->
-                    <ComboBox ItemsSource="{Binding IssueList}"
+                    <Grid>
+
+                        <ComboBox x:Name="linkIssueComboBox"  ItemsSource="{Binding IssueList}"
+                                MinWidth="{Binding Path=ActualWidth, ElementName=linkIssueText}"
                                 Margin="0 0 5 0"
                                 SelectedValuePath="Id"
                                 SelectedValue="{Binding Path=Key}"
                                 SelectedItem="{Binding SelectedLinkIssue}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                    </ComboBox>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource PlainText}" Text="{Binding Key}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+
+                        <TextBlock x:Name="linkIssueText"
+                                Width="90"
+                                Style="{StaticResource PlainTextFaded}"
+                                Visibility="{Binding SelectedItem, ElementName=linkIssueComboBox, Converter={StaticResource NullToVisibilityConverter}}"
+                                IsHitTestVisible="False"
+                                Text="Select issue" />
+
+                    </Grid>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">

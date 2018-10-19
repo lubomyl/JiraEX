@@ -793,20 +793,23 @@ namespace JiraEX.ViewModel
 
         private async void ConfirmLinkIssue(object sender)
         {
-            this._parent.StartLoading();
-
-            if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
+            if (this._selectedLinkType != null)
             {
-                await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
-            }
-            else
-            {
-                await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
-            }
+                this._parent.StartLoading();
 
-            this.IsLinkingIssue = false;
+                if (this._selectedLinkType.Type.Equals("inward"))
+                {
+                    await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
+                }
+                else
+                {
+                    await this._issueService.LinkIssue(this.Issue.Key, this.SelectedLinkIssue.Key, this._selectedLinkType.Name);
+                }
 
-            UpdateIssueAsync();
+                this.IsLinkingIssue = false;
+
+                UpdateIssueAsync();
+            }
         }
 
         private async void DoTransitionAsync()
