@@ -261,6 +261,12 @@ namespace JiraEX.ViewModel.Navigation
             if (this._historyNavigator.CanGoBack())
             {
                 this.SelectedView = this._historyNavigator.GetBackView();
+                var selView = ((UserControl)this._selectedView).DataContext;
+
+                if (selView is IReinitializable)
+                {
+                    (selView as IReinitializable).Reinitialize();
+                }
             }
         }
 
@@ -269,6 +275,12 @@ namespace JiraEX.ViewModel.Navigation
             if (this._historyNavigator.CanGoForward())
             {
                 this.SelectedView = this._historyNavigator.GetForwardView();
+                var selView = ((UserControl)this._selectedView).DataContext;
+
+                if (selView is IReinitializable)
+                {
+                    (selView as IReinitializable).Reinitialize();
+                }
             }
         }
 

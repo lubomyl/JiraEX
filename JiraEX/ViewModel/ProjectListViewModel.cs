@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class ProjectListViewModel : ViewModelBase, ITitleable
+    public class ProjectListViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private IProjectService _projectService;
         private IBoardService _boardService;
@@ -108,6 +108,13 @@ namespace JiraEX.ViewModel
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", "Projects");
+        }
+
+        public void Reinitialize()
+        {
+            this._parent.SetRefreshCommand(RefreshProjects);
+
+            GetProjectsAsync();
         }
 
         public ObservableCollection<Project> ProjectList

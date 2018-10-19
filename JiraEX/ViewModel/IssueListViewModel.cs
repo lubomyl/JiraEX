@@ -17,13 +17,14 @@ using System.Windows.Controls;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueListViewModel : ViewModelBase, ITitleable
+    public class IssueListViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private IIssueService _issueService;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
         private Project _project;
+        private string _filter;
 
         private bool _isEditingAttributes;
 
@@ -65,6 +66,8 @@ namespace JiraEX.ViewModel
             this._subtitle = this._project.Name;
             this.CanCreateIssue = true;
 
+            this._parent.SetRefreshCommand(RefreshIssues);
+
             GetIssuesAsync();
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
@@ -75,12 +78,27 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, string filter) : this(parent, issueService)
         {
-            GetIssuesAsync(filter);
+            this._filter = filter;
+
             this._subtitle = filter;
+
+            this._parent.SetRefreshCommand(RefreshFilteredIssues);
+
+            GetIssuesAsync(filter);
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
             SetPanelTitles();
+        }
+
+        private void RefreshIssues(object sender, EventArgs e)
+        {
+            GetIssuesAsync();
+        }
+
+        private void RefreshFilteredIssues(object sender, EventArgs e)
+        {
+            GetIssuesAsync(this._filter);
         }
 
         private void RedirectCreateIssue(object sender)
@@ -201,6 +219,19 @@ namespace JiraEX.ViewModel
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", this._subtitle);
+        }
+
+        public void Reinitialize()
+        {
+            if (this._filter != null)
+            {
+                this._parent.SetRefreshCommand(RefreshFilteredIssues);
+                GetIssuesAsync(this._filter);
+            } else
+            {
+                this._parent.SetRefreshCommand(RefreshIssues);
+                GetIssuesAsync();
+            }
         }
 
         public ObservableCollection<Issue> IssueList

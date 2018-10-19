@@ -74,15 +74,16 @@
     <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
     <Compile Include="ViewModel\CreateIssueViewModel.cs" />
     <Compile Include="ViewModel\FilterListViewModel.cs" />
+    <Compile Include="ViewModel\Common\IReinitializable.cs" />
     <Compile Include="ViewModel\IssueDetailViewModel.cs" />
     <Compile Include="ViewModel\IssueListViewModel.cs" />
-    <Compile Include="ViewModel\ITitleable.cs" />
+    <Compile Include="ViewModel\Common\ITitleable.cs" />
     <Compile Include="ViewModel\Navigation\HistoryNavigator.cs" />
     <Compile Include="ViewModel\Navigation\IJiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\Common\ViewModelBase.cs" />
     <Compile Include="View\AdvancedSearchView.xaml.cs">
       <DependentUpon>AdvancedSearchView.xaml</DependentUpon>
     </Compile>

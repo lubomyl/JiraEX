@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class FilterListViewModel : ViewModelBase, ITitleable
+    public class FilterListViewModel : ViewModelBase, ITitleable, IReinitializable
     {
 
         private IJiraToolWindowNavigatorViewModel _parent;
@@ -24,6 +24,7 @@ namespace JiraEX.ViewModel
         public FilterListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
             this._parent = parent;
+            this._parent.SetRefreshCommand(RefreshFilters);
 
             this._issueService = issueService;
 
@@ -34,9 +35,16 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
         }
 
+        private void RefreshFilters(object sender, EventArgs e)
+        {
+            GetFiltersAsync();
+        }
+
         private async void GetFiltersAsync()
         {
             this._parent.StartLoading();
+
+            this.FilterList.Clear();
 
             Task<FilterList> filterTask = this._issueService.GetAllFiltersAsync();
 
@@ -67,6 +75,13 @@ namespace JiraEX.ViewModel
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", "Favourite filters");
+        }
+
+        public void Reinitialize()
+        {
+            this._parent.SetRefreshCommand(RefreshFilters);
+
+            GetFiltersAsync();
         }
 
         public ObservableCollection<Filter> FilterList

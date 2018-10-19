@@ -19,7 +19,7 @@ using System.Windows.Forms;
 
 namespace JiraEX.ViewModel
 {
-    public class IssueDetailViewModel : ViewModelBase, ITitleable
+    public class IssueDetailViewModel : ViewModelBase, ITitleable, IReinitializable
     {
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
@@ -138,6 +138,7 @@ namespace JiraEX.ViewModel
             IAttachmentService attachmentService, IUserService userService, IBoardService boardService, IProjectService projectService)
         {
             this._parent = parent;
+            this._parent.SetRefreshCommand(RefreshIssueDetails);
 
             Initialize(issueService, priorityService, transitionService,
             attachmentService, userService, boardService, projectService);
@@ -168,6 +169,13 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
 
             SeparateLinkedIssueTypes();
+        }
+
+        private void RefreshIssueDetails(object sender, EventArgs e)
+        {
+            this._parent.StartLoading();
+
+            UpdateIssueAsync();
         }
 
         private void CheckSubTaskCreatable()
@@ -1110,6 +1118,13 @@ namespace JiraEX.ViewModel
             }
 
             return ret;
+        }
+
+        public void Reinitialize()
+        {
+            this._parent.SetRefreshCommand(RefreshIssueDetails);
+
+            UpdateIssueAsync();
         }
 
         public bool IsLinkingIssue
