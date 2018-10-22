@@ -894,16 +894,6 @@ namespace JiraEX.ViewModel
 
         #endregion
 
-        private void CheckTotalNumberOfActiveLoadings()
-        {
-            this._totalNumberOfLoadings--;
-
-            if (this._totalNumberOfLoadings <= 0)
-            {
-                this._parent.StopLoading();
-            }
-        }
-
         #region Visibility controls
 
         private void LinkIssue(object sender)
@@ -919,7 +909,7 @@ namespace JiraEX.ViewModel
         private void EnableEditSummary(object parameter)
         {
             this.IsEditingSummary = true;
-        }        
+        }
 
         private void CancelEditSummary(object parameter)
         {
@@ -1007,6 +997,18 @@ namespace JiraEX.ViewModel
         }
 
         #endregion
+
+        private void CheckTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings--;
+
+            if (this._totalNumberOfLoadings <= 0)
+            {
+                this._parent.StopLoading();
+            }
+        }
+
+        
 
         public void SetPanelTitles()
         {

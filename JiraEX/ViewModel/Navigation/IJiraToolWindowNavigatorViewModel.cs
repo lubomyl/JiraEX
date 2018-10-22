@@ -38,5 +38,7 @@ namespace JiraEX.ViewModel.Navigation
         void StartLoading();
 
         void StopLoading();
+
+        void SetErrorMessage(string errorMessage);
     }
 }

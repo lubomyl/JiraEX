@@ -17,39 +17,46 @@
             </ResourceDictionary.MergedDictionaries>
 
             <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" IsHidden="true"/>
+            <controls:NullToVisibilityConverter x:Key="NotNullToVisibleConverter" IsReversed="true"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel>
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-            <StackPanel Margin="6,9,9,5"
-                    Orientation="Horizontal">
+    <Grid>
+        <DockPanel>
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                <StackPanel Margin="6,9,9,5"
+                        Orientation="Horizontal">
 
-                <TextBlock Margin="0,-5,0,0"
-                     FontSize="14.7"
-                     FontWeight="SemiBold"
-                     Style="{StaticResource PlainText}"
-                     Text="{Binding Title}"/>
-                <Separator Margin="5,-2,5,0"
-                     Foreground="#FFFFFF"
-                     Style="{StaticResource TitleVerticalSeparator}" />
-                <TextBlock Margin="0,-5,0,0"
-                     VerticalAlignment="Center"
-                     Foreground="#FF717171"
-                     TextTrimming="CharacterEllipsis"
-                     Text="{Binding Subtitle}" />
+                    <TextBlock Margin="0,-5,0,0"
+                         FontSize="14.7"
+                         FontWeight="SemiBold"
+                         Style="{StaticResource PlainText}"
+                         Text="{Binding Title}"/>
+                    <Separator Margin="5,-2,5,0"
+                         Foreground="#FFFFFF"
+                         Style="{StaticResource TitleVerticalSeparator}" />
+                    <TextBlock Margin="0,-5,0,0"
+                         VerticalAlignment="Center"
+                         Foreground="#FF717171"
+                         TextTrimming="CharacterEllipsis"
+                         Text="{Binding Subtitle}" />
+                </StackPanel>
+
+                <Separator Margin="0,0,0,2"
+                       Style="{StaticResource PaneHorizontalSeparator}" />
+
+                <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" IsIndeterminate="True" 
+                             Visibility="{Binding IsLoading, Converter={StaticResource TrueToVisibleConverter}}"/>
             </StackPanel>
 
-            <Separator Margin="0,0,0,2"
-                   Style="{StaticResource PaneHorizontalSeparator}" />
+            <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
+        </DockPanel>
 
-            <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" IsIndeterminate="True" 
-                         Visibility="{Binding IsLoading, Converter={StaticResource TrueToVisibleConverter}}"/>
-        </StackPanel>
-
-        <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
-    </DockPanel>
-
+        <DockPanel VerticalAlignment="Bottom" Height="20" Background="DarkRed"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource NotNullToVisibleConverter}}">
+            <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource PlainText}"/>
+        </DockPanel>
+    </Grid>
 
 
 </UserControl>

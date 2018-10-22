@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -87,21 +88,30 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Issue fullyCreatedIssue = null;
-
-            if (this.IsCreatingSubTask) {
-                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
-
-                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
-            }
-            else
+            try
             {
-                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
+                Issue fullyCreatedIssue = null;
 
-                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                if (this.IsCreatingSubTask)
+                {
+                    Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
+
+                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                }
+                else
+                {
+                    Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
+
+                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                }
+
+                this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
             }
-
-            this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
+            catch (WebException ex)
+            {
+                this._parent.StopLoading();
+                this._parent.SetErrorMessage(ex.Message);
+            }
         }
 
         private void CancelCreateIssue(object sender)
