@@ -1,4 +1,5 @@
 ﻿using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Model.Exceptions;
 using AtlassianConnector.Service;
 using DevDefined.OAuth.Framework;
 using JiraRESTClient.Model;
@@ -115,7 +116,14 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issue";
 
-                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+                try
+                {
+                     return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+                }
+                catch(MissingParameterException ex)
+                {
+                     return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+                }
             });
         }
 

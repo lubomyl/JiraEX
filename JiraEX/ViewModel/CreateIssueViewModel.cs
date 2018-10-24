@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -100,9 +101,25 @@ namespace JiraEX.ViewModel
                 }
                 else
                 {
-                    Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
+                    try
+                    {
+                        Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
 
-                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                        fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                    }
+                    catch(MissingParameterException ex)
+                    {
+                        string errorMessage = "";
+
+                        foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+                        {
+                            errorMessage += error.Value;
+                        }
+
+                        this._parent.SetErrorMessage(errorMessage);
+                    }
+
+                    
                 }
 
                 this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);

@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Editable\AffectsVersionsEditableProperty.cs" />
+    <Compile Include="Model\ErrorResponse.cs" />
     <Compile Include="Model\IssueModel\Attachment.cs" />
     <Compile Include="Model\Board\BoardList.cs" />
     <Compile Include="Model\Board\BoardProjectList.cs" />
