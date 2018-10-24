@@ -387,7 +387,8 @@
             </StackPanel>
 
             <!-- Sprint -->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                    Visibility="{Binding IsSupportingSprints, Converter={StaticResource TrueToVisibleConverter}}">
                 <Label Style="{StaticResource LabelFaded}">Sprint:</Label>
 
                 <Grid>

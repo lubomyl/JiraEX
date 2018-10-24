@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -64,34 +65,41 @@ namespace JiraEX.ViewModel
 
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
-            var projectList = await projectTask as ProjectList;
-
-            this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
-
-            if (projectList.Count > 0)
+            try
             {
-                foreach (Project p in projectList)
+                var projectList = await projectTask as ProjectList;
+
+                this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
+
+                if (projectList.Count > 0)
                 {
-
-                    //Fetching Creatable IssueTypes for each project
-                    foreach (ProjectCreatable pc in this._projectCreatableList.Projects)
+                    foreach (Project p in projectList)
                     {
-                        if (p.Id.Equals(pc.Id))
+
+                        //Fetching Creatable IssueTypes for each project
+                        foreach (ProjectCreatable pc in this._projectCreatableList.Projects)
                         {
-                            p.CreatableIssueTypesList = pc.Issuetypes;
+                            if (p.Id.Equals(pc.Id))
+                            {
+                                p.CreatableIssueTypesList = pc.Issuetypes;
+                            }
                         }
+                        //end fetching
+
+                        this.ProjectList.Add(p);
                     }
-                    //end fetching
-
-                    this.ProjectList.Add(p);
                 }
-            }
-            else
-            {
-                this.NoProjects = true;
-            }
+                else
+                {
+                    this.NoProjects = true;
+                }
 
-            this._parent.StopLoading();
+                this._parent.StopLoading();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         public void OnItemSelected(object sender)

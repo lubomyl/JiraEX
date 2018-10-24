@@ -52,9 +52,10 @@
             <ContentControl x:Name="Pages" Content="{Binding SelectedView}"/>
         </DockPanel>
 
-        <DockPanel VerticalAlignment="Bottom" Height="20" Background="DarkRed"
+        <DockPanel VerticalAlignment="Bottom" Background="#007acc"
                 Visibility="{Binding ErrorMessage, Converter={StaticResource NotNullToVisibleConverter}}">
-            <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource PlainText}"/>
+            <TextBlock TextWrapping="Wrap"
+                    Padding="8 4" VerticalAlignment="Center" Text="{Binding ErrorMessage, StringFormat=ERROR: {0}}" Style="{StaticResource PlainText}"/>
         </DockPanel>
     </Grid>
 

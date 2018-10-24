@@ -116,14 +116,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issue";
 
-                try
-                {
-                     return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
-                }
-                catch(MissingParameterException ex)
-                {
-                     return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
-                }
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
             });
         }
 

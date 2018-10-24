@@ -33,7 +33,7 @@ namespace JiraEX.ViewModel
         private IssueType _selectedType;
 
         private ObservableCollection<IssueType> _typesList;
-        private IssueType _subTask; 
+        private IssueType _subTask;
 
         public DelegateCommand CancelCreateIssueCommand { get; private set; }
         public DelegateCommand ConfirmCreateIssueCommand { get; private set; }
@@ -89,10 +89,10 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
+            Issue fullyCreatedIssue = null;
+
             try
             {
-                Issue fullyCreatedIssue = null;
-
                 if (this.IsCreatingSubTask)
                 {
                     Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
@@ -101,35 +101,19 @@ namespace JiraEX.ViewModel
                 }
                 else
                 {
-                    try
-                    {
-                        Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
 
-                        fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
-                    }
-                    catch(MissingParameterException ex)
-                    {
-                        string errorMessage = "";
+                    Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
 
-                        foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
-                        {
-                            errorMessage += error.Value;
-                        }
-
-                        this._parent.SetErrorMessage(errorMessage);
-                    }
-
-                    
+                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
                 }
 
                 this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
             }
-            catch (WebException ex)
+            catch (JiraException ex)
             {
-                this._parent.StopLoading();
-                this._parent.SetErrorMessage(ex.Message);
+                ShowErrorMessages(ex, this._parent);
             }
-        }
+}
 
         private void CancelCreateIssue(object sender)
         {

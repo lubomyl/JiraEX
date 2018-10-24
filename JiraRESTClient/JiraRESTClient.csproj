@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Editable\AffectsVersionsEditableProperty.cs" />
-    <Compile Include="Model\ErrorResponse.cs" />
     <Compile Include="Model\IssueModel\Attachment.cs" />
     <Compile Include="Model\Board\BoardList.cs" />
     <Compile Include="Model\Board\BoardProjectList.cs" />
@@ -116,14 +115,14 @@
     <Compile Include="Service\ITransitionService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JiraRESTClient.pfx" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\AtlassianConnector\AtlassianOAuthConnector\AtlassianConnector.csproj">
       <Project>{bd9dd1a3-1667-4ec4-9519-8d86e4157f78}</Project>
       <Name>AtlassianConnector</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="JiraRESTClient.pfx" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
