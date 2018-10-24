@@ -1,4 +1,6 @@
-﻿using JiraEX.Common;
+﻿using AtlassianConnector.Model.Exceptions;
+using JiraEX.Common;
+using JiraEX.ViewModel.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +35,28 @@ namespace JiraEX.ViewModel
             {
                 this.MessageBoxRequest(this, new MvvmMessageBoxEventArgs(resultAction, messageBoxText, caption, button, icon, defaultResult, options));
             }
+        }
+
+        protected void ShowErrorMessages(JiraException ex, IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.StopLoading();
+
+            string errorMessage = "";
+
+            if (ex.ErrorResponse.ErrorMessages.Length != 0)
+            {
+                foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
+                {
+                    errorMessage += errorMsg;
+                }
+            }
+
+            foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+            {
+                errorMessage += error.Value;
+            }
+
+            parent.SetErrorMessage(errorMessage);
         }
     }
 }

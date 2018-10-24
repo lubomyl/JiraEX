@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel.Navigation;
+﻿using AtlassianConnector.Model.Exceptions;
+using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using System;
@@ -48,21 +49,27 @@ namespace JiraEX.ViewModel
 
             Task<FilterList> filterTask = this._issueService.GetAllFiltersAsync();
 
-            var filterList = await filterTask as FilterList;
+            try { 
+                var filterList = await filterTask as FilterList;
 
-            if (filterList.Count > 0)
-            {
-                foreach (Filter f in filterList)
+                if (filterList.Count > 0)
                 {
-                    this.FilterList.Add(f);
+                    foreach (Filter f in filterList)
+                    {
+                        this.FilterList.Add(f);
+                    }
                 }
-            }
-            else
-            {
-                this.NoFilters = true;
-            }
+                else
+                {
+                    this.NoFilters = true;
+                }
 
-            this._parent.StopLoading();
+                this._parent.StopLoading();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         public void OnItemSelected(object sender)

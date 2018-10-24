@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using JiraEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
@@ -114,16 +115,23 @@ namespace JiraEX.ViewModel
 
             this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
 
-            var issueList = await issueTask as IssueList;
-
-            this.IssueList.Clear();
-
-            foreach (Issue i in issueList.Issues)
+            try
             {
-                this.IssueList.Add(i);
-            }
+                var issueList = await issueTask as IssueList;
 
-            CheckTotalNumberOfActiveLoadings();
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    this.IssueList.Add(i);
+                }
+
+                CheckTotalNumberOfActiveLoadings();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetPrioritiesAsync()
@@ -132,16 +140,23 @@ namespace JiraEX.ViewModel
 
             Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
 
-            var priorityList = await priorityTask as PriorityList;
-
-            this.PriorityList.Clear();
-
-            foreach (Priority p in priorityList)
+            try
             {
-                this.PriorityList.Add(p);
-            }
+                var priorityList = await priorityTask as PriorityList;
 
-            CheckTotalNumberOfActiveLoadings();
+                this.PriorityList.Clear();
+
+                foreach (Priority p in priorityList)
+                {
+                    this.PriorityList.Add(p);
+                }
+
+                CheckTotalNumberOfActiveLoadings();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetStatusesAsync()
@@ -150,34 +165,42 @@ namespace JiraEX.ViewModel
 
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
-            var projectList = await projectTask as ProjectList;
-
-            this.StatusList.Clear();
-
-            foreach(Project p in projectList)
+            try
             {
-                Task<StatusList> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
+                var projectList = await projectTask as ProjectList;
 
-                var statusList = await statusTask as StatusList;
+                this.StatusList.Clear();
 
-                foreach(Status s in statusList[0].Statuses)
+                foreach (Project p in projectList)
                 {
-                    if (this.StatusList.Count > 0)
-                    {
-                        Status contains = this.StatusList.FirstOrDefault(status => status.Name.Equals(s.Name));
+                    Task<StatusList> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
 
-                        if (contains == null)
+                    var statusList = await statusTask as StatusList;
+
+                    foreach (Status s in statusList[0].Statuses)
+                    {
+                        if (this.StatusList.Count > 0)
+                        {
+                            Status contains = this.StatusList.FirstOrDefault(status => status.Name.Equals(s.Name));
+
+                            if (contains == null)
+                            {
+                                this.StatusList.Add(s);
+                            }
+                        }
+                        else
                         {
                             this.StatusList.Add(s);
                         }
-                    } else
-                    {
-                        this.StatusList.Add(s);
                     }
                 }
-            }
 
-            CheckTotalNumberOfActiveLoadings();
+                CheckTotalNumberOfActiveLoadings();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetProjectsAsync()
@@ -186,16 +209,23 @@ namespace JiraEX.ViewModel
 
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
-            var projectList = await projectTask as ProjectList;
-
-            this.ProjectList.Clear();
-
-            foreach (Project p in projectList)
+            try
             {
-                this.ProjectList.Add(p);
-            }
+                var projectList = await projectTask as ProjectList;
 
-            CheckTotalNumberOfActiveLoadings();
+                this.ProjectList.Clear();
+
+                foreach (Project p in projectList)
+                {
+                    this.ProjectList.Add(p);
+                }
+
+                CheckTotalNumberOfActiveLoadings();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetBoardsAsync()
@@ -203,16 +233,24 @@ namespace JiraEX.ViewModel
             this._parent.StartLoading();
 
             Task<BoardProjectList> boardsTask = this._boardService.GetAllBoardsAsync();
-            var boardsList = await boardsTask as BoardProjectList;
 
-            this._boardList.Clear();
-
-            foreach (BoardProject b in boardsList.Values)
+            try
             {
-                this._boardList.Add(b);
-            }
+                var boardsList = await boardsTask as BoardProjectList;
 
-            GetSprintsAsync();
+                this._boardList.Clear();
+
+                foreach (BoardProject b in boardsList.Values)
+                {
+                    this._boardList.Add(b);
+                }
+
+                GetSprintsAsync();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetSprintsAsync()
@@ -224,17 +262,25 @@ namespace JiraEX.ViewModel
             foreach (BoardProject bp in this._boardList)
             {
                 Task<SprintList> sprintsTask = this._boardService.GetAllSprintsByBoardIdAsync(bp.Id);
-                var sprintsList = await sprintsTask as SprintList;
 
-                if (sprintsList != null)
+                try
                 {
-                    foreach (Sprint s in sprintsList.Values)
+                    var sprintsList = await sprintsTask as SprintList;
+
+                    if (sprintsList != null)
                     {
-                        if (!this.SprintList.Any(sprint => sprint.Id == s.Id))
+                        foreach (Sprint s in sprintsList.Values)
                         {
-                            this.SprintList.Add(s);
+                            if (!this.SprintList.Any(sprint => sprint.Id == s.Id))
+                            {
+                                this.SprintList.Add(s);
+                            }
                         }
                     }
+                }
+                catch (JiraException ex)
+                {
+                    
                 }
             }
 

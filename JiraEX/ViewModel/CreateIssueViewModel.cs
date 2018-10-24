@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,7 +33,7 @@ namespace JiraEX.ViewModel
         private IssueType _selectedType;
 
         private ObservableCollection<IssueType> _typesList;
-        private IssueType _subTask; 
+        private IssueType _subTask;
 
         public DelegateCommand CancelCreateIssueCommand { get; private set; }
         public DelegateCommand ConfirmCreateIssueCommand { get; private set; }
@@ -89,20 +91,29 @@ namespace JiraEX.ViewModel
 
             Issue fullyCreatedIssue = null;
 
-            if (this.IsCreatingSubTask) {
-                Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
-
-                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
-            }
-            else
+            try
             {
-                Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
+                if (this.IsCreatingSubTask)
+                {
+                    Issue createdIssue = await this._issueService.CreateSubTaskIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id, this._parentIssue.Key);
 
-                fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                }
+                else
+                {
+
+                    Issue createdIssue = await this._issueService.CreateIssueAsync(this._project.Id, this.Summary, this.Description, this.SelectedType.Id);
+
+                    fullyCreatedIssue = await this._issueService.GetIssueByIssueKeyAsync(createdIssue.Key);
+                }
+
+                this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
             }
-
-            this._parent.ShowIssueDetail(fullyCreatedIssue, this._project);
-        }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+}
 
         private void CancelCreateIssue(object sender)
         {

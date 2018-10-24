@@ -52,6 +52,8 @@ namespace JiraEX.ViewModel.Navigation
         private string _title;
         private string _subtitle;
 
+        private string _errorMessage;
+
         private bool _isLoading;
 
         public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
@@ -350,12 +352,19 @@ namespace JiraEX.ViewModel.Navigation
             this.IsLoading = false;
         }
 
+        public void SetErrorMessage(string errorMessage)
+        {
+            this.ErrorMessage = errorMessage;
+        }
+
         public object SelectedView
         {
             get { return _selectedView; }
             set
             {
                 this._selectedView = value;
+                this.SetErrorMessage(null);
+
                 var selView = ((UserControl)this._selectedView).DataContext as ITitleable;
                 selView.SetPanelTitles();
 
@@ -408,6 +417,16 @@ namespace JiraEX.ViewModel.Navigation
             {
                 this._isLoading = value;
                 OnPropertyChanged("IsLoading");
+            }
+        }
+
+        public string ErrorMessage
+        {
+            get { return this._errorMessage; }
+            set
+            {
+                this._errorMessage = value;
+                OnPropertyChanged("ErrorMessage");
             }
         }
     }

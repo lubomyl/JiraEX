@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using ConfluenceEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
@@ -112,16 +113,22 @@ namespace JiraEX.ViewModel
 
             Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
 
-            var issueList = await issueTask as IssueList;
+            try { 
+                var issueList = await issueTask as IssueList;
 
-            this.IssueList.Clear();
+                this.IssueList.Clear();
 
-            foreach (Issue i in issueList.Issues)
-            {
-                this.IssueList.Add(i);
+                foreach (Issue i in issueList.Issues)
+                {
+                    this.IssueList.Add(i);
+                }
+
+                this._parent.StopLoading();
             }
-
-            this._parent.StopLoading();
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         private async void GetIssuesAsync(string filter)
@@ -130,16 +137,22 @@ namespace JiraEX.ViewModel
 
             Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
 
-            var issueList = await issueTask as IssueList;
+            try { 
+                var issueList = await issueTask as IssueList;
 
-            this.IssueList.Clear();
+                this.IssueList.Clear();
 
-            foreach (Issue i in issueList.Issues)
-            {
-                this.IssueList.Add(i);
+                foreach (Issue i in issueList.Issues)
+                {
+                    this.IssueList.Add(i);
+                }
+
+                this._parent.StopLoading();
             }
-
-            this._parent.StopLoading();
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
         }
 
         public void OnItemSelected(Issue issue)

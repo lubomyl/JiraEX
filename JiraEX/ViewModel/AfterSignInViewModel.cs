@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
@@ -58,6 +59,12 @@ namespace JiraEX.ViewModel
             catch (OAuthException ex)
             {
                 this._parent.ShowBeforeSignIn();
+            }
+            catch (JiraException ex2)
+            {
+                this._parent.ShowBeforeSignIn();
+
+                ShowErrorMessages(ex2, this._parent);
             }
         }
 

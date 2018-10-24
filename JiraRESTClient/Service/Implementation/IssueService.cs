@@ -1,4 +1,5 @@
 ﻿using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Model.Exceptions;
 using AtlassianConnector.Service;
 using DevDefined.OAuth.Framework;
 using JiraRESTClient.Model;

@@ -116,7 +116,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
@@ -299,6 +298,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AtlassianConnector\AtlassianOAuthConnector\AtlassianConnector.csproj">
+      <Project>{bd9dd1a3-1667-4ec4-9519-8d86e4157f78}</Project>
+      <Name>AtlassianConnector</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JiraRESTClient\JiraRESTClient.csproj">
       <Project>{606984D6-0A28-4926-90EB-D76E2CC27481}</Project>
       <Name>JiraRESTClient</Name>
