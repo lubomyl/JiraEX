@@ -6,7 +6,10 @@ using JiraEX.View;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.Internal.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -199,6 +202,17 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._issueListView;
         }
 
+        public void ShowIssuesQuickSearch(string searchString)
+        {
+            this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+
+            this._issueListView = new IssueListView(this, this._issueService, this._sprintService, true, searchString);
+            this._historyNavigator.AddView(this._issueListView);
+
+            SelectedView = this._issueListView;
+        }
+
         public void ShowIssueDetail(Issue issue, Project project)
         {
             this.StopLoading();
@@ -258,7 +272,7 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._advancedSearchView;
         }
 
-        private void GoBack(object sender, EventArgs e)
+        public void GoBack(object sender, EventArgs e)
         {
             if (this._historyNavigator.CanGoBack())
             {
@@ -272,7 +286,7 @@ namespace JiraEX.ViewModel.Navigation
             }
         }
 
-        private void GoForward(object sender, EventArgs e)
+        public void GoForward(object sender, EventArgs e)
         {
             if (this._historyNavigator.CanGoForward())
             {
@@ -428,6 +442,11 @@ namespace JiraEX.ViewModel.Navigation
                 this._errorMessage = value;
                 OnPropertyChanged("ErrorMessage");
             }
+        }
+
+        public HistoryNavigator HistoryNavigator
+        {
+            get { return this._historyNavigator; }
         }
     }
 }

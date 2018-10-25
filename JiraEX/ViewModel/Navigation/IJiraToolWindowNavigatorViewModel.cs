@@ -33,6 +33,8 @@ namespace JiraEX.ViewModel.Navigation
 
         void ShowIssuesOfFilter(Filter filter);
 
+        void ShowIssuesQuickSearch(string quickSearch);
+
         void SetRefreshCommand(EventHandler command);
 
         void StartLoading();

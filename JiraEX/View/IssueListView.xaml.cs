@@ -43,6 +43,14 @@ namespace JiraEX.View
             this.DataContext = this._viewModel;
         }
 
+        public IssueListView(JiraToolWindowNavigatorViewModel parent, IIssueService issueService, ISprintService sprintService, bool quickSearch, string filter)
+        {
+            InitializeComponent();
+
+            this._viewModel = new IssueListViewModel(parent, issueService, quickSearch, filter);
+            this.DataContext = this._viewModel;
+        }
+
         void IssueSelected_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {   
             ListBox listBox = sender as ListBox;

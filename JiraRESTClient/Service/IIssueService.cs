@@ -54,6 +54,8 @@ namespace JiraRESTClient.Service
 
         Task<IssueList> GetAllIssuesByJqlAsync(string jql);
 
+        Task<IssueList> GetAllIssuesByTextContainingAsync(string quickSearch);
+
         Task<IssueLinkTypeList> GetAllIssueLinkTypes();
 
         Task LinkIssue(string inwardIssueKey, string outwardIssueKey, string linkName);

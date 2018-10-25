@@ -964,14 +964,14 @@ namespace JiraEX.ViewModel
                     }
 
                     this.IsLinkingIssue = false;
-
-                    UpdateIssueAsync();
                 }
                 catch (JiraException ex)
                 {
                     ShowErrorMessages(ex, this._parent);
                 }
             }
+
+            UpdateIssueAsync();
         }
 
         private async void DoTransitionAsync()

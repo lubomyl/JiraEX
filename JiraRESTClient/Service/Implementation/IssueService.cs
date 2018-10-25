@@ -221,6 +221,15 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task<IssueList> GetAllIssuesByTextContainingAsync(string quickSearch)
+        {
+            return Task.Run(() => {
+                var resource = $"search?jql=text~\"{quickSearch}\"";
+
+                return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
+
         public Task<IssueList> GetAllIssues()
         {
             return Task.Run(() => {

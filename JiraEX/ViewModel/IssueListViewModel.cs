@@ -26,6 +26,7 @@ namespace JiraEX.ViewModel
 
         private Project _project;
         private string _filter;
+        private string _searchString;
 
         private bool _isEditingAttributes;
 
@@ -92,6 +93,21 @@ namespace JiraEX.ViewModel
             SetPanelTitles();
         }
 
+        public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, bool quickSearch, string searchString) : this(parent, issueService)
+        {
+            this._searchString = searchString;
+
+            this._subtitle = "Search string \"" + searchString + "\""; ;
+
+            this._parent.SetRefreshCommand(RefreshQuickSearchIssues);
+
+            GetIssuesQuickSearchAsync(searchString);
+
+            this.IssueList.CollectionChanged += this.OnCollectionChanged;
+
+            SetPanelTitles();
+        }
+
         private void RefreshIssues(object sender, EventArgs e)
         {
             GetIssuesAsync();
@@ -100,6 +116,11 @@ namespace JiraEX.ViewModel
         private void RefreshFilteredIssues(object sender, EventArgs e)
         {
             GetIssuesAsync(this._filter);
+        }
+
+        private void RefreshQuickSearchIssues(object sender, EventArgs e)
+        {
+            GetIssuesQuickSearchAsync(this._filter);
         }
 
         private void RedirectCreateIssue(object sender)
@@ -138,6 +159,31 @@ namespace JiraEX.ViewModel
             Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
 
             try { 
+                var issueList = await issueTask as IssueList;
+
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    this.IssueList.Add(i);
+                }
+
+                this._parent.StopLoading();
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+        }
+
+        private async void GetIssuesQuickSearchAsync(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<IssueList> issueTask = this._issueService.GetAllIssuesByTextContainingAsync(searchString);
+
+            try
+            {
                 var issueList = await issueTask as IssueList;
 
                 this.IssueList.Clear();
@@ -240,7 +286,13 @@ namespace JiraEX.ViewModel
             {
                 this._parent.SetRefreshCommand(RefreshFilteredIssues);
                 GetIssuesAsync(this._filter);
-            } else
+            }
+            else if(this._searchString != null)
+            {
+                this._parent.SetRefreshCommand(RefreshQuickSearchIssues);
+                GetIssuesQuickSearchAsync(this._searchString);
+            }
+            else
             {
                 this._parent.SetRefreshCommand(RefreshIssues);
                 GetIssuesAsync();
