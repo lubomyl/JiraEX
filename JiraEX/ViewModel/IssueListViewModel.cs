@@ -28,7 +28,21 @@ namespace JiraEX.ViewModel
         private string _filter;
         private string _searchString;
 
+        private int _startAt = 0;
+        private int _maxResults = 0;
+
+        private bool _hasNext = false;
+        private bool _hasPrevious = false;
         private bool _isEditingAttributes;
+
+        private enum IssueListType
+        {
+            normal,
+            filter,
+            quickSearch
+        }
+
+        private IssueListType _type;
 
         private ObservableCollection<Issue> _issueList;
         private ObservableCollection<MyAttribute> _attributesList;
@@ -41,6 +55,9 @@ namespace JiraEX.ViewModel
         public DelegateCommand CheckedAttributeCommand { get; set; }
         public DelegateCommand EditAttributesCommand { get; set; }
         public DelegateCommand CancelEditAttributesCommand { get; set; }
+
+        public DelegateCommand GetNextIssuesCommand { get; set; }
+        public DelegateCommand GetPreviousIssuesCommand { get; set; }
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService)
         {
@@ -57,6 +74,9 @@ namespace JiraEX.ViewModel
             this.EditAttributesCommand = new DelegateCommand(EditAttributes);
             this.CancelEditAttributesCommand = new DelegateCommand(CancelEditAttributes);
 
+            this.GetNextIssuesCommand = new DelegateCommand(GetNextIssues);
+            this.GetPreviousIssuesCommand = new DelegateCommand(GetPreviousIssues);
+
             InitializeAttributes();
 
             OleMenuCommandService service = JiraPackage.Mcs;
@@ -64,13 +84,15 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, Project project) : this(parent, issueService)
         {
+            this._type = IssueListType.normal;
+
             this._project = project;
             this._subtitle = this._project.Name;
             this.CanCreateIssue = true;
 
             this._parent.SetRefreshCommand(RefreshIssues);
 
-            GetIssuesAsync();
+            GetIssuesAsync(this._startAt);
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
@@ -80,13 +102,14 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, string filter) : this(parent, issueService)
         {
+            this._type = IssueListType.filter;
             this._filter = filter;
 
             this._subtitle = filter;
 
             this._parent.SetRefreshCommand(RefreshFilteredIssues);
 
-            GetIssuesAsync(filter);
+            GetIssuesAsync(this._startAt, filter);
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
@@ -95,13 +118,15 @@ namespace JiraEX.ViewModel
 
         public IssueListViewModel(IJiraToolWindowNavigatorViewModel parent, IIssueService issueService, bool quickSearch, string searchString) : this(parent, issueService)
         {
+            this._type = IssueListType.quickSearch;
+
             this._searchString = searchString;
 
             this._subtitle = "Search string \"" + searchString + "\""; ;
 
             this._parent.SetRefreshCommand(RefreshQuickSearchIssues);
 
-            GetIssuesQuickSearchAsync(searchString);
+            GetIssuesQuickSearchAsync(this._startAt, searchString);
 
             this.IssueList.CollectionChanged += this.OnCollectionChanged;
 
@@ -110,17 +135,17 @@ namespace JiraEX.ViewModel
 
         private void RefreshIssues(object sender, EventArgs e)
         {
-            GetIssuesAsync();
+            GetIssuesAsync(this._startAt);
         }
 
         private void RefreshFilteredIssues(object sender, EventArgs e)
         {
-            GetIssuesAsync(this._filter);
+            GetIssuesAsync(this._startAt, this._filter);
         }
 
         private void RefreshQuickSearchIssues(object sender, EventArgs e)
         {
-            GetIssuesQuickSearchAsync(this._filter);
+            GetIssuesQuickSearchAsync(this._startAt, this._filter);
         }
 
         private void RedirectCreateIssue(object sender)
@@ -128,21 +153,61 @@ namespace JiraEX.ViewModel
             this._parent.ShowCreateIssue(this._project);
         }
 
-        private async void GetIssuesAsync()
+        private void GetNextIssues(object sender) {
+            this._startAt += this._maxResults;
+
+            switch (this._type)
+            {
+                case IssueListType.normal:
+                    this.GetIssuesAsync(this._startAt);
+                    break;
+                case IssueListType.filter:
+                    this.GetIssuesAsync(this._startAt, this._filter);
+                    break;
+                case IssueListType.quickSearch:
+                    this.GetIssuesQuickSearchAsync(this._startAt, this._searchString);
+                    break;
+            }
+        }
+
+        private void GetPreviousIssues(object sender)
+        {
+            this._startAt -= this._maxResults;
+
+            switch (this._type)
+            {
+                case IssueListType.normal:
+                    this.GetIssuesAsync(this._startAt);
+                    break;
+                case IssueListType.filter:
+                    this.GetIssuesAsync(this._startAt, this._filter);
+                    break;
+                case IssueListType.quickSearch:
+                    this.GetIssuesQuickSearchAsync(this._startAt, this._searchString);
+                    break;
+            }
+        }
+
+        private async void GetIssuesAsync(int startAt)
         {
             this._parent.StartLoading();
 
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesOfProjectAsync(this._project.Key);
+            Task<IssueListPaged> issueTask = this._issueService.GetAllIssuesOfProjectAsync(startAt, this._project.Key);
 
             try { 
-                var issueList = await issueTask as IssueList;
+                var issueList = await issueTask as IssueListPaged;
 
-                this.IssueList.Clear();
-
-                foreach (Issue i in issueList.Issues)
+                if (issueList.Issues.Count != 0)
                 {
-                    this.IssueList.Add(i);
+                    this.IssueList.Clear();
+
+                    foreach (Issue i in issueList.Issues)
+                    {
+                        this.IssueList.Add(i);
+                    }  
                 }
+
+                ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
             }
@@ -152,21 +217,26 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void GetIssuesAsync(string filter)
+        private async void GetIssuesAsync(int startAt, string filter)
         {
             this._parent.StartLoading();
 
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesByJqlAsync(filter);
+            Task<IssueListPaged> issueTask = this._issueService.GetAllIssuesByJqlAsync(this._startAt, filter);
 
             try { 
-                var issueList = await issueTask as IssueList;
+                var issueList = await issueTask as IssueListPaged;
 
-                this.IssueList.Clear();
-
-                foreach (Issue i in issueList.Issues)
+                if (issueList.Issues.Count != 0)
                 {
-                    this.IssueList.Add(i);
+                    this.IssueList.Clear();
+
+                    foreach (Issue i in issueList.Issues)
+                    {
+                        this.IssueList.Add(i);
+                    }
                 }
+
+                ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
             }
@@ -176,22 +246,27 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void GetIssuesQuickSearchAsync(string searchString)
+        private async void GetIssuesQuickSearchAsync(int startAt, string searchString)
         {
             this._parent.StartLoading();
 
-            Task<IssueList> issueTask = this._issueService.GetAllIssuesByTextContainingAsync(searchString);
+            Task<IssueListPaged> issueTask = this._issueService.GetAllIssuesByTextContainingAsync(this._startAt, searchString);
 
             try
             {
-                var issueList = await issueTask as IssueList;
+                var issueList = await issueTask as IssueListPaged;
 
-                this.IssueList.Clear();
-
-                foreach (Issue i in issueList.Issues)
+                if (issueList.Issues.Count != 0)
                 {
-                    this.IssueList.Add(i);
+                    this.IssueList.Clear();
+
+                    foreach (Issue i in issueList.Issues)
+                    {
+                        this.IssueList.Add(i);
+                    }
                 }
+
+                ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
             }
@@ -199,6 +274,33 @@ namespace JiraEX.ViewModel
             {
                 ShowErrorMessages(ex, this._parent);
             }
+        }
+
+        private void ProcessBoundaries(IssueListPaged issueList)
+        {
+            int startAt = issueList.StartAt;
+            int maxResults = issueList.MaxResults;
+
+            if (maxResults == issueList.Issues.Count)
+            {
+                this.HasNext = true;
+            }
+            else
+            {
+                this.HasNext = false;
+            }
+
+            if (startAt != 0)
+            {
+                this.HasPrevious = true;
+            }
+            else
+            {
+                this.HasPrevious = false;
+            }
+
+            this._startAt = startAt;
+            this._maxResults = maxResults;
         }
 
         public void OnItemSelected(Issue issue)
@@ -285,17 +387,17 @@ namespace JiraEX.ViewModel
             if (this._filter != null)
             {
                 this._parent.SetRefreshCommand(RefreshFilteredIssues);
-                GetIssuesAsync(this._filter);
+                GetIssuesAsync(this._startAt, this._filter);
             }
             else if(this._searchString != null)
             {
                 this._parent.SetRefreshCommand(RefreshQuickSearchIssues);
-                GetIssuesQuickSearchAsync(this._searchString);
+                GetIssuesQuickSearchAsync(this._startAt, this._searchString);
             }
             else
             {
                 this._parent.SetRefreshCommand(RefreshIssues);
-                GetIssuesAsync();
+                GetIssuesAsync(this._startAt);
             }
         }
 
@@ -394,6 +496,26 @@ namespace JiraEX.ViewModel
         public bool PriorityAttribute
         {
             get { return this.AttributesList[6].CheckedStatus; }
+        }
+
+        public bool HasNext
+        {
+            get { return this._hasNext; }
+            set
+            {
+                this._hasNext = value;
+                OnPropertyChanged("HasNext");
+            }
+        }
+
+        public bool HasPrevious
+        {
+            get { return this._hasPrevious; }
+            set
+            {
+                this._hasPrevious = value;
+                OnPropertyChanged("HasPrevious");
+            }
         }
     }
 }
