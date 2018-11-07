@@ -73,15 +73,32 @@
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
 
 
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-            <TextBlock Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
+        <DockPanel LastChildFill="False" DockPanel.Dock="Top">
+            <TextBlock DockPanel.Dock="Left" Visibility="{Binding CanCreateIssue, Converter={StaticResource TrueToVisibleConverter}}"
                        Margin="8 0 0 0" Style="{StaticResource PlainText}">
                         <Hyperlink Command="{Binding CreateIssueCommand}" 
                                     CommandParameter="{Binding}">
                             Create issue
                         </Hyperlink>
             </TextBlock>
-        </StackPanel>
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <TextBlock IsEnabled="{Binding HasPrevious}"
+                           Margin="0 0 8 0" Style="{StaticResource PlainText}">
+                    <Hyperlink Command="{Binding GetPrevisousIssuesCommand}" 
+                            CommandParameter="{Binding}">
+                        Previous
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock IsEnabled="{Binding HasNext}"
+                           Margin="0 0 8 0" Style="{StaticResource PlainText}">
+                    <Hyperlink Command="{Binding GetNextIssuesCommand}" 
+                            CommandParameter="{Binding}">
+                       Next
+                    </Hyperlink>
+                    </TextBlock>
+            </StackPanel>
+        </DockPanel>
 
         <Grid>
             <ListBox ItemsSource="{Binding IssueList}"

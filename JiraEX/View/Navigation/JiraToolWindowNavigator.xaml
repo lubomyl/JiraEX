@@ -27,7 +27,8 @@
                 <StackPanel Margin="6,9,9,5"
                         Orientation="Horizontal">
 
-                    <TextBlock Margin="0,-5,0,0"
+                    <TextBlock AutomationProperties.AutomationId="ToolbarTitle" 
+                        Margin="0,-5,0,0"
                          FontSize="14.7"
                          FontWeight="SemiBold"
                          Style="{StaticResource PlainText}"

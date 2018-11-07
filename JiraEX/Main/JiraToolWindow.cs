@@ -14,6 +14,7 @@ namespace JiraEX.Main
     using Main;
     using System.ComponentModel.Design;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System.Windows.Forms;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.

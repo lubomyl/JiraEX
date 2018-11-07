@@ -41,7 +41,7 @@
       </Button>
 
     <!--ToolWindow - ToolBar - Menu Buttons-->
-    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandHome" priority="0x0000" type="Button" >
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandHome" priority="0x0000" type="Button">
       <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
       <Icon guid="ImageCatalogGuid" id="Home" />
       <CommandFlag>IconIsMoniker</CommandFlag>

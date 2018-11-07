@@ -26,8 +26,7 @@ namespace JiraEX.View
             InitializeComponent();
 
             this.DataContext = navigator;
-
-
         }
+        
     }
 }
