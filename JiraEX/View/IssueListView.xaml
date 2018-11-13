@@ -36,23 +36,26 @@
             <Grid>
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
                                         Visibility="{Binding IsEditingAttributes, Converter={StaticResource FalseToVisibleConverter}}">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAttributes, Mode=OneWay}" Text="{Binding SelectedAttributes, Mode=OneWay}">
+                    <TextBlock  AutomationProperties.AutomationId="AttributesOverlayTextBlock"
+                                FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAttributes, Mode=OneWay}" Text="{Binding SelectedAttributes, Mode=OneWay}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditAttributesCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>
                     </TextBlock>
                 </Border>
 
-                <ComboBox StaysOpenOnEdit="True" 
-                                Visibility="{Binding IsEditingAttributes, Converter={StaticResource TrueToVisibleConverter}}"
-                                ItemsSource="{Binding AttributesList}"
-                                Margin="0 0 5 0">
+                <ComboBox AutomationProperties.AutomationId="AttributesComboBox"
+                        StaysOpenOnEdit="True" 
+                        Visibility="{Binding IsEditingAttributes, Converter={StaticResource TrueToVisibleConverter}}"
+                        ItemsSource="{Binding AttributesList}"
+                        Margin="0 0 5 0">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Command="{Binding DataContext.CheckedAttributeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
-                                                Content="{Binding Name}" 
-                                                IsChecked="{Binding CheckedStatus}" 
-                                                CommandParameter="{Binding}">
+                            <CheckBox AutomationProperties.AutomationId="SelectedAttribute"
+                                    Command="{Binding DataContext.CheckedAttributeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                                    Content="{Binding Name}" 
+                                    IsChecked="{Binding CheckedStatus}" 
+                                    CommandParameter="{Binding}">
                             </CheckBox>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -123,39 +126,47 @@
                                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                             <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0"
                                                     Visibility="{Binding DataContext.StatusAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Converter={StaticResource TrueToVisibleConverter}}">
-                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
+                                                <TextBlock AutomationProperties.AutomationId="IssueStatus" 
+                                                           FontFamily="Consolas" ToolTip="{Binding Fields.Status.Name, Mode=OneWay}" Text="{Binding Fields.Status.Name, Mode=OneWay}" />
                                             </Border>
                                             <Border Visibility="{Binding DataContext.PriorityAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Converter={StaticResource TrueToVisibleConverter}}"
                                                     VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0">
-                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.Priority.Name, Mode=OneWay}" Text="{Binding Fields.Priority.Name, Mode=OneWay}" />
+                                                <TextBlock AutomationProperties.AutomationId="IssuePriority" 
+                                                           FontFamily="Consolas" ToolTip="{Binding Fields.Priority.Name, Mode=OneWay}" Text="{Binding Fields.Priority.Name, Mode=OneWay}" />
                                             </Border>
                                             <Border CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50" Margin="0 0 5 0"
                                                     Visibility="{Binding DataContext.TypeAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Converter={StaticResource TrueToVisibleConverter}}">
-                                                <TextBlock FontFamily="Consolas" ToolTip="{Binding Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Fields.IssueType.Name, Mode=OneWay}" />
+                                                <TextBlock AutomationProperties.AutomationId="IssueType" 
+                                                           FontFamily="Consolas" ToolTip="{Binding Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Fields.IssueType.Name, Mode=OneWay}"/>
                                             </Border>
                                         </StackPanel>
                                     </DockPanel>
                                 </Grid>
 
-                                <TextBlock Visibility="{Binding DataContext.SummaryAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={StaticResource TrueToVisibleConverter}}"
+                                <TextBlock AutomationProperties.AutomationId="IssueSummary" 
+                                           Visibility="{Binding DataContext.SummaryAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={StaticResource TrueToVisibleConverter}}"
                                     Text="{Binding Fields.Summary}"  Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
 
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding DataContext.CreatedAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={StaticResource TrueToVisibleConverter}, Mode=OneWay}">
                                     <Label Style="{StaticResource LabelFaded}">Created</Label>
-                                    <TextBlock Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Created, Mode=OneWay}"/>
+                                    <TextBlock AutomationProperties.AutomationId="IssueCreated" 
+                                               Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Created, Mode=OneWay}"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding DataContext.UpdatedAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={StaticResource TrueToVisibleConverter}}">
                                     <Label Style="{StaticResource LabelFaded}">Updated</Label>
-                                    <TextBlock Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Updated, Mode=OneWay}"/>
+                                    <TextBlock AutomationProperties.AutomationId="IssueUpdated" 
+                                               Style="{StaticResource PlainTextFaded}" Text="{Binding Fields.Updated, Mode=OneWay}"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding DataContext.AssigneeAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={StaticResource TrueToVisibleConverter}}">
-                                    <Label Style="{StaticResource LabelFaded}">Assignee:</Label>
-                                    <TextBlock Visibility="{Binding Fields.Assignee, Converter={StaticResource NullToVisibleConverter}}"
+                                    <Label AutomationProperties.AutomationId="IssueAssignee" 
+                                           Style="{StaticResource LabelFaded}">Assignee:</Label>
+                                    <TextBlock 
+                                               Visibility="{Binding Fields.Assignee, Converter={StaticResource NullToVisibleConverter}}"
                                                Style="{StaticResource PlainText}" Text="None" 
                                                Margin="0 0 5 0"/>
                                     

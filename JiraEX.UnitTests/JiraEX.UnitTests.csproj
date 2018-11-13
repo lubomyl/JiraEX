@@ -44,6 +44,7 @@
       <HintPath>..\packages\Moq.4.10.0\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -59,6 +60,7 @@
       <HintPath>..\packages\TestStack.White.0.13.3\lib\net40\TestStack.White.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <Choose>
@@ -76,7 +78,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UIAutomation\UnitTest1.cs" />
+    <Compile Include="UIAutomation\IssueListViewUnitTests.cs" />
+    <Compile Include="UIAutomation\ToolbarTitleUnitTests.cs" />
     <Compile Include="ViewModel\CreateIssueViewModelUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\FilterListViewModelUnitTests.cs" />
