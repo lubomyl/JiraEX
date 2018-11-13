@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace JiraEX
+namespace JiraEX.Main
 {
     using System;
     using System.Runtime.InteropServices;
@@ -13,6 +13,8 @@ namespace JiraEX
     using View;
     using Main;
     using System.ComponentModel.Design;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System.Windows.Forms;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -26,7 +28,7 @@ namespace JiraEX
     /// </para>
     /// </remarks>
     [Guid(Guids.GUID_JIRA_TOOL_WINDOW_STRING)]
-    public class JiraToolWindow : ToolWindowPane
+    public partial class JiraToolWindow : ToolWindowPane
     {
         private readonly object _view;
         private JiraToolWindowNavigatorViewModel _navigator;

@@ -58,6 +58,8 @@ namespace JiraEX.ViewModel
                     {
                         this.FilterList.Add(f);
                     }
+
+                    this.NoFilters = false;
                 }
                 else
                 {

@@ -27,5 +27,6 @@ namespace JiraEX.View
 
             this.DataContext = navigator;
         }
+        
     }
 }

@@ -124,7 +124,7 @@ namespace JiraEX.Helper
             if (searchText != null && !searchText.Equals(""))
             {
                 AppendParameterNameLike("text");
-                AddParameterValueLike(searchText);
+                AddParameterValueLike(searchText + "*");
                 CloseParameterValuesLike();
             }
         }

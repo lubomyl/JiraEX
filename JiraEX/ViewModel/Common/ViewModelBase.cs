@@ -43,7 +43,7 @@ namespace JiraEX.ViewModel
 
             string errorMessage = "";
 
-            if (ex.ErrorResponse.ErrorMessages.Length != 0)
+            if (ex.ErrorResponse.ErrorMessages.Length != 0 && ex.ErrorResponse.ErrorMessages != null)
             {
                 foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
                 {
@@ -51,9 +51,12 @@ namespace JiraEX.ViewModel
                 }
             }
 
-            foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+            if (ex.ErrorResponse.Errors != null)
             {
-                errorMessage += error.Value;
+                foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+                {
+                    errorMessage += error.Value;
+                }
             }
 
             parent.SetErrorMessage(errorMessage);

@@ -20,7 +20,7 @@ namespace JiraRESTClient.Service
         /// </summary>
         /// <returns>Task containing deserialized <see cref="IssueList"/> model class object.</returns>
         /// <param name="projectKey">Short string representing Jira Project.</param>
-        Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey);
+        Task<IssueListPaged> GetAllIssuesOfProjectAsync(int startAt, string projectKey);
 
         Task<IssueList> GetAllIssues();
 
@@ -52,7 +52,9 @@ namespace JiraRESTClient.Service
 
         Task<FilterList> GetAllFiltersAsync();
 
-        Task<IssueList> GetAllIssuesByJqlAsync(string jql);
+        Task<IssueListPaged> GetAllIssuesByJqlAsync(int startAt, string jql);
+
+        Task<IssueListPaged> GetAllIssuesByTextContainingAsync(int startAt, string quickSearch);
 
         Task<IssueLinkTypeList> GetAllIssueLinkTypes();
 

@@ -40,7 +40,7 @@
                     <StackPanel Orientation="Vertical" Margin="8 3 8 3">
                         <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" Style="{StaticResource TitleText}" Opacity="0.5" Margin="0 0 10 0"/>
 
-                        <TextBlock Text="{Binding Jql}" Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
+                        <TextBlock AutomationProperties.AutomationId="JqlString" Text="{Binding Jql}" Style="{StaticResource PlainText}" TextWrapping="Wrap"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

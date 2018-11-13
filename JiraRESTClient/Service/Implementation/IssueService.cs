@@ -30,12 +30,12 @@ namespace JiraRESTClient.Service.Implementation
         /// <summary>
         /// <see cref="IIssueService.GetAllIssuesAsync(string)"/>
         /// </summary>
-        public Task<IssueList> GetAllIssuesOfProjectAsync(string projectKey)
+        public Task<IssueListPaged> GetAllIssuesOfProjectAsync(int startAt, string projectKey)
         {
             return Task.Run(() => {
-                var resource = $"search?jql=project={projectKey}";
+                var resource = $"search?jql=project={projectKey}&startAt={startAt}";
 
-                return this._baseService.GetResource<IssueList>(resource);
+                return this._baseService.GetResource<IssueListPaged>(resource);
             });
         }
 
@@ -212,12 +212,21 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<IssueList> GetAllIssuesByJqlAsync(string jql)
+        public Task<IssueListPaged> GetAllIssuesByJqlAsync(int startAt, string jql)
         {
             return Task.Run(() => {
-                var resource = $"search?jql={jql}";
+                var resource = $"search?jql={jql}&startAt={startAt}";
 
-                return this._baseService.GetResource<IssueList>(resource);
+                return this._baseService.GetResource<IssueListPaged>(resource);
+            });
+        }
+
+        public Task<IssueListPaged> GetAllIssuesByTextContainingAsync(int startAt, string quickSearch)
+        {
+            return Task.Run(() => {
+                var resource = $"search?jql=text~\"{quickSearch}*\"&startAt={startAt}";
+
+                return this._baseService.GetResource<IssueListPaged>(resource);
             });
         }
 

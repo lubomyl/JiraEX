@@ -3,7 +3,11 @@
   <Metadata>
     <Identity Id="8f4fd3bc-f29e-4e20-8d1b-5145ec98a341" Version="1.0" Language="en-US" Publisher="Lubomír Kletenský" />
     <DisplayName>JiraEX</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Description xml:space="preserve">Atlassian Jira unofficial extension integrating most of the web features. 
+- list issues by project/filter/advanced search
+- quick search for issue(s)
+- see/edit details about issue
+- create issues/sub-tasks</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />

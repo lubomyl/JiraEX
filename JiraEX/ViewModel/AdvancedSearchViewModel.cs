@@ -58,7 +58,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand ClearFiltersCommand { get; set; }
 
-        private Task<IssueList> issueTask;
+        private Task<IssueListPaged> issueTask;
 
         private int _totalNumberOfLoadings = 5;
 
@@ -113,11 +113,11 @@ namespace JiraEX.ViewModel
             string jql = JqlBuilder.Build(this.SprintList.ToArray(), this.IsAssignedToMe, this.IsUnassigned,
                 this.PriorityList.ToArray(), this.StatusList.ToArray(), this.ProjectList.ToArray(), this.SearchText);
 
-            this.issueTask = this._issueService.GetAllIssuesByJqlAsync(jql);
+            this.issueTask = this._issueService.GetAllIssuesByJqlAsync(0, jql);
 
             try
             {
-                var issueList = await issueTask as IssueList;
+                var issueList = await issueTask as IssueListPaged;
 
                 this.IssueList.Clear();
 
