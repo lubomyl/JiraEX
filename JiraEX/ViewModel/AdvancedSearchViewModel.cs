@@ -67,6 +67,8 @@ namespace JiraEX.ViewModel
         {
             this._parent = parent;
 
+            this._parent.SetRefreshCommand(RefreshAdvancedSearch);
+
             this._priorityService = priorityService;
             this._issueService = issueService;
             this._projectService = projectService;
@@ -106,6 +108,11 @@ namespace JiraEX.ViewModel
             GetBoardsAsync();
         }
 
+        private void RefreshAdvancedSearch(object sender, EventArgs e)
+        {
+            GetIssuesAsync();
+        }
+
         private async void GetIssuesAsync()
         {
             this._parent.StartLoading();
@@ -127,6 +134,8 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckTotalNumberOfActiveLoadings();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -152,6 +161,8 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckTotalNumberOfActiveLoadings();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -196,6 +207,8 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckTotalNumberOfActiveLoadings();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -221,6 +234,8 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckTotalNumberOfActiveLoadings();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -246,6 +261,8 @@ namespace JiraEX.ViewModel
                 }
 
                 GetSprintsAsync();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {

@@ -178,6 +178,8 @@ namespace JiraEX.ViewModel
             this._parent.StartLoading();
 
             UpdateIssueAsync();
+
+            HideErrorMessages(this._parent);
         }
 
         private void CheckSubTaskCreatable()
@@ -337,6 +339,8 @@ namespace JiraEX.ViewModel
                 var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
 
                 this._parent.ShowIssueDetail(completeIssue, this._project);
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -354,6 +358,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 if (label.CheckedStatus)
                 {
                     await this._issueService.UpdateIssuePropertyAsync(this.Issue.Key, "add", "labels", label.Label);
@@ -379,6 +385,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 if (version.CheckedStatus)
                 {
                     await this._issueService.AddIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
@@ -387,6 +395,7 @@ namespace JiraEX.ViewModel
                 {
                     await this._issueService.RemoveIssueVersionPropertyAsync(this.Issue.Key, "fixVersions", version.Name);
                 }
+
             }
             catch (JiraException ex)
             {
@@ -404,6 +413,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 if (version.CheckedStatus)
                 {
                     await this._issueService.AddIssueVersionPropertyAsync(this.Issue.Key, "versions", version.Name);
@@ -539,6 +550,8 @@ namespace JiraEX.ViewModel
                 }
 
                 this.CheckTotalNumberOfActiveLoadings();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -843,6 +856,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "summary", this._issue.Fields.Summary);
 
                 this.IsEditingSummary = false;
@@ -861,6 +876,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "description", this._issue.Fields.Description);
 
                 this.IsEditingDescription = false;
@@ -879,6 +896,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._issueService.UpdateIssuePropertyAsync(this._issue.Key, "set", "priority", this.SelectedPriority);
             }
             catch (JiraException ex)
@@ -936,6 +955,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._issueService.DeleteLinkedIssue(il.Id);
             }
             catch (JiraException ex)
@@ -954,6 +975,8 @@ namespace JiraEX.ViewModel
 
                 try
                 {
+                    HideErrorMessages(this._parent);
+
                     if (this._selectedLinkType.Type != null && this._selectedLinkType.Type.Equals("inward"))
                     {
                         await this._issueService.LinkIssue(this.SelectedLinkIssue.Key, this.Issue.Key, this._selectedLinkType.Name);
@@ -980,14 +1003,16 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._transitionService.DoTransitionAsync(this._issue.Key, this.SelectedTransition);
-            
-                UpdateIssueAsync();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            UpdateIssueAsync();
         }
 
         private async void AssignAsync()
@@ -996,6 +1021,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._issueService.AssignAsync(this._issue.Key, this._selectedAssignee.Name);
             }
             catch (JiraException ex)
@@ -1012,14 +1039,16 @@ namespace JiraEX.ViewModel
 
             try
             {
-                await this._issueService.MoveIssueToSprintAsync(this.Issue.Key, this.SelectedSprint.Id);
+                HideErrorMessages(this._parent);
 
-                UpdateIssueAsync();
+                await this._issueService.MoveIssueToSprintAsync(this.Issue.Key, this.SelectedSprint.Id);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            UpdateIssueAsync();
         }
 
         internal void DownloadAttachment(Attachment attachment)
@@ -1045,6 +1074,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                HideErrorMessages(this._parent);
+
                 await this._attachmentService.DeleteAttachmentByIdAsync(attachment.Id);
             }
             catch (JiraException ex)
@@ -1068,13 +1099,13 @@ namespace JiraEX.ViewModel
 
                 try { 
                     await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
-
-                    UpdateIssueAsync();
                 }
                 catch (JiraException ex)
                 {
                     ShowErrorMessages(ex, this._parent);
                 }
+
+                UpdateIssueAsync();
             }
         }
 
@@ -1192,9 +1223,7 @@ namespace JiraEX.ViewModel
             {
                 this._parent.StopLoading();
             }
-        }
-
-        
+        }       
 
         public void SetPanelTitles()
         {

@@ -67,6 +67,8 @@ namespace JiraEX.ViewModel
                 }
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {

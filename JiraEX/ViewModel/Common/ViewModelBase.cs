@@ -37,6 +37,11 @@ namespace JiraEX.ViewModel
             }
         }
 
+        protected void HideErrorMessages(IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.SetErrorMessage(null);
+        }
+
         protected void ShowErrorMessages(JiraException ex, IJiraToolWindowNavigatorViewModel parent)
         {
             parent.StopLoading();

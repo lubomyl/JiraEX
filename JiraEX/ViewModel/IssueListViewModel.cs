@@ -210,6 +210,8 @@ namespace JiraEX.ViewModel
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -239,6 +241,8 @@ namespace JiraEX.ViewModel
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
@@ -269,6 +273,8 @@ namespace JiraEX.ViewModel
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
