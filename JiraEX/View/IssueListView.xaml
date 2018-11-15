@@ -182,6 +182,38 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <StackPanel Margin="10" 
+                    VerticalAlignment="Center"
+                    Visibility="{Binding NoIssues, Converter={StaticResource TrueToVisibleConverter}}">
+                <TextBlock Style="{StaticResource TitleText}" 
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Margin="4"
+                    Text="There are not any issues."/>
+                <TextBlock Style="{StaticResource PlainTextFaded}" 
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="4"
+                    Text="You do not have permission to see any or there are no issues at all."/>
+            </StackPanel>
+
+            <StackPanel Margin="10" 
+                    VerticalAlignment="Center"
+                    Visibility="{Binding NoIssuesSearch, Converter={StaticResource TrueToVisibleConverter}}">
+                <TextBlock Style="{StaticResource TitleText}" 
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Margin="4"
+                    Text="There are not any issues."/>
+                <TextBlock Style="{StaticResource PlainTextFaded}" 
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="4"
+                    Text="The search string or issuesKey you have entered does not match any issue."/>
+            </StackPanel>
         </Grid>
     </DockPanel>
 </UserControl>

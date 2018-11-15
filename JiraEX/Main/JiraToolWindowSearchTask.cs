@@ -43,7 +43,7 @@ namespace JiraEX.Main
 
         public override void ClearSearch()
         {
-            ((JiraToolWindowNavigatorViewModel)navigator).GoBack(null, null);
+            ((JiraToolWindowNavigatorViewModel)navigator).ShowProjects(null, null);
         }
 
         internal class SearchTask : VsSearchTask
@@ -80,7 +80,6 @@ namespace JiraEX.Main
                         }
                         catch (JiraException ex)
                         {
-                            //TODO redirect to empty page with error message
                         }
                     }
                     else

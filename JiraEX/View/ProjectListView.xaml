@@ -60,7 +60,7 @@
                     HorizontalAlignment="Center"
                     FontSize="16"
                     Margin="4"
-                    Text="There aren't any projects."/>
+                    Text="There are not any projects."/>
             <TextBlock Style="{StaticResource PlainTextFaded}" 
                     TextWrapping="Wrap"
                     TextAlignment="Center"

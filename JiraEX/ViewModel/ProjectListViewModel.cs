@@ -73,6 +73,8 @@ namespace JiraEX.ViewModel
 
                 if (projectList.Count > 0)
                 {
+                    this.NoProjects = false;
+
                     foreach (Project p in projectList)
                     {
 
@@ -101,6 +103,8 @@ namespace JiraEX.ViewModel
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
+
+                this._parent.StopLoading();
             }
         }
 
