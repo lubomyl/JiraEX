@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class AfterSignInViewModel : ViewModelBase, ITitleable
+    public class ConnectionViewModel : ViewModelBase, ITitleable
     {
 
         private IJiraToolWindowNavigatorViewModel _parent;
@@ -32,7 +32,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand SignOutCommand { get; private set; }
 
-        public AfterSignInViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
+        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
         {
             this._parent = parent;
 
@@ -58,11 +58,11 @@ namespace JiraEX.ViewModel
             }
             catch (OAuthException ex)
             {
-                this._parent.ShowBeforeSignIn();
+                this._parent.ShowAuthentication();
             }
             catch (JiraException ex2)
             {
-                this._parent.ShowBeforeSignIn();
+                this._parent.ShowAuthentication();
 
                 ShowErrorMessages(ex2, this._parent);
             }
@@ -74,7 +74,7 @@ namespace JiraEX.ViewModel
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
-            this._parent.ShowBeforeSignIn();
+            this._parent.ShowAuthentication();
         }
 
         public void SetPanelTitles()

@@ -17,21 +17,20 @@ using System.Windows.Threading;
 
 namespace JiraEX.ViewModel
 {
-    public class BeforeSignInViewModel : ViewModelBase, ITitleable
+    public class AuthenticateViewModel : ViewModelBase, ITitleable
     {
 
         private IOAuthService _oAuthService;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
-        private string _errorMessage;
         private string _baseUrl;
 
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignInOAuthCommand { get; private set; }
 
-        public BeforeSignInViewModel(IJiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
+        public AuthenticateViewModel(IJiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
         {
             this._parent = parent;
 
@@ -52,6 +51,8 @@ namespace JiraEX.ViewModel
 
             try
             {
+                this._parent.StartLoading();
+
                 this._baseUrl = this.ProcessBaseUrlInput(this.BaseUrl);
 
                 this._oAuthService.InitializeOAuthSession(this.BaseUrl);
@@ -62,30 +63,36 @@ namespace JiraEX.ViewModel
                 authorizationUrl = await this._oAuthService.GetUserAuthorizationUrlForToken(requestToken);
 
                 System.Diagnostics.Process.Start(authorizationUrl);
-                this._parent.ShowOAuthVerificationConfirmation(null, null, requestToken);
+                this._parent.ShowAuthenticationVerification(null, null, requestToken);
             }
             catch (OAuthException ex)
             {
-                this.ErrorMessage = ex.Message;
+                this._parent.SetErrorMessage(ex.Message);
             }
             catch (SecurityException ex)
             {
-                this.ErrorMessage = ex.Message;
+                this._parent.SetErrorMessage(ex.Message);
             }
             catch (Exception ex)
             {
-                this.ErrorMessage = ex.Message;
+                this._parent.SetErrorMessage(ex.Message);
             }
+
+            this._parent.StopLoading();
         }
 
         private string ProcessBaseUrlInput(string baseUrl)
         {
             string ret = baseUrl;
             string https = "https://";
+            string http = "http://";
 
-            if (!baseUrl.Substring(0, 8).Equals("https://"))
+            if (baseUrl.Length > 7)
             {
-                ret = https + ret;
+                if (!baseUrl.Substring(0, 8).Equals(https) && !baseUrl.Substring(0, 7).Equals(http))
+                {
+                    ret = https + ret;
+                }
             }
 
             return ret;
@@ -93,23 +100,10 @@ namespace JiraEX.ViewModel
 
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", "Sign-in");
+            this._parent.SetPanelTitles("JiraEX", "OAuth authentication");
         }
 
         #region BeforeSignInViewModel Members   
-
-        public string ErrorMessage
-        {
-            get
-            {
-                return this._errorMessage;
-            }
-            set
-            {
-                this._errorMessage = value;
-                OnPropertyChanged("ErrorMessage");
-            }
-        }
 
         public string BaseUrl
         {

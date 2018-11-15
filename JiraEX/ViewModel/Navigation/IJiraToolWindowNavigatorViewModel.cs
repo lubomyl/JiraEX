@@ -13,11 +13,11 @@ namespace JiraEX.ViewModel.Navigation
 
         void ShowConnection(object sender, EventArgs e);
 
-        void ShowBeforeSignIn();
+        void ShowAuthentication();
 
-        void ShowAfterSignIn();
+        void ShowConnection();
 
-        void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken);
+        void ShowAuthenticationVerification(object sender, EventArgs e, IToken requestToken);
 
         void ShowProjects(object sender, EventArgs e);
 

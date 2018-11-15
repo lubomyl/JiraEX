@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="JiraEX.View.AuthenticationVerificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <DockPanel LastChildFill="False">
+
+            <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Margin="0,0,0,8">Verification code:</TextBlock>
+            
+            <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding OAuthVerificationCode}" Margin="32,0,32,8"/>
+
+            <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInCommand}" 
+                    CommandParameter="{Binding ElementName=This}" Content="Verify" 
+                    Margin="0,0,0,24" Height="25" x:Name="SignInOAuth"/>
+
+        </DockPanel>
+    </ScrollViewer>
+
+</UserControl>

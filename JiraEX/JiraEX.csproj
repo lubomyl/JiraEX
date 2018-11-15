@@ -71,8 +71,8 @@
     <Compile Include="Theme\ThemeColorId.cs" />
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\AdvancedSearchViewModel.cs" />
-    <Compile Include="ViewModel\AfterSignInViewModel.cs" />
-    <Compile Include="ViewModel\BeforeSignInViewModel.cs" />
+    <Compile Include="ViewModel\ConnectionViewModel.cs" />
+    <Compile Include="ViewModel\AuthenticateViewModel.cs" />
     <Compile Include="ViewModel\CreateIssueViewModel.cs" />
     <Compile Include="ViewModel\FilterListViewModel.cs" />
     <Compile Include="ViewModel\Common\IReinitializable.cs" />
@@ -83,17 +83,17 @@
     <Compile Include="ViewModel\Navigation\IJiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\NoIssueFoundViewModel.cs" />
-    <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
+    <Compile Include="ViewModel\AuthenticationVerificationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />
     <Compile Include="ViewModel\Common\ViewModelBase.cs" />
     <Compile Include="View\AdvancedSearchView.xaml.cs">
       <DependentUpon>AdvancedSearchView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AfterSignInView.xaml.cs">
-      <DependentUpon>AfterSignInView.xaml</DependentUpon>
+    <Compile Include="View\ConnectionView.xaml.cs">
+      <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\BeforeSignInView.xaml.cs">
-      <DependentUpon>BeforeSignInView.xaml</DependentUpon>
+    <Compile Include="View\AuthenticationView.xaml.cs">
+      <DependentUpon>AuthenticationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CreateIssueView.xaml.cs">
       <DependentUpon>CreateIssueView.xaml</DependentUpon>
@@ -113,8 +113,8 @@
     <Compile Include="View\NoIssueFoundView.xaml.cs">
       <DependentUpon>NoIssueFoundView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OAuthVerifierConfirmationView.xaml.cs">
-      <DependentUpon>OAuthVerifierConfirmationView.xaml</DependentUpon>
+    <Compile Include="View\AuthenticationVerificationView.xaml.cs">
+      <DependentUpon>AuthenticationVerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ProjectListView.xaml.cs">
       <DependentUpon>ProjectListView.xaml</DependentUpon>
@@ -265,11 +265,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AfterSignInView.xaml">
+    <Page Include="View\ConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\BeforeSignInView.xaml">
+    <Page Include="View\AuthenticationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -297,7 +297,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OAuthVerifierConfirmationView.xaml">
+    <Page Include="View\AuthenticationVerificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

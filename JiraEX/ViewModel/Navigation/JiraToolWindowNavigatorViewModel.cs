@@ -36,9 +36,9 @@ namespace JiraEX.ViewModel.Navigation
         private ISprintService _sprintService;
         private IProjectService _projectService;
 
-        private BeforeSignInView _beforeSignInView;
-        private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
-        private AfterSignInView _afterSignInView;
+        private AuthenticationView _authenticationView;
+        private AuthenticationVerificationView _authenticationVerification;
+        private ConnectionView connectionView;
         private ProjectListView _projectListView;
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
@@ -95,19 +95,19 @@ namespace JiraEX.ViewModel.Navigation
                 {
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
-                    this.ShowAfterSignIn();
+                    this.ShowConnection();
                 } else
                 {
-                    this.ShowBeforeSignIn();
+                    this.ShowAuthentication();
                 }
             }
             catch (Exception ex)
             {
-                this.ShowBeforeSignIn();
+                this.ShowAuthentication();
             }
         }
 
-        public void ShowBeforeSignIn()
+        public void ShowAuthentication()
         {
             this.StopLoading();
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
@@ -116,19 +116,19 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(false, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
             this._historyNavigator.ClearStack();
 
-            if (this._beforeSignInView == null)
+            if (this._authenticationView == null)
             {
-                this._beforeSignInView = new BeforeSignInView(this, this._oAuthService);
+                this._authenticationView = new AuthenticationView(this, this._oAuthService);
 
-                SelectedView = this._beforeSignInView;
+                SelectedView = this._authenticationView;
             }
             else
             {
-                SelectedView = _beforeSignInView;
+                SelectedView = _authenticationView;
             }
         }
 
-        public void ShowAfterSignIn()
+        public void ShowConnection()
         {
             this.StopLoading();
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
@@ -136,29 +136,29 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
 
-            if (this._afterSignInView == null)
+            if (this.connectionView == null)
             {
-                this._afterSignInView = new AfterSignInView(this, this._userService, this._oAuthService);
-                this._historyNavigator.AddView(this._afterSignInView);
+                this.connectionView = new ConnectionView(this, this._userService, this._oAuthService);
+                this._historyNavigator.AddView(this.connectionView);
 
-                SelectedView = this._afterSignInView;
+                SelectedView = this.connectionView;
             }
             else
             {
-                this._historyNavigator.AddView(this._afterSignInView);
+                this._historyNavigator.AddView(this.connectionView);
 
-                SelectedView = _afterSignInView;
+                SelectedView = connectionView;
             }
         }
 
-        public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
+        public void ShowAuthenticationVerification(object sender, EventArgs e, IToken requestToken)
         {
             this.StopLoading();
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
-            this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
+            this._authenticationVerification = new AuthenticationVerificationView(this, requestToken, this._oAuthService);
 
-            SelectedView = this._oAuthVerifierConfirmationView;
+            SelectedView = this._authenticationVerification;
         }
 
         public void ShowProjects(object sender, EventArgs e)
