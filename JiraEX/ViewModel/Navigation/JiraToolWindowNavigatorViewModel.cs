@@ -45,6 +45,7 @@ namespace JiraEX.ViewModel.Navigation
         private CreateIssueView _createIssueView;
         private FiltersListView _filtersListView;
         private AdvancedSearchView _advancedSearchView;
+        private NoIssueFoundView _noIssueFoundView;
 
         private CommandID toolbarMenuCommandRefreshID;
 
@@ -270,6 +271,17 @@ namespace JiraEX.ViewModel.Navigation
             this._historyNavigator.AddView(this._advancedSearchView);
 
             SelectedView = this._advancedSearchView;
+        }
+
+        public void ShowNoIssueFound(string issueKey)
+        {
+            this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+
+            this._noIssueFoundView = new NoIssueFoundView(this, issueKey);
+            this._historyNavigator.AddView(this._noIssueFoundView);
+
+            SelectedView = this._noIssueFoundView;
         }
 
         public void GoBack(object sender, EventArgs e)

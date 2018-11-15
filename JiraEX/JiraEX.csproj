@@ -82,6 +82,7 @@
     <Compile Include="ViewModel\Navigation\HistoryNavigator.cs" />
     <Compile Include="ViewModel\Navigation\IJiraToolWindowNavigatorViewModel.cs" />
     <Compile Include="ViewModel\Navigation\JiraToolWindowNavigatorViewModel.cs" />
+    <Compile Include="ViewModel\NoIssueFoundViewModel.cs" />
     <Compile Include="ViewModel\OAuthVerifierConfirmationViewModel.cs" />
     <Compile Include="ViewModel\ProjectListViewModel.cs" />
     <Compile Include="ViewModel\Common\ViewModelBase.cs" />
@@ -108,6 +109,9 @@
     </Compile>
     <Compile Include="View\Navigation\JiraToolWindowNavigator.xaml.cs">
       <DependentUpon>JiraToolWindowNavigator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\NoIssueFoundView.xaml.cs">
+      <DependentUpon>NoIssueFoundView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OAuthVerifierConfirmationView.xaml.cs">
       <DependentUpon>OAuthVerifierConfirmationView.xaml</DependentUpon>
@@ -286,6 +290,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Navigation\JiraToolWindowNavigator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\NoIssueFoundView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

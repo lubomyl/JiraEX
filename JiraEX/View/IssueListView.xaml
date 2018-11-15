@@ -212,7 +212,7 @@
                     TextAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="4"
-                    Text="The search string or issuesKey you have entered does not match any issue."/>
+                    Text="The search string you have entered does not match any issue."/>
             </StackPanel>
         </Grid>
     </DockPanel>

@@ -80,6 +80,7 @@ namespace JiraEX.Main
                         }
                         catch (JiraException ex)
                         {
+                            navigator.ShowNoIssueFound(this.SearchQuery.SearchString.Substring(4));
                         }
                     }
                     else
