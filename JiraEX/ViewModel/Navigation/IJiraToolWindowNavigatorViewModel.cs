@@ -11,7 +11,7 @@ namespace JiraEX.ViewModel.Navigation
     public interface IJiraToolWindowNavigatorViewModel
     {
 
-        void ShowConnection(object sender, EventArgs e);
+        void TryToSignIn(object sender, EventArgs e);
 
         void ShowAuthentication();
 

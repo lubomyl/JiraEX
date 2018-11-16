@@ -26,6 +26,8 @@ namespace JiraEX.ViewModel.Navigation
         private object _selectedView;
         private JiraToolWindow _parent;
 
+        private IVsWindowSearchHost _searchHost; 
+
         private IUserService _userService;
         private IOAuthService _oAuthService;
         private IIssueService _issueService;
@@ -64,6 +66,8 @@ namespace JiraEX.ViewModel.Navigation
         {
             this._parent = parent;
 
+            this._searchHost = parent.SearchHost;
+
             this._historyNavigator = new HistoryNavigator();
             
             this._service = JiraPackage.Mcs;
@@ -81,7 +85,7 @@ namespace JiraEX.ViewModel.Navigation
             InitializeCommands(this._service);
         }
 
-        public void ShowConnection(object sender, EventArgs e)
+        public void TryToSignIn(object sender, EventArgs e)
         {
             this.StopLoading();
 
@@ -110,6 +114,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowAuthentication()
         {
             this.StopLoading();
+
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_HOME_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_FILTERS_ID);
@@ -131,6 +136,7 @@ namespace JiraEX.ViewModel.Navigation
         public void ShowConnection()
         {
             this.StopLoading();
+
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
@@ -327,7 +333,7 @@ namespace JiraEX.ViewModel.Navigation
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
                 MenuCommand onToolbarMenuCommandBackClick = new MenuCommand(GoBack, toolbarMenuCommandBackID);
                 MenuCommand onToolbarMenuCommandForwardClick = new MenuCommand(GoForward, toolbarMenuCommandForwardID);
-                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(TryToSignIn, toolbarMenuCommandConnectionID);
                 MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(null, toolbarMenuCommandRefreshID);
                 MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
                 MenuCommand onToolbarMenuCommandAdvancedSearClick = new MenuCommand(ShowAdvancedSearch, toolbarMenuCommandAdvancedSearchID);

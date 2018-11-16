@@ -148,7 +148,7 @@ namespace JiraEX.ViewModel
 
         private void RefreshQuickSearchIssues(object sender, EventArgs e)
         {
-            GetIssuesQuickSearchAsync(this._startAt, this._filter);
+            GetIssuesQuickSearchAsync(this._startAt, this._searchString);
         }
 
         private void RedirectCreateIssue(object sender)

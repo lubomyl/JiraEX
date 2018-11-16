@@ -43,11 +43,11 @@
     <!--ToolWindow - ToolBar - Menu Buttons-->
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandHome" priority="0x0000" type="Button">
       <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
-      <Icon guid="ImageCatalogGuid" id="Home" />
+      <Icon guid="ImageCatalogGuid" id="AbstractCube" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
-        <CommandName>Home</CommandName>
-        <ButtonText>Home</ButtonText>
+        <CommandName>Projects</CommandName>
+        <ButtonText>Projects</ButtonText>
       </Strings>
     </Button>
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandBack" priority="0x0000" type="Button" >
@@ -75,8 +75,8 @@
       <Icon guid="ImageCatalogGuid" id="AddConnection" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
-        <CommandName>Sign-in</CommandName>
-        <ButtonText>Sign-in</ButtonText>
+        <CommandName>Connection</CommandName>
+        <ButtonText>Connection</ButtonText>
       </Strings>
     </Button>
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandRefresh" priority="0x0000" type="Button" >
@@ -85,8 +85,8 @@
       <CommandFlag>IconIsMoniker</CommandFlag>
       <CommandFlag>DefaultDisabled</CommandFlag>
       <Strings>
-        <CommandName>Refresh Issues</CommandName>
-        <ButtonText>Refresh Issues</ButtonText>
+        <CommandName>Refresh</CommandName>
+        <ButtonText>Refresh</ButtonText>
       </Strings>
     </Button>
       <Button guid="guidJiraToolbarMenu" id="ToolbarCommandFilters" priority="0x0000" type="Button" >

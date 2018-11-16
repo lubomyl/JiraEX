@@ -6,6 +6,7 @@ using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace JiraEX.ViewModel
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignInOAuthCommand { get; private set; }
+        public DelegateCommand HowToSetupOAuthCommand { get; private set; }
 
         public AuthenticateViewModel(IJiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
         {
@@ -40,6 +42,7 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
+            this.HowToSetupOAuthCommand = new DelegateCommand(HowToSetupOAuth);
 
             SetPanelTitles();
         }
@@ -81,6 +84,13 @@ namespace JiraEX.ViewModel
             this._parent.StopLoading();
         }
 
+        private void HowToSetupOAuth(object sender)
+        {
+            string howToURL = "https://github.com/lubomyl/JiraEX/wiki/How-to-setup-OAuth-(Jira-administrator)";
+
+            System.Diagnostics.Process.Start(howToURL);
+        }
+
         private string ProcessBaseUrlInput(string baseUrl)
         {
             string ret = baseUrl;
@@ -93,6 +103,11 @@ namespace JiraEX.ViewModel
                 {
                     ret = https + ret;
                 }
+            }
+    
+            if(ret == null)
+            {
+                ret = "";
             }
 
             return ret;
