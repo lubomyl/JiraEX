@@ -14,8 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace JiraEX.ViewModel.Navigation
@@ -40,7 +42,7 @@ namespace JiraEX.ViewModel.Navigation
 
         private AuthenticationView _authenticationView;
         private AuthenticationVerificationView _authenticationVerification;
-        private ConnectionView connectionView;
+        private ConnectionView _connectionView;
         private ProjectListView _projectListView;
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
@@ -85,7 +87,29 @@ namespace JiraEX.ViewModel.Navigation
             InitializeCommands(this._service);
         }
 
-        public void TryToSignIn(object sender, EventArgs e)
+        public void SignOut(object sender, EventArgs e)
+        {
+            ShowSignOutDialog();
+        }
+
+        protected void ShowSignOutDialog()
+        {
+            MessageBox_Show(ProcessCancelCreateIssueDialogSelection, "Are you sure want to sign out?", "Alert", MessageBoxButton.YesNo);
+        }
+
+        public void ProcessCancelCreateIssueDialogSelection(MessageBoxResult result)
+        {
+            if (result == MessageBoxResult.Yes)
+            {
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
+
+                this.ShowAuthentication();
+            }
+        }
+
+        public void TryToSignIn()
         {
             this.StopLoading();
 
@@ -99,7 +123,7 @@ namespace JiraEX.ViewModel.Navigation
                 {
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
-                    this.ShowConnection();
+                    this.ShowProjects(null, null);
                 } else
                 {
                     this.ShowAuthentication();
@@ -119,6 +143,8 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(false, this._service, Guids.COMMAND_HOME_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_FILTERS_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_CONNECTION_ID);
+
             this._historyNavigator.ClearStack();
 
             if (this._authenticationView == null)
@@ -130,30 +156,6 @@ namespace JiraEX.ViewModel.Navigation
             else
             {
                 SelectedView = _authenticationView;
-            }
-        }
-
-        public void ShowConnection()
-        {
-            this.StopLoading();
-
-            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
-
-            if (this.connectionView == null)
-            {
-                this.connectionView = new ConnectionView(this, this._userService, this._oAuthService);
-                this._historyNavigator.AddView(this.connectionView);
-
-                SelectedView = this.connectionView;
-            }
-            else
-            {
-                this._historyNavigator.AddView(this.connectionView);
-
-                SelectedView = connectionView;
             }
         }
 
@@ -171,6 +173,7 @@ namespace JiraEX.ViewModel.Navigation
         {
             this.StopLoading();
             this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_CONNECTION_ID);
 
             if (this._projectListView == null)
             {
@@ -290,6 +293,20 @@ namespace JiraEX.ViewModel.Navigation
             SelectedView = this._noIssueFoundView;
         }
 
+        public void ShowConnection(object sender, EventArgs e)
+        {
+            this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+
+            this._connectionView = new ConnectionView(this, this._userService);
+            this._historyNavigator.AddView(this._connectionView);
+
+            SelectedView = this._connectionView;
+        }
+
         public void GoBack(object sender, EventArgs e)
         {
             if (this._historyNavigator.CanGoBack())
@@ -333,7 +350,7 @@ namespace JiraEX.ViewModel.Navigation
                 MenuCommand onToolbarMenuCommandHomeClick = new MenuCommand(ShowProjects, toolbarMenuCommandHomeID);
                 MenuCommand onToolbarMenuCommandBackClick = new MenuCommand(GoBack, toolbarMenuCommandBackID);
                 MenuCommand onToolbarMenuCommandForwardClick = new MenuCommand(GoForward, toolbarMenuCommandForwardID);
-                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(TryToSignIn, toolbarMenuCommandConnectionID);
+                MenuCommand onToolbarMenuCommandConnectionClick = new MenuCommand(ShowConnection, toolbarMenuCommandConnectionID);
                 MenuCommand onToolbarMenuCommandRefreshClick = new MenuCommand(null, toolbarMenuCommandRefreshID);
                 MenuCommand onToolbarMenuCommandFiltersClick = new MenuCommand(ShowFilters, toolbarMenuCommandFiltersID);
                 MenuCommand onToolbarMenuCommandAdvancedSearClick = new MenuCommand(ShowAdvancedSearch, toolbarMenuCommandAdvancedSearchID);

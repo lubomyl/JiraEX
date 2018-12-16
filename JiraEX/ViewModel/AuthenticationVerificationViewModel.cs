@@ -67,7 +67,7 @@ namespace JiraEX.ViewModel
 
                 WriteToUserSettingsIssueAttributes();
 
-                this._parent.ShowConnection();
+                this._parent.ShowConnection(null, null);
                 this._timer.Stop();
             }
             catch (OAuthException ex)

@@ -43,7 +43,7 @@
     <!--ToolWindow - ToolBar - Menu Buttons-->
     <Button guid="guidJiraToolbarMenu" id="ToolbarCommandHome" priority="0x0000" type="Button">
       <Parent guid="guidJiraPackage" id="JiraToolbarGroup" />
-      <Icon guid="ImageCatalogGuid" id="AbstractCube" />
+      <Icon guid="ImageCatalogGuid" id="CloudConfigurationFile" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
         <CommandName>Projects</CommandName>
@@ -70,9 +70,9 @@
         <CommandName>Forward</CommandName>
       </Strings>
     </Button>
-    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandConnection" priority="0x0000" type="Button" >
+    <Button guid="guidJiraToolbarMenu" id="ToolbarCommandSignOut" priority="0x0000" type="Button" >
       <Parent guid="guidJiraPackage" id="JiraToolbarGroup2" />
-      <Icon guid="ImageCatalogGuid" id="AddConnection" />
+      <Icon guid="ImageCatalogGuid" id="Home" />
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
         <CommandName>Connection</CommandName>
@@ -124,7 +124,7 @@
       <IDSymbol name="ToolbarCommandHome" value="0x0129" />
       <IDSymbol name="ToolbarCommandBack" value="0x0130" />
       <IDSymbol name="ToolbarCommandForward" value="0x0131" />
-      <IDSymbol name="ToolbarCommandConnection" value="0x0132" />
+      <IDSymbol name="ToolbarCommandSignOut" value="0x0132" />
       <IDSymbol name="ToolbarCommandRefresh" value="0x0133" />
       <IDSymbol name="ToolbarCommandFilters" value="0x0134" />
     <IDSymbol name="ToolbarCommandAdvancedSearch" value="0x0135" />

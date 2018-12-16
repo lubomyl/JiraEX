@@ -26,17 +26,15 @@ namespace JiraEX.ViewModel
 
         private IUserService _userService;
 
-        private IOAuthService _oauthService;
-
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignOutCommand { get; private set; }
+        public DelegateCommand IssueReportGitHubCommand { get; private set; }
 
-        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
+        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService)
         {
             this._parent = parent;
-
-            this._oauthService = oAuthService;
+            
             this._userService = userService;
             this.GetAuthenticatedUserAsync();
 
@@ -44,6 +42,7 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignOutCommand = new DelegateCommand(SignOut);
+            this.IssueReportGitHubCommand = new DelegateCommand(IssueReportGitHub);
 
             SetPanelTitles();
         }
@@ -77,6 +76,13 @@ namespace JiraEX.ViewModel
             this._parent.ShowAuthentication();
         }
 
+        private void IssueReportGitHub(object parameter)
+        {
+            string issueReportURL = "https://github.com/lubomyl/JiraEX";
+
+            System.Diagnostics.Process.Start(issueReportURL);
+        }
+
         public void SetPanelTitles()
         {
             this._parent.SetPanelTitles("JiraEX", UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl"));
@@ -93,6 +99,11 @@ namespace JiraEX.ViewModel
                 this._authenticatedUser = value;
                 OnPropertyChanged("AuthenticatedUser");
             }
+        }
+
+        public string JiraURL
+        {
+            get { return UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl"); }
         }
 
     }

@@ -18,31 +18,51 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <DockPanel LastChildFill="False" Margin="8 8">
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                <TextBlock Style="{StaticResource PlainText}" TextWrapping="Wrap" Margin="0 0 0 8">
+                        This is beta version of JiraEX - Visual Studio extension integrating Jira application. It allows you to
+                        list issues by project/filter, search for them in advanced mode or using quick search on menu panel. You can also create
+                        all types of issues/sub-tasks and edit their properties. (summary, description, attachments, linked issues, assignee, sprint, type, priority,
+                        fix version, affects version and labels.
+                </TextBlock>
+                <TextBlock Style="{StaticResource PlainText}" TextWrapping="Wrap" Margin="0 0 0 8">
+                        In case of any bugs, enhancements, and ideas, please, create issue at GitHub project repository:
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"  
+                           Style="{StaticResource PlainText}">
+                                <Hyperlink Command="{Binding IssueReportGitHubCommand}" 
+                                            CommandParameter="{Binding}">
+                                    https://github.com/lubomyl/JiraEX
+                                </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <DockPanel LastChildFill="False" DockPanel.Dock="Top" Margin="8 8">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Jira URL:</Label>
+                    <TextBlock Text="{Binding JiraURL}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
 
-        <TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource PlainText}">Successfully signed-in as:</TextBlock>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">AppName:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.Name}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
 
-        <Label Grid.Column="0" Grid.Row="1" >AppName:</Label>
-        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding AuthenticatedUser.Name}" Style="{StaticResource PlainText}"/>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Name:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.DisplayName}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
 
-        <Label Grid.Column="0" Grid.Row="2" >Name:</Label>
-        <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding AuthenticatedUser.DisplayName}" Style="{StaticResource PlainText}"/>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Email:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.EmailAddress}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
 
-        <Label Grid.Column="0" Grid.Row="3" >Email:</Label>
-        <TextBlock Grid.Column="3" Grid.Row="3" Text="{Binding AuthenticatedUser.EmailAddress}" Style="{StaticResource PlainText}"/>
-
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding SignOutCommand}" Content="Sign out" Height="25" x:Name="SignOut" Width="75" />
-
-    </Grid>
+                <Button DockPanel.Dock="Top" Command="{Binding SignOutCommand}" 
+                            CommandParameter="{Binding ElementName=This}" Content="Sign out" 
+                            Height="25" HorizontalAlignment="Stretch" x:Name="SignOut"/>
+            </DockPanel>
+        </DockPanel>
+    </ScrollViewer>
 </UserControl>
