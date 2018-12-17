@@ -3,7 +3,7 @@
 Visual Studio extension integrating Atlassian Jira.
 
 ##### Testing with own Jira instance
-See: [Wiki - How to configure ConfluenceEX as consumer](https://github.com/lubomyl/ConfluenceEX/wiki/How-to-configure-ConfluenceEX-as-consumer)
+See: [Wiki - How to setup OAuth (Jira administrator)](https://github.com/lubomyl/JiraEX/wiki/How-to-setup-OAuth-(Jira-administrator))
 
 _Works same for Jira_
 
@@ -23,25 +23,7 @@ _Works same for Jira_
 - Build&Start  
 
 ##### Authentication protection
-Need to sign-in at [My testing Atlassian server](https://lubomyl4.atlassian.net)  
-
-##### What does it demonstrate?
-REST Client integrated into ToolWindow  
-After project start-up goto and click on `View|Jira` if the Jira Toolbar is not already shown    
-New ToolWindow with ToolBar will show up  
-  
-Before successful sign-in:  
-- If not already signed-in with oauth_access_token from registry User Settings Store click on `Redirect`
-- By Signing-in and clicking on `Allow/Přijmout` give JiraEX rights to make rest api calls with your identity
-- Copy generated oauth_verifier (ověřovací kód) and navigate back to JiraEX
-- Paste copied oauth oauth_verifier (ověřovací kód) and click on `Sign-in`
-
-After successful sign-in:  
-- On ToolBar click on `Connect` to check authentication state
-- On ToolBar click on `Home` icon to show list of available Projects
-- Double-click on specific `Project` to see list of Issues available under this Project
-- Click on specific `Issue` to see details
-- On Issue view edit property by clicking on its value
+Need to sign-in at [My testing Atlassian server](https://lubomyl11.atlassian.net)  
 
 ## Solution structure
 - JiraEX *(main)*
