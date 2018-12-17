@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="JiraEX.View.NoIssueFoundView"
+             x:Name="This" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Grid>
+            <StackPanel Margin="10" 
+                    VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource TitleText}" 
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Margin="4"
+                    Text="There is not any issue."/>
+                <TextBlock Style="{StaticResource PlainTextFaded}" 
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="4"
+                    Text="{Binding IssueKey, StringFormat=The issueKey {0} you have entered does not match any issue.}"/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>
+    

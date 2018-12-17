@@ -24,6 +24,9 @@ namespace JiraEX.ViewModel
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
+        private bool _noIssues = false;
+        private bool _noIssuesSearch = false;
+
         private Project _project;
         private string _filter;
         private string _searchString;
@@ -145,7 +148,7 @@ namespace JiraEX.ViewModel
 
         private void RefreshQuickSearchIssues(object sender, EventArgs e)
         {
-            GetIssuesQuickSearchAsync(this._startAt, this._filter);
+            GetIssuesQuickSearchAsync(this._startAt, this._searchString);
         }
 
         private void RedirectCreateIssue(object sender)
@@ -199,21 +202,30 @@ namespace JiraEX.ViewModel
 
                 if (issueList.Issues.Count != 0)
                 {
+                    this.NoIssues = false;
+
                     this.IssueList.Clear();
 
                     foreach (Issue i in issueList.Issues)
                     {
                         this.IssueList.Add(i);
                     }  
+                } else
+                {
+                    this.NoIssues = true;
                 }
 
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
+
+                this._parent.StopLoading();
             }
         }
 
@@ -228,21 +240,30 @@ namespace JiraEX.ViewModel
 
                 if (issueList.Issues.Count != 0)
                 {
+                    this.NoIssues = false;
+
                     this.IssueList.Clear();
 
                     foreach (Issue i in issueList.Issues)
                     {
                         this.IssueList.Add(i);
                     }
+                } else
+                {
+                    this.NoIssues = true;
                 }
 
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
+
+                this._parent.StopLoading();
             }
         }
 
@@ -258,21 +279,30 @@ namespace JiraEX.ViewModel
 
                 if (issueList.Issues.Count != 0)
                 {
+                    this.NoIssuesSearch = false;
+
                     this.IssueList.Clear();
 
                     foreach (Issue i in issueList.Issues)
                     {
                         this.IssueList.Add(i);
                     }
+                } else
+                {
+                    this.NoIssuesSearch = true;
                 }
 
                 ProcessBoundaries(issueList);
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
+
+                this._parent.StopLoading();
             }
         }
 
@@ -515,6 +545,26 @@ namespace JiraEX.ViewModel
             {
                 this._hasPrevious = value;
                 OnPropertyChanged("HasPrevious");
+            }
+        }
+
+        public bool NoIssues
+        {
+            get { return this._noIssues; }
+            set
+            {
+                this._noIssues = value;
+                OnPropertyChanged("NoIssues");
+            }
+        }
+
+        public bool NoIssuesSearch
+        {
+            get { return this._noIssuesSearch; }
+            set
+            {
+                this._noIssuesSearch = value;
+                OnPropertyChanged("NoIssuesSearch");
             }
         }
     }

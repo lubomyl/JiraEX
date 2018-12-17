@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace JiraEX.ViewModel
 {
-    public class AfterSignInViewModel : ViewModelBase, ITitleable
+    public class ConnectionViewModel : ViewModelBase, ITitleable
     {
 
         private IJiraToolWindowNavigatorViewModel _parent;
@@ -26,17 +26,15 @@ namespace JiraEX.ViewModel
 
         private IUserService _userService;
 
-        private IOAuthService _oauthService;
-
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignOutCommand { get; private set; }
+        public DelegateCommand IssueReportGitHubCommand { get; private set; }
 
-        public AfterSignInViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
+        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService)
         {
             this._parent = parent;
-
-            this._oauthService = oAuthService;
+            
             this._userService = userService;
             this.GetAuthenticatedUserAsync();
 
@@ -44,6 +42,7 @@ namespace JiraEX.ViewModel
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignOutCommand = new DelegateCommand(SignOut);
+            this.IssueReportGitHubCommand = new DelegateCommand(IssueReportGitHub);
 
             SetPanelTitles();
         }
@@ -58,11 +57,11 @@ namespace JiraEX.ViewModel
             }
             catch (OAuthException ex)
             {
-                this._parent.ShowBeforeSignIn();
+                this._parent.ShowAuthentication();
             }
             catch (JiraException ex2)
             {
-                this._parent.ShowBeforeSignIn();
+                this._parent.ShowAuthentication();
 
                 ShowErrorMessages(ex2, this._parent);
             }
@@ -74,7 +73,14 @@ namespace JiraEX.ViewModel
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
-            this._parent.ShowBeforeSignIn();
+            this._parent.ShowAuthentication();
+        }
+
+        private void IssueReportGitHub(object parameter)
+        {
+            string issueReportURL = "https://github.com/lubomyl/JiraEX";
+
+            System.Diagnostics.Process.Start(issueReportURL);
         }
 
         public void SetPanelTitles()
@@ -93,6 +99,11 @@ namespace JiraEX.ViewModel
                 this._authenticatedUser = value;
                 OnPropertyChanged("AuthenticatedUser");
             }
+        }
+
+        public string JiraURL
+        {
+            get { return UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl"); }
         }
 
     }

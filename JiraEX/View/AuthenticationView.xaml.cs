@@ -19,18 +19,18 @@ using System.Windows.Shapes;
 namespace JiraEX.View
 {
     /// <summary>
-    /// Interaction logic for AfterSignInView.xaml
+    /// Interaction logic for BeforeSignInView.xaml
     /// </summary>
-    public partial class AfterSignInView : UserControl
+    public partial class AuthenticationView : UserControl
     {
 
-        private AfterSignInViewModel _viewModel;
+        private AuthenticateViewModel _viewModel;
 
-        public AfterSignInView(JiraToolWindowNavigatorViewModel parent, IUserService userService, IOAuthService oAuthService)
+        public AuthenticationView(JiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
         {
             InitializeComponent();
 
-            this._viewModel = new AfterSignInViewModel(parent, userService, oAuthService);
+            this._viewModel = new AuthenticateViewModel(parent, oAuthService);
             this.DataContext = this._viewModel;
         }
     }

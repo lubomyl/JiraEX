@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,6 +38,11 @@ namespace JiraEX.ViewModel
             }
         }
 
+        protected void HideErrorMessages(IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.SetErrorMessage(null);
+        }
+
         protected void ShowErrorMessages(JiraException ex, IJiraToolWindowNavigatorViewModel parent)
         {
             parent.StopLoading();
@@ -60,6 +66,13 @@ namespace JiraEX.ViewModel
             }
 
             parent.SetErrorMessage(errorMessage);
+        }
+
+        protected void ShowErrorMessages(WebException ex, IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.StopLoading();
+
+            parent.SetErrorMessage(ex.Message);
         }
     }
 }

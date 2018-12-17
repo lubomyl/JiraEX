@@ -14,8 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace JiraEX.ViewModel.Navigation
@@ -25,6 +27,8 @@ namespace JiraEX.ViewModel.Navigation
 
         private object _selectedView;
         private JiraToolWindow _parent;
+
+        private IVsWindowSearchHost _searchHost; 
 
         private IUserService _userService;
         private IOAuthService _oAuthService;
@@ -36,15 +40,16 @@ namespace JiraEX.ViewModel.Navigation
         private ISprintService _sprintService;
         private IProjectService _projectService;
 
-        private BeforeSignInView _beforeSignInView;
-        private OAuthVerifierConfirmationView _oAuthVerifierConfirmationView;
-        private AfterSignInView _afterSignInView;
+        private AuthenticationView _authenticationView;
+        private AuthenticationVerificationView _authenticationVerification;
+        private ConnectionView _connectionView;
         private ProjectListView _projectListView;
         private IssueListView _issueListView;
         private IssueDetailView _issueDetailView;
         private CreateIssueView _createIssueView;
         private FiltersListView _filtersListView;
         private AdvancedSearchView _advancedSearchView;
+        private NoIssueFoundView _noIssueFoundView;
 
         private CommandID toolbarMenuCommandRefreshID;
 
@@ -63,6 +68,8 @@ namespace JiraEX.ViewModel.Navigation
         {
             this._parent = parent;
 
+            this._searchHost = parent.SearchHost;
+
             this._historyNavigator = new HistoryNavigator();
             
             this._service = JiraPackage.Mcs;
@@ -80,7 +87,29 @@ namespace JiraEX.ViewModel.Navigation
             InitializeCommands(this._service);
         }
 
-        public void ShowConnection(object sender, EventArgs e)
+        public void SignOut(object sender, EventArgs e)
+        {
+            ShowSignOutDialog();
+        }
+
+        protected void ShowSignOutDialog()
+        {
+            MessageBox_Show(ProcessCancelCreateIssueDialogSelection, "Are you sure want to sign out?", "Alert", MessageBoxButton.YesNo);
+        }
+
+        public void ProcessCancelCreateIssueDialogSelection(MessageBoxResult result)
+        {
+            if (result == MessageBoxResult.Yes)
+            {
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
+
+                this.ShowAuthentication();
+            }
+        }
+
+        public void TryToSignIn()
         {
             this.StopLoading();
 
@@ -94,76 +123,57 @@ namespace JiraEX.ViewModel.Navigation
                 {
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
-                    this.ShowAfterSignIn();
+                    this.ShowProjects(null, null);
                 } else
                 {
-                    this.ShowBeforeSignIn();
+                    this.ShowAuthentication();
                 }
             }
             catch (Exception ex)
             {
-                this.ShowBeforeSignIn();
+                this.ShowAuthentication();
             }
         }
 
-        public void ShowBeforeSignIn()
+        public void ShowAuthentication()
         {
             this.StopLoading();
+
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_HOME_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_FILTERS_ID);
             this.EnableCommand(false, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this.EnableCommand(false, this._service, Guids.COMMAND_CONNECTION_ID);
+
             this._historyNavigator.ClearStack();
 
-            if (this._beforeSignInView == null)
+            if (this._authenticationView == null)
             {
-                this._beforeSignInView = new BeforeSignInView(this, this._oAuthService);
+                this._authenticationView = new AuthenticationView(this, this._oAuthService);
 
-                SelectedView = this._beforeSignInView;
+                SelectedView = this._authenticationView;
             }
             else
             {
-                SelectedView = _beforeSignInView;
+                SelectedView = _authenticationView;
             }
         }
 
-        public void ShowAfterSignIn()
-        {
-            this.StopLoading();
-            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
-            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
-
-            if (this._afterSignInView == null)
-            {
-                this._afterSignInView = new AfterSignInView(this, this._userService, this._oAuthService);
-                this._historyNavigator.AddView(this._afterSignInView);
-
-                SelectedView = this._afterSignInView;
-            }
-            else
-            {
-                this._historyNavigator.AddView(this._afterSignInView);
-
-                SelectedView = _afterSignInView;
-            }
-        }
-
-        public void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken)
+        public void ShowAuthenticationVerification(object sender, EventArgs e, IToken requestToken)
         {
             this.StopLoading();
             this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
 
-            this._oAuthVerifierConfirmationView = new OAuthVerifierConfirmationView(this, requestToken, this._oAuthService);
+            this._authenticationVerification = new AuthenticationVerificationView(this, requestToken, this._oAuthService);
 
-            SelectedView = this._oAuthVerifierConfirmationView;
+            SelectedView = this._authenticationVerification;
         }
 
         public void ShowProjects(object sender, EventArgs e)
         {
             this.StopLoading();
             this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_CONNECTION_ID);
 
             if (this._projectListView == null)
             {
@@ -270,6 +280,31 @@ namespace JiraEX.ViewModel.Navigation
             this._historyNavigator.AddView(this._advancedSearchView);
 
             SelectedView = this._advancedSearchView;
+        }
+
+        public void ShowNoIssueFound(string issueKey)
+        {
+            this.StopLoading();
+            this.EnableCommand(false, this._service, Guids.COMMAND_REFRESH_ID);
+
+            this._noIssueFoundView = new NoIssueFoundView(this, issueKey);
+            this._historyNavigator.AddView(this._noIssueFoundView);
+
+            SelectedView = this._noIssueFoundView;
+        }
+
+        public void ShowConnection(object sender, EventArgs e)
+        {
+            this.StopLoading();
+            this.EnableCommand(true, this._service, Guids.COMMAND_HOME_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+
+            this._connectionView = new ConnectionView(this, this._userService);
+            this._historyNavigator.AddView(this._connectionView);
+
+            SelectedView = this._connectionView;
         }
 
         public void GoBack(object sender, EventArgs e)

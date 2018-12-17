@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel;
+﻿using DevDefined.OAuth.Framework;
+using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Service;
 using System;
@@ -19,18 +20,18 @@ using System.Windows.Shapes;
 namespace JiraEX.View
 {
     /// <summary>
-    /// Interaction logic for BeforeSignInView.xaml
+    /// Interaction logic for OAuthVerifierConfirmationView.xaml
     /// </summary>
-    public partial class BeforeSignInView : UserControl
+    public partial class AuthenticationVerificationView : UserControl
     {
 
-        private BeforeSignInViewModel _viewModel;
+        private AuthenticationVerificationViewModel _viewModel;
 
-        public BeforeSignInView(JiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
+        public AuthenticationVerificationView(JiraToolWindowNavigatorViewModel parent, IToken requestToken, IOAuthService oAuthService)
         {
             InitializeComponent();
 
-            this._viewModel = new BeforeSignInViewModel(parent, oAuthService);
+            this._viewModel = new AuthenticationVerificationViewModel(parent, requestToken, oAuthService);
             this.DataContext = this._viewModel;
         }
     }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,6 +74,8 @@ namespace JiraEX.ViewModel
 
                 if (projectList.Count > 0)
                 {
+                    this.NoProjects = false;
+
                     foreach (Project p in projectList)
                     {
 
@@ -95,10 +98,20 @@ namespace JiraEX.ViewModel
                 }
 
                 this._parent.StopLoading();
+
+                HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
+
+                this._parent.StopLoading();
+            }
+            catch (Newtonsoft.Json.JsonReaderException njex)
+            {
+                this._parent.StopLoading();
+
+                this._parent.ShowAuthentication();
             }
         }
 

@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="JiraEX.View.ConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <DockPanel LastChildFill="False" Margin="8 8">
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                <TextBlock Style="{StaticResource PlainText}" TextWrapping="Wrap" Margin="0 0 0 8">
+                        This is beta a version of the JiraEX - Visual Studio extension integrating the Jira application. It allows you to
+                        list issues by a project/filter, search for them in advanced mode or to use quick search located on on the menu panel. You can also create
+                        all types of issues/sub-tasks and edit their properties. (summary, description, attachments, linked issues, assignee, sprint, type, priority,
+                        fix version, affects version and labels)
+                </TextBlock>
+                <TextBlock Style="{StaticResource PlainText}" TextWrapping="Wrap" Margin="0 0 0 8">
+                        In case of any bugs, enhancements, and ideas, please, create an issue at GitHub project repository:
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"  
+                           Style="{StaticResource PlainText}">
+                                <Hyperlink Command="{Binding IssueReportGitHubCommand}" 
+                                            CommandParameter="{Binding}">
+                                    https://github.com/lubomyl/JiraEX
+                                </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <DockPanel LastChildFill="False" DockPanel.Dock="Top" Margin="8 8">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Jira URL:</Label>
+                    <TextBlock Text="{Binding JiraURL}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">AppName:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.Name}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Name:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.DisplayName}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label Style="{StaticResource LabelFaded}">Email:</Label>
+                    <TextBlock Text="{Binding AuthenticatedUser.EmailAddress}" Style="{StaticResource PlainText}"/>
+                </StackPanel>
+
+                <Button DockPanel.Dock="Top" Command="{Binding SignOutCommand}" 
+                            CommandParameter="{Binding ElementName=This}" Content="Sign out" 
+                            Height="25" HorizontalAlignment="Stretch" x:Name="SignOut"/>
+            </DockPanel>
+        </DockPanel>
+    </ScrollViewer>
+</UserControl>

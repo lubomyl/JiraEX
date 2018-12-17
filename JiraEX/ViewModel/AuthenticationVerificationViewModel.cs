@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace JiraEX.ViewModel
 {
-    public class OAuthVerifierConfirmationViewModel : ViewModelBase, ITitleable
+    public class AuthenticationVerificationViewModel : ViewModelBase, ITitleable
     {
 
         private const int REQUEST_TOKEN_EXPIRATION_TIME_SECONDS = 600;
@@ -32,14 +32,13 @@ namespace JiraEX.ViewModel
         DispatcherTimer _timer;
         TimeSpan _time;
 
-        private string _errorMessage;
         private string _requestTokenExpirationTime;
 
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignInCommand { get; private set; }
 
-        public OAuthVerifierConfirmationViewModel(IJiraToolWindowNavigatorViewModel parent, IToken requestToken, IOAuthService oAuthService)
+        public AuthenticationVerificationViewModel(IJiraToolWindowNavigatorViewModel parent, IToken requestToken, IOAuthService oAuthService)
         {
             this._parent = parent;
 
@@ -68,12 +67,12 @@ namespace JiraEX.ViewModel
 
                 WriteToUserSettingsIssueAttributes();
 
-                this._parent.ShowAfterSignIn();
+                this._parent.ShowConnection(null, null);
                 this._timer.Stop();
             }
             catch (OAuthException ex)
             {
-                this.ErrorMessage = ex.Message;
+                this._parent.SetErrorMessage(ex.Message);
             }
         }
 
@@ -110,7 +109,7 @@ namespace JiraEX.ViewModel
                 if (time == TimeSpan.Zero)
                 {
                     _timer.Stop();
-                    this._parent.ShowBeforeSignIn();
+                    this._parent.ShowAuthentication();
                 }
 
                 time = time.Add(TimeSpan.FromSeconds(-1));
@@ -128,20 +127,7 @@ namespace JiraEX.ViewModel
 
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", "OAuth");
-        }
-
-        public string ErrorMessage
-        {
-            get
-            {
-                return this._errorMessage;
-            }
-            set
-            {
-                this._errorMessage = value;
-                OnPropertyChanged("ErrorMessage");
-            }
+            this._parent.SetPanelTitles("JiraEX", "Authentication verification");
         }
 
         public string RequestTokenExpirationTime

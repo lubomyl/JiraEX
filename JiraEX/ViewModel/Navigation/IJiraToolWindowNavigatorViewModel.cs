@@ -11,13 +11,13 @@ namespace JiraEX.ViewModel.Navigation
     public interface IJiraToolWindowNavigatorViewModel
     {
 
+        void TryToSignIn();
+
+        void ShowAuthentication();
+
         void ShowConnection(object sender, EventArgs e);
 
-        void ShowBeforeSignIn();
-
-        void ShowAfterSignIn();
-
-        void ShowOAuthVerificationConfirmation(object sender, EventArgs e, IToken requestToken);
+        void ShowAuthenticationVerification(object sender, EventArgs e, IToken requestToken);
 
         void ShowProjects(object sender, EventArgs e);
 
@@ -42,5 +42,7 @@ namespace JiraEX.ViewModel.Navigation
         void StopLoading();
 
         void SetErrorMessage(string errorMessage);
+
+        void ShowNoIssueFound(string issueKey);
     }
 }
