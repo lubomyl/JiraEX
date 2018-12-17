@@ -66,7 +66,7 @@
                     </ComboBox.ItemContainerStyle>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeave">
-                            <i:InvokeCommandAction Command="{Binding CancelEditAttributesCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding CancelEditAttributesCommand}" x:Name="interactivityFix"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>

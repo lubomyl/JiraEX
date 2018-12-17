@@ -177,6 +177,16 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
+            GetIssuesAsync();
+            GetIssueLinkTypesAsync();
+            GetPrioritiesAsync();
+            GetTransitionsAsync();
+            GetAssigneesAsync();
+            GetLabelsAsync();
+            GetBoardsAsync();
+            GetCreatableIssueTypesAsync();
+            GetEditablePropertiesAsync();
+
             UpdateIssueAsync();
 
             HideErrorMessages(this._parent);
@@ -338,7 +348,7 @@ namespace JiraEX.ViewModel
             {
                 var completeIssue = await this._issueService.GetIssueByIssueKeyAsync(issue.Key);
 
-                this._parent.ShowIssueDetail(completeIssue, this._project);
+                this._parent.ShowIssueDetail(completeIssue, completeIssue.Fields.Project);
 
                 HideErrorMessages(this._parent);
             }

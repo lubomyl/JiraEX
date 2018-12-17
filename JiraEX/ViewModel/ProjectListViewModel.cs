@@ -107,6 +107,12 @@ namespace JiraEX.ViewModel
 
                 this._parent.StopLoading();
             }
+            catch (Newtonsoft.Json.JsonReaderException njex)
+            {
+                this._parent.StopLoading();
+
+                this._parent.ShowAuthentication();
+            }
         }
 
         public void OnItemSelected(object sender)
