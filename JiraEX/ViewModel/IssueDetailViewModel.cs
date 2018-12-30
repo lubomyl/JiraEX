@@ -136,6 +136,8 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteLinkedIssueCommand { get; set; }
 
+        public DelegateCommand OpenInBrowserCommand { get; set; }
+
         private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
         public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
@@ -342,6 +344,8 @@ namespace JiraEX.ViewModel
             this.CancelLinkIssueCommand = new DelegateCommand(CancelLinkIssue);
 
             this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
+
+            this.OpenInBrowserCommand = new DelegateCommand(OpenInBrowser);
         }
 
         private async void ShowIssue(object sender)
@@ -714,6 +718,7 @@ namespace JiraEX.ViewModel
             catch (JiraException ex)
             {
                 this.IsSupportingSprints = false;
+                this._totalNumberOfLoadings--;
             }
         }
 
@@ -983,6 +988,11 @@ namespace JiraEX.ViewModel
             }
 
             UpdateIssueAsync();
+        }
+
+        private void OpenInBrowser(object sender)
+        {
+            System.Diagnostics.Process.Start(UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl") + "/browse/" + this.Issue.Key);
         }
 
         private async void ConfirmLinkIssue(object sender)

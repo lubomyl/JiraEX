@@ -165,7 +165,8 @@
             </Grid>
 
             <!-- Add attachment, Create sub-task-->
-            <StackPanel Orientation="Horizontal">
+            <DockPanel LastChildFill="False">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                 <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
                             <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
                                         CommandParameter="{Binding}">
@@ -188,6 +189,13 @@
                             </Hyperlink>
                 </TextBlock>
             </StackPanel>
+                <TextBlock Style="{StaticResource PlainText}" DockPanel.Dock="Right">
+                            <Hyperlink Command="{Binding OpenInBrowserCommand}" 
+                                        CommandParameter="{Binding}">
+                                Open in browser...
+                            </Hyperlink>
+                </TextBlock>
+            </DockPanel>
 
             <!-- Create linked issue -->
             <StackPanel Orientation="Vertical" 
