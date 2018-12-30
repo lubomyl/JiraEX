@@ -177,16 +177,6 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            GetIssuesAsync();
-            GetIssueLinkTypesAsync();
-            GetPrioritiesAsync();
-            GetTransitionsAsync();
-            GetAssigneesAsync();
-            GetLabelsAsync();
-            GetBoardsAsync();
-            GetCreatableIssueTypesAsync();
-            GetEditablePropertiesAsync();
-
             UpdateIssueAsync();
 
             HideErrorMessages(this._parent);
@@ -944,6 +934,8 @@ namespace JiraEX.ViewModel
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            HideErrorMessages(this._parent);
         }
 
         #endregion
@@ -1109,13 +1101,15 @@ namespace JiraEX.ViewModel
 
                 try { 
                     await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+
+                    UpdateIssueAsync();
                 }
                 catch (JiraException ex)
                 {
                     ShowErrorMessages(ex, this._parent);
                 }
 
-                UpdateIssueAsync();
+                
             }
         }
 
