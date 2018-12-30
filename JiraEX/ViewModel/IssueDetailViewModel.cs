@@ -22,6 +22,8 @@ namespace JiraEX.ViewModel
 {
     public class IssueDetailViewModel : ViewModelBase, ITitleable, IReinitializable
     {
+        private const int TOTAL_NUMBER_OF_LOADINGS = 11;
+
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
         private bool _isEditingPriority = false;
@@ -70,6 +72,7 @@ namespace JiraEX.ViewModel
 
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
+        private bool _isRefreshing = false;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -133,7 +136,7 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteLinkedIssueCommand { get; set; }
 
-        private int _totalNumberOfLoadings = 10;
+        private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
         public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
@@ -158,13 +161,13 @@ namespace JiraEX.ViewModel
 
             GetIssuesAsync();
             GetIssueLinkTypesAsync();
-            GetPrioritiesAsync();
-            GetTransitionsAsync();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetBoardsAsync();
             GetCreatableIssueTypesAsync();
             GetEditablePropertiesAsync();
+            GetPrioritiesAsync();
+            GetTransitionsAsync();
 
             UpdateIssueAsync();
 
@@ -175,7 +178,20 @@ namespace JiraEX.ViewModel
 
         private void RefreshIssueDetails(object sender, EventArgs e)
         {
+            this.ResetTotalNumberOfActiveLoadings();
+            this._isRefreshing = true;
+
             this._parent.StartLoading();
+
+            GetIssuesAsync();
+            GetIssueLinkTypesAsync();
+            GetAssigneesAsync();
+            GetLabelsAsync();
+            GetBoardsAsync();
+            GetCreatableIssueTypesAsync();
+            GetEditablePropertiesAsync();
+            GetPrioritiesAsync();
+            GetTransitionsAsync();
 
             UpdateIssueAsync();
 
@@ -470,7 +486,7 @@ namespace JiraEX.ViewModel
             try
             {
                 var issueList = await issueTask as IssueList;
-
+               
                 this.IssueList.Clear();
 
                 foreach (Issue i in issueList.Issues)
@@ -1226,8 +1242,14 @@ namespace JiraEX.ViewModel
             if (this._totalNumberOfLoadings <= 0)
             {
                 this._parent.StopLoading();
+                this._isRefreshing = false;
             }
-        }       
+        }     
+        
+        private void ResetTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings += TOTAL_NUMBER_OF_LOADINGS;
+        }
 
         public void SetPanelTitles()
         {
@@ -1393,7 +1415,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
-                if (this._selectedPriority != null)
+                if (this._selectedPriority != null && !this._isRefreshing)
                 {
                     this._selectedPriority = value;
                     this.UpdatePriorityAsync();
@@ -1423,7 +1445,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
-                if (this._selectedTransition != null)
+                if (this._selectedTransition != null && !this._isRefreshing)
                 {
                     this._selectedTransition = value;
                     this.DoTransitionAsync();
@@ -1483,7 +1505,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                if (!this._isInitializingAssignees)
+                if (!this._isInitializingAssignees && !this._isRefreshing)
                 {
                     this._selectedAssignee = value;
                     this.AssignAsync();
@@ -1503,7 +1525,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedSprint; }
             set
             {
-                if (!this._isInitializingSprints)
+                if (!this._isInitializingSprints && !this._isRefreshing)
                 {
                     this._selectedSprint = value;
                     this.UpdateSprint();
