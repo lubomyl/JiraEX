@@ -1,5 +1,6 @@
 ﻿using AtlassianConnector.Model.Exceptions;
 using ConfluenceEX.Command;
+using ConfluenceEX.Helper;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -110,6 +111,10 @@ namespace JiraEX.ViewModel
             catch (Newtonsoft.Json.JsonReaderException njex)
             {
                 this._parent.StopLoading();
+
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
+                UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
                 this._parent.ShowAuthentication();
             }

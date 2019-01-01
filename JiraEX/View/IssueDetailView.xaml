@@ -94,7 +94,7 @@
                                 SelectedValuePath="Id"
                                 Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
                                 SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedTransition, Mode=OneWay}">
+                                SelectedItem="{Binding SelectedTransition}">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ComboBoxItem}">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

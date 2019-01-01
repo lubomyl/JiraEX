@@ -520,6 +520,7 @@ namespace JiraEX.ViewModel
                 var issueLinkTypeList = await issueLinkTypeTask as IssueLinkTypeList;
 
                 this.IssueList.Clear();
+                this.IssueLinkTypesList.Clear();
 
                 foreach (IssueLinkType i in issueLinkTypeList.IssueLinkTypes)
                 {
@@ -955,8 +956,6 @@ namespace JiraEX.ViewModel
             {
                 ShowErrorMessages(ex, this._parent);
             }
-
-            HideErrorMessages(this._parent);
         }
 
         #endregion
