@@ -17,5 +17,7 @@ namespace JiraRESTClient.Service
         Task<User> GetAuthenticatedUserAsync();
 
         Task<UserList> GetAllAssignableUsersForIssueByIssueKey(string issueKey);
+
+        Task<UserList> GetAllAssignableUsersForIssueByIssueKeyAndByUsername(string issueKey, string username);
     }
 }

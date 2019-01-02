@@ -22,7 +22,7 @@ namespace JiraEX.ViewModel
 {
     public class IssueDetailViewModel : ViewModelBase, ITitleable, IReinitializable
     {
-        private const int TOTAL_NUMBER_OF_LOADINGS = 11;
+        private const int TOTAL_NUMBER_OF_LOADINGS = 10;
 
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
@@ -719,7 +719,7 @@ namespace JiraEX.ViewModel
             catch (JiraException ex)
             {
                 this.IsSupportingSprints = false;
-                this._totalNumberOfLoadings--;
+                this.CheckTotalNumberOfActiveLoadings();
             }
         }
 
@@ -949,13 +949,13 @@ namespace JiraEX.ViewModel
                 CheckEmptyFields();
                 UpdateAttachments();
                 SeparateLinkedIssueTypes();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this._parent.StopLoading();
         }
 
         #endregion
@@ -1136,6 +1136,33 @@ namespace JiraEX.ViewModel
 
                 
             }
+        }
+
+        internal async void SearchAssignee(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKeyAndByUsername(this._issue.Key, searchString);
+
+            try
+            {
+                var userList = await userTask as UserList;
+
+                this.AssigneeList.Clear();
+                this.AssigneeList.Add(this._unassigned);
+
+                foreach (User u in userList)
+                {
+                    this.AssigneeList.Add(u);
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this._parent.StopLoading();
+            this.IsEditingAssignee = true;
         }
 
         #endregion
@@ -1516,8 +1543,11 @@ namespace JiraEX.ViewModel
             {
                 if (!this._isInitializingAssignees && !this._isRefreshing)
                 {
-                    this._selectedAssignee = value;
-                    this.AssignAsync();
+                    if (value != null)
+                    {
+                        this._selectedAssignee = value;
+                        this.AssignAsync();
+                    }
                 }
                 else
                 {

@@ -367,11 +367,17 @@
                     </TextBlock>
 
                     <ComboBox ItemsSource="{Binding AssigneeList}"
+                            Name="cbAssignee"
+                            MinWidth="150"
                             Margin="0 0 5 0"
                             SelectedValuePath="Id"
                             Visibility="{Binding IsEditingAssignee, Converter={StaticResource TrueToVisibleConverter}}"
                             SelectedValue="{Binding Path=Name}"
-                            SelectedItem="{Binding SelectedAssignee}">
+                            SelectedItem="{Binding SelectedAssignee}"
+                            IsTextSearchEnabled="false"
+                            IsEditable="True"
+                            StaysOpenOnEdit="True"
+                            TextBoxBase.TextChanged="cbAssignee_TextChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

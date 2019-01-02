@@ -46,5 +46,16 @@ namespace JiraEX.View
 
             this._viewModel.DownloadAttachment(attachment);
         }
+
+        void cbAssignee_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchString = cbAssignee.Text;
+
+            if (cbAssignee.SelectedItem != null && !searchString.Equals(((User)cbAssignee.SelectedItem).DisplayName))
+            {
+                cbAssignee.IsDropDownOpen = true;
+                this._viewModel.SearchAssignee(searchString);
+            }
+        }
     }
 }
