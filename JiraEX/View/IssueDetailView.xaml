@@ -238,12 +238,16 @@
                     <!-- issue -->
                     <Grid>
 
-                        <ComboBox x:Name="linkIssueComboBox"  ItemsSource="{Binding IssueList}"
+                        <ComboBox x:Name="cbLinkedIssue"  ItemsSource="{Binding IssueList}"
                                 MinWidth="{Binding Path=ActualWidth, ElementName=linkIssueText}"
                                 Margin="0 0 5 0"
                                 SelectedValuePath="Id"
                                 SelectedValue="{Binding Path=Key}"
-                                SelectedItem="{Binding SelectedLinkIssue}">
+                                SelectedItem="{Binding SelectedLinkIssue}"
+                                IsTextSearchEnabled="False"
+                                IsEditable="True"
+                                StaysOpenOnEdit="True"
+                                TextBoxBase.TextChanged="cbLinkedIssue_TextChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -256,15 +260,22 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 </Style>
                             </ComboBox.ItemContainerStyle>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <i:InvokeCommandAction Command="{Binding CancelEditLinkedIssueCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </ComboBox>
 
                         <TextBlock x:Name="linkIssueText"
-                                Width="90"
+                                Width="100"
                                 Style="{StaticResource PlainTextFaded}"
-                                Visibility="{Binding SelectedItem, ElementName=linkIssueComboBox, Converter={StaticResource NullToVisibilityConverter}}"
-                                IsHitTestVisible="False"
-                                Text="Select issue" />
-
+                                Visibility="{Binding IsEditingLinkedIssue, Converter={StaticResource FalseToVisibleConverter}}"
+                                Text="Select issue">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditLinkedIssueCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
                     </Grid>
                 </StackPanel>
 
@@ -423,6 +434,7 @@
 
                     <ComboBox ItemsSource="{Binding SprintList}"
                             Margin="0 0 5 0"
+                            MinWidth="100"
                             DisplayMemberPath="Name"
                             SelectedValuePath="Id"
                             Visibility="{Binding IsEditingSprint, Converter={StaticResource TrueToVisibleConverter}}"

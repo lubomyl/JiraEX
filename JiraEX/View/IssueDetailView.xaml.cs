@@ -65,5 +65,24 @@ namespace JiraEX.View
             cbLabels.IsDropDownOpen = true;
             this._viewModel.SearchLabels(searchString);
         }
+
+        void cbLinkedIssue_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchString = cbLinkedIssue.Text;
+
+            string pattern = "-(\\d+)";
+
+            if (System.Text.RegularExpressions.Regex.IsMatch(searchString, pattern) &&
+                cbLinkedIssue.SelectedItem != null && 
+                !searchString.Equals(((Issue)cbLinkedIssue.SelectedItem).Key))
+            {
+                cbLinkedIssue.IsDropDownOpen = true;
+                this._viewModel.SearchLinkedIssues(searchString);
+            }
+            else if (searchString.Equals(""))
+            {
+                this._viewModel.RefreshIssuesAsync();
+            }
+        }
     }
 }

@@ -14,5 +14,9 @@ namespace JiraRESTClient.Model
 
         public IssueFields Fields { get; set; }
 
+        public override string ToString()
+        {
+            return Key;
+        }
     }
 }

@@ -61,5 +61,7 @@ namespace JiraRESTClient.Service
         Task LinkIssue(string inwardIssueKey, string outwardIssueKey, string linkName);
 
         Task DeleteLinkedIssue(string linkId);
+
+        Task<IssueList> GetIssuesByIssueKeyAsync(string searchString);
     }
 }

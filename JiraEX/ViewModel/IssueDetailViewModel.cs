@@ -34,6 +34,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingLabels = false;
         private bool _isEditingSprint = false;
         private bool _isLinkingIssue = false;
+        private bool _isEditingLinkedIssue = true;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -138,6 +139,9 @@ namespace JiraEX.ViewModel
         public DelegateCommand DeleteLinkedIssueCommand { get; set; }
 
         public DelegateCommand OpenInBrowserCommand { get; set; }
+
+        public DelegateCommand EditLinkedIssueCommand { get; set; }
+        public DelegateCommand CancelEditLinkedIssueCommand { get; set; }
 
         private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
@@ -347,6 +351,9 @@ namespace JiraEX.ViewModel
             this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
 
             this.OpenInBrowserCommand = new DelegateCommand(OpenInBrowser);
+
+            this.EditLinkedIssueCommand = new DelegateCommand(EnableEditLinkedIssue);
+            this.CancelEditLinkedIssueCommand = new DelegateCommand(CancelEditLinkedIssue);
         }
 
         private async void ShowIssue(object sender)
@@ -499,6 +506,7 @@ namespace JiraEX.ViewModel
                     if (this._issue.Id != i.Id)
                     {
                         this.IssueList.Add(i);
+                        this.SelectedLinkIssue = i;
                     }
                 }
 
@@ -1205,6 +1213,64 @@ namespace JiraEX.ViewModel
             this.IsEditingLabels = true;
         }
 
+        internal async void SearchLinkedIssues(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<IssueList> issueTask = this._issueService.GetIssuesByIssueKeyAsync(searchString);
+
+            try
+            {
+                var issueList = await issueTask as IssueList;
+
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    if (this._issue.Id != i.Id)
+                    {
+                        this.IssueList.Add(i);
+                    }
+                }
+            }
+            catch (JiraException ex)
+            {
+                
+            }
+
+            this.IsEditingLinkedIssue = true;
+            this._parent.StopLoading();
+        }
+
+        internal async void RefreshIssuesAsync()
+        {
+            this._parent.StartLoading();
+
+            Task<IssueList> issueTask = this._issueService.GetAllIssues();
+
+            try
+            {
+                var issueList = await issueTask as IssueList;
+
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    if (this._issue.Id != i.Id)
+                    {
+                        this.IssueList.Add(i);
+                    }
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this.IsEditingLinkedIssue = true;
+            this._parent.StopLoading();
+        }
+
         #endregion
 
         #region Visibility controls
@@ -1307,6 +1373,19 @@ namespace JiraEX.ViewModel
         private void CancelEditLabels(object parameter)
         {
             this.IsEditingLabels = false;
+        }
+
+        private void EnableEditLinkedIssue(object parameter)
+        {
+            this.IsEditingLinkedIssue = true;
+        }
+
+        private void CancelEditLinkedIssue(object parameter)
+        {
+            if (this.SelectedLinkIssue == null)
+            {
+                this.IsEditingLinkedIssue = false;
+            }
         }
 
         #endregion
@@ -1453,6 +1532,16 @@ namespace JiraEX.ViewModel
             {
                 this._isLinkingIssue = value;
                 OnPropertyChanged("IsLinkingIssue");
+            }
+        }
+
+        public bool IsEditingLinkedIssue
+        {
+            get { return this._isEditingLinkedIssue; }
+            set
+            {
+                this._isEditingLinkedIssue = value;
+                OnPropertyChanged("IsEditingLinkedIssue");
             }
         }
 
@@ -1625,8 +1714,11 @@ namespace JiraEX.ViewModel
             get { return this._selectedLinkIssue; }
             set
             {
-                this._selectedLinkIssue = value;
-                OnPropertyChanged("SelectedLinkIssue");
+                if (value != null)
+                {
+                    this._selectedLinkIssue = value;
+                    OnPropertyChanged("SelectedLinkIssue");
+                }
             }
         }
 
