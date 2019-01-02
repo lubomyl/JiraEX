@@ -455,10 +455,10 @@
             </StackPanel>
 
             <!-- Labels -->
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource LabelFaded}">Labels:</Label>
+            <DockPanel LastChildFill="False">
+                <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}" VerticalAlignment="Top">Labels:</Label>
 
-                <Grid>
+                <Grid DockPanel.Dock="Left">
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
@@ -466,16 +466,16 @@
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <Grid>
-                        <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}"
+                        <ItemsControl ItemsSource="{Binding Issue.Fields.Labels}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 Visibility="{Binding IsEditingLabels, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
+                                    <WrapPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5"  BorderThickness="1" BorderBrush="#FF4B4D50">
                                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" Text="{Binding}" Style="{StaticResource PlainText}"/>
                                     </Border>
                                 </DataTemplate>
@@ -520,13 +520,13 @@
                     </ComboBox>
                 </Grid>
 
-            </StackPanel>
+            </DockPanel>
 
             <!-- FixVersions -->
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource LabelFaded}">Fix versions:</Label>
+            <DockPanel LastChildFill="False">
+                <Label DockPanel.Dock="Left" VerticalAlignment="Top" Style="{StaticResource LabelFaded}">Fix versions:</Label>
 
-                <Grid>
+                <Grid DockPanel.Dock="Left">
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
@@ -538,12 +538,12 @@
                                 Visibility="{Binding IsEditingFixVersions, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
+                                    <WrapPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5"  BorderThickness="1" BorderBrush="#FF4B4D50">
                                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
                                     </Border>
                                 </DataTemplate>
@@ -583,14 +583,14 @@
                     </ComboBox>
                 </Grid>
 
-            </StackPanel>
+            </DockPanel>
 
             <!-- AffectsVersions -->
-            <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding IsAffectsVersionsEditable, Converter={StaticResource TrueToVisibleConverter}}">
-                <Label Style="{StaticResource LabelFaded}">Affects versions:</Label>
+            <DockPanel LastChildFill="False"
+                Visibility="{Binding IsAffectsVersionsEditable, Converter={StaticResource TrueToVisibleConverter}}">
+                <Label DockPanel.Dock="Left" VerticalAlignment="Top" Style="{StaticResource LabelFaded}">Affects versions:</Label>
 
-                <Grid>
+                <Grid DockPanel.Dock="Left">
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
@@ -607,7 +607,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5"  BorderThickness="1" BorderBrush="#FF4B4D50">
                                         <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
                                     </Border>
                                 </DataTemplate>
@@ -647,7 +647,7 @@
                     </ComboBox>
                 </Grid>
 
-            </StackPanel>
+            </DockPanel>
 
             <!-- Linked issues -->
             <StackPanel Orientation="Vertical" 
@@ -769,8 +769,8 @@
                                             </Image.Source>
                                         </Image>
 
-                                        <TextBlock Style="{StaticResource PlainText}" Text="{Binding Filename}" Margin="0 0 10 0"/>
-                                        <TextBlock Text="{Binding Size, StringFormat={}{0} bytes}" Style="{StaticResource PlainText}"/>
+                                        <TextBlock Style="{StaticResource PlainText}" Text="{Binding Filename}" Width="100" Margin="0 0 10 0"/>
+                                        <TextBlock Text="{Binding Size}" Style="{StaticResource PlainText}"/>
 
                                         <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
                                             CommandParameter="{Binding}"

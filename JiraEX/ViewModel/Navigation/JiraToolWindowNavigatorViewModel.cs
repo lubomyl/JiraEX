@@ -300,6 +300,7 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(true, this._service, Guids.COMMAND_FILTERS_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_ADVANCED_SEARCH_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
+            this.EnableCommand(true, this._service, Guids.COMMAND_CONNECTION_ID);
 
             this._connectionView = new ConnectionView(this, this._userService);
             this._historyNavigator.AddView(this._connectionView);
