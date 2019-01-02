@@ -5,8 +5,6 @@ Visual Studio extension integrating Atlassian Jira.
 ##### Testing with own Jira instance
 See: [Wiki - How to setup OAuth (Jira administrator)](https://github.com/lubomyl/JiraEX/wiki/How-to-setup-OAuth-(Jira-administrator))
 
-_Works same for Jira_
-
 ##### Missing ignored settings file
 See: [Wiki - Ignored setting file](https://github.com/lubomyl/ConfluenceEX/wiki/Ignored-settings-file)
 
@@ -21,9 +19,6 @@ _Works same for Jira_
   3. As external program navigate to: `"MicrosoftVS installation location"\Common7\IDE\devenv.exe`
   4. As command line argument on  start-up add `/RootSuffix Exp`
 - Build&Start  
-
-##### Authentication protection
-Need to sign-in at [My testing Atlassian server](https://lubomyl11.atlassian.net)  
 
 ## Solution structure
 - JiraEX *(main)*
