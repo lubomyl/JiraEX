@@ -66,6 +66,7 @@ namespace JiraEX.ViewModel
         private Priority _selectedPriority;
         private Transition _selectedTransition;
         private User _selectedAssignee;
+
         private Sprint _selectedSprint;
         private Issue _selectedLinkIssue;
         private IssueLinkTypeSplitted _selectedLinkType;
@@ -1163,6 +1164,45 @@ namespace JiraEX.ViewModel
 
             this._parent.StopLoading();
             this.IsEditingAssignee = true;
+        }
+
+
+        internal async void SearchLabels(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<LabelsList> labelsTask = this._issueService.GetAllLabelsAsync(searchString);
+
+            try
+            {
+                var labelsList = await labelsTask as LabelsList;
+
+                this.LabelsList.Clear();
+
+                foreach (JiraRESTClient.Model.LabelSuggestion l in labelsList.Suggestions)
+                {
+
+                    foreach (string label in this.Issue.Fields.Labels)
+                    {
+                        if (label.Equals(l.Label))
+                        {
+                            l.CheckedStatus = true;
+                            break;
+                        }
+
+                        l.CheckedStatus = false;
+                    }
+
+                    this.LabelsList.Add(l);
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this._parent.StopLoading();
+            this.IsEditingLabels = true;
         }
 
         #endregion

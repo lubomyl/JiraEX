@@ -12,5 +12,9 @@ namespace JiraRESTClient.Model
         public string Label { get; set; }
         public bool CheckedStatus { get; set; }
 
+        public override string ToString()
+        {
+            return Label;
+        }
     }
 }

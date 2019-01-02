@@ -57,5 +57,13 @@ namespace JiraEX.View
                 this._viewModel.SearchAssignee(searchString);
             }
         }
+
+        void cbLabels_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchString = cbLabels.Text;
+
+            cbLabels.IsDropDownOpen = true;
+            this._viewModel.SearchLabels(searchString);
+        }
     }
 }
