@@ -9,7 +9,7 @@ namespace ConfluenceEX.ViewModel.Navigation
 {
     public class HistoryNavigator
     {
-        private const int STACK_SIZE = 6;
+        private const int STACK_SIZE = 12;
         private const int STEP = 1;
         private const int STARTING_INDEX = -1;
 

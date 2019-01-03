@@ -481,12 +481,15 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckSubTaskCreatable();
-                this.CheckTotalNumberOfActiveLoadings();
+
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssuesAsync()
@@ -509,13 +512,14 @@ namespace JiraEX.ViewModel
                         this.SelectedLinkIssue = i;
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssueLinkTypesAsync()
@@ -548,13 +552,14 @@ namespace JiraEX.ViewModel
                         this.IssueLinkTypesList.Add(ilts);
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetPrioritiesAsync()
@@ -579,14 +584,15 @@ namespace JiraEX.ViewModel
                     }
                 }
 
-                this.CheckTotalNumberOfActiveLoadings();
-
                 HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetTransitionsAsync()
@@ -610,13 +616,14 @@ namespace JiraEX.ViewModel
                         this.SelectedTransition = t;
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetAssigneesAsync()
@@ -652,13 +659,14 @@ namespace JiraEX.ViewModel
                 }
 
                 this._isInitializingAssignees = false;
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetBoardsAsync()
@@ -679,13 +687,14 @@ namespace JiraEX.ViewModel
                 }
 
                 GetSprintsAsync();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetSprintsAsync()
@@ -722,14 +731,14 @@ namespace JiraEX.ViewModel
                 }
 
                 this._isInitializingSprints = false;
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 this.IsSupportingSprints = false;
-                this.CheckTotalNumberOfActiveLoadings();
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetLabelsAsync()
@@ -760,13 +769,14 @@ namespace JiraEX.ViewModel
 
                     this.LabelsList.Add(l);
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetEditablePropertiesAsync()
@@ -781,13 +791,14 @@ namespace JiraEX.ViewModel
                 this._editablePropertiesFields = editableProperties.Fields;
 
                 CheckEditableProperties();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         #endregion
@@ -964,7 +975,7 @@ namespace JiraEX.ViewModel
                 ShowErrorMessages(ex, this._parent);
             }
 
-            this._parent.StopLoading();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         #endregion
@@ -1099,6 +1110,7 @@ namespace JiraEX.ViewModel
                 Process.Start("shell:Downloads");
             }
 
+            this.DecrementTotalNumberOfActiveLoadings();
             this.CheckTotalNumberOfActiveLoadings();
         }
 
@@ -1133,17 +1145,20 @@ namespace JiraEX.ViewModel
 
                 string sSelectedPath = fileDialog.FileName;
 
-                try { 
+                try {
+                    this.IncrementTotalNumberOfActiveLoadings();
+
                     await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+
+                    this.DecrementTotalNumberOfActiveLoadings();
 
                     UpdateIssueAsync();
                 }
                 catch (JiraException ex)
                 {
+                    this.DecrementTotalNumberOfActiveLoadings();
                     ShowErrorMessages(ex, this._parent);
-                }
-
-                
+                }  
             }
         }
 
@@ -1392,8 +1407,6 @@ namespace JiraEX.ViewModel
 
         private void CheckTotalNumberOfActiveLoadings()
         {
-            this._totalNumberOfLoadings--;
-
             if (this._totalNumberOfLoadings <= 0)
             {
                 this._parent.StopLoading();
@@ -1404,6 +1417,16 @@ namespace JiraEX.ViewModel
         private void ResetTotalNumberOfActiveLoadings()
         {
             this._totalNumberOfLoadings += TOTAL_NUMBER_OF_LOADINGS;
+        }
+
+        private void IncrementTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings += 1;
+        }
+
+        private void DecrementTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings -= 1;
         }
 
         public void SetPanelTitles()
