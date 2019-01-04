@@ -1,5 +1,5 @@
 ﻿using AtlassianConnector.Base.Implementation.DevDefined;
-using AtlassianConnector.Service;
+using AtlassianConnector.Base;
 using DevDefined.OAuth.Consumer;
 using DevDefined.OAuth.Framework;
 using System;
@@ -18,11 +18,11 @@ namespace JiraRESTClient.Service.Implementation
     /// </summary>
     public class OAuthService : IOAuthService
     {
-        private IBaseService<IToken> _baseService;
+        private IBaseOAuthService<IToken> _baseService;
 
         public OAuthService()
         {
-            this._baseService = BaseService.JiraInstance;
+            this._baseService = BaseOAuthService.JiraInstance;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace JiraRESTClient.Service.Implementation
         /// </summary>
         public void InitializeOAuthSession(string baseUrl)
         {
-            ((BaseService)this._baseService).InitializeOAuthSession(baseUrl);
+            ((BaseOAuthService)this._baseService).InitializeOAuthSession(baseUrl);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace JiraRESTClient.Service.Implementation
         /// </summary>
         public void ReinitializeOAuthSessionAccessToken(string token, string tokenSecret, string baseUrl)
         {
-            ((BaseService)this._baseService).ReinitializeOAuthSessionAccessToken(token, tokenSecret, baseUrl);
+            ((BaseOAuthService)this._baseService).ReinitializeOAuthSessionAccessToken(token, tokenSecret, baseUrl);
         }
 
         /// <summary>

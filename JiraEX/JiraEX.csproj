@@ -57,9 +57,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Common\IHavePassword.cs" />
     <Compile Include="Common\MvvmMessageBoxEventArgs.cs" />
     <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\NullToVisibilityConverter.cs" />
+    <Compile Include="Controls\Watermark\WatermarkAdorner.cs" />
+    <Compile Include="Controls\Watermark\WatermarkService.cs" />
     <Compile Include="Helper\JqlBuilder.cs" />
     <Compile Include="Helper\UserSettingsHelper.cs" />
     <Compile Include="Main\JiraToolWindow.cs" />
@@ -76,7 +79,7 @@
     <Compile Include="Theme\ThemeColorId.cs" />
     <Compile Include="Theme\ThemeColors.cs" />
     <Compile Include="ViewModel\AdvancedSearchViewModel.cs" />
-    <Compile Include="ViewModel\AuthenticateViewModel.cs" />
+    <Compile Include="ViewModel\AuthenticationViewModel.cs" />
     <Compile Include="ViewModel\ConnectionViewModel.cs" />
     <Compile Include="ViewModel\CreateIssueViewModel.cs" />
     <Compile Include="ViewModel\FilterListViewModel.cs" />

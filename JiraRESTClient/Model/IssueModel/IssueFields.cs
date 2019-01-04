@@ -26,7 +26,7 @@ namespace JiraRESTClient.Model
 
         public string Description { get; set; }
 
-        public string[] Labels { get; set; }
+        public List<string> Labels { get; set; }
 
         public List<Attachment> Attachment { get; set; }
 

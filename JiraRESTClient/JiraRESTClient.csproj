@@ -44,6 +44,7 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AuthenticationType.cs" />
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Editable\AffectsVersionsEditableProperty.cs" />
     <Compile Include="Model\IssueModel\Attachment.cs" />
@@ -97,9 +99,11 @@
     <Compile Include="Model\MyAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\IAttachmentService.cs" />
+    <Compile Include="Service\IBasicAuthenticationService.cs" />
     <Compile Include="Service\IBoardService.cs" />
     <Compile Include="Service\IIssueService.cs" />
     <Compile Include="Service\Implementation\AttachmentService.cs" />
+    <Compile Include="Service\Implementation\BasicAuthenticationService.cs" />
     <Compile Include="Service\Implementation\BoardService.cs" />
     <Compile Include="Service\Implementation\IssueService.cs" />
     <Compile Include="Service\Implementation\OAuthService.cs" />

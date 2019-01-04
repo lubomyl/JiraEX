@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using JiraRESTClient.Model;
 using DevDefined.OAuth.Framework;
-using AtlassianConnector.Service;
 using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.RestSharp;
 
 namespace JiraRESTClient.Service.Implementation
 {
@@ -18,11 +19,18 @@ namespace JiraRESTClient.Service.Implementation
     public class ProjectService : IProjectService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public ProjectService()
+        public ProjectService(AuthenticationType type)
         {
-            this._baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Basic)
+            {
+                this._baseService = BaseService.JiraInstance;
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

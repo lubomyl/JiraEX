@@ -25,17 +25,20 @@ namespace JiraEX.ViewModel
         private User _authenticatedUser;
 
         private IUserService _userService;
+        private IBasicAuthenticationService _basicAuthenticationService;
 
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignOutCommand { get; private set; }
         public DelegateCommand IssueReportGitHubCommand { get; private set; }
 
-        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService)
+        public ConnectionViewModel(IJiraToolWindowNavigatorViewModel parent, IUserService userService, IBasicAuthenticationService basicAuthenticationService)
         {
             this._parent = parent;
             
             this._userService = userService;
+            this._basicAuthenticationService = basicAuthenticationService;
+
             this.GetAuthenticatedUserAsync();
 
             SettingsManager settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
@@ -65,13 +68,18 @@ namespace JiraEX.ViewModel
 
                 ShowErrorMessages(ex2, this._parent);
             }
+
+            this._parent.StopLoading();
         }
 
         private void SignOut(object parameter)
         {
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
-            UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
+
+            this._basicAuthenticationService.DeleteAuthenticationCredentials();
+
+            this._parent.DisposeConnectionView();
 
             this._parent.ShowAuthentication();
         }

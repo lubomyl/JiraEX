@@ -53,8 +53,6 @@ namespace JiraEX.Main
                 : base(dwCookie, pSearchQuery, pSearchCallback)
             {
                 m_toolWindow = toolwindow;
-
-                _issueService = new IssueService();
             }
 
             protected override void OnStartSearch()
@@ -63,31 +61,39 @@ namespace JiraEX.Main
 
                 control.Dispatcher.Invoke(async () =>
                 {
+                    
                     navigator = (IJiraToolWindowNavigatorViewModel)control.DataContext;
 
-                    if (this.SearchQuery.SearchString.Length > 4 && this.SearchQuery.SearchString.Substring(0, 4).Equals("key:")){
-                        Task<Issue> issueTask = _issueService.GetIssueByIssueKeyAsync(this.SearchQuery.SearchString.Substring(4));
+                    if (((JiraToolWindowNavigatorViewModel)navigator).SelectedView.GetType() != typeof(AuthenticationView)
+                        && ((JiraToolWindowNavigatorViewModel)navigator).SelectedView.GetType() != typeof(AuthenticationVerificationView))
+                    {
+                        _issueService = ((JiraToolWindowNavigatorViewModel)navigator).IssueService;
 
-                        try
+                        if (this.SearchQuery.SearchString.Length > 4 && this.SearchQuery.SearchString.Substring(0, 4).Equals("key:"))
                         {
-                            Issue issue = await issueTask;
+                            Task<Issue> issueTask = _issueService.GetIssueByIssueKeyAsync(this.SearchQuery.SearchString.Substring(4));
 
-                            if (issue != null)
+                            try
                             {
-                                navigator.ShowIssueDetail(issue, null);
+                                Issue issue = await issueTask;
+
+                                if (issue != null)
+                                {
+                                    navigator.ShowIssueDetail(issue, null);
+                                }
+                            }
+                            catch (JiraException ex)
+                            {
+                                navigator.ShowNoIssueFound(this.SearchQuery.SearchString.Substring(4));
                             }
                         }
-                        catch (JiraException ex)
+                        else
                         {
-                            navigator.ShowNoIssueFound(this.SearchQuery.SearchString.Substring(4));
+                            navigator.ShowIssuesQuickSearch(this.SearchQuery.SearchString);
                         }
                     }
-                    else
-                    {
-                        navigator.ShowIssuesQuickSearch(this.SearchQuery.SearchString);
-                    }
                 });
-               
+
                 base.OnStartSearch();
             }
 

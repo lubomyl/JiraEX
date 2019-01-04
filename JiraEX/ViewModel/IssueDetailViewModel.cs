@@ -251,7 +251,7 @@ namespace JiraEX.ViewModel
                 this.IsSprintEmpty = true;
             }
 
-            if (this._issue.Fields.Labels.Length > 0)
+            if (this._issue.Fields.Labels.Count > 0)
             {
                 this.IsLabelsEmpty = false;
             } else
@@ -709,7 +709,7 @@ namespace JiraEX.ViewModel
 
                 this.SprintList.Clear();
 
-                if (sprintsList != null)
+                if (sprintsList != null && sprintsList.Values != null)
                 {
                     this.IsSupportingSprints = true;
 

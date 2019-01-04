@@ -98,26 +98,22 @@ namespace JiraEX.ViewModel
                     this.NoProjects = true;
                 }
 
-                this._parent.StopLoading();
-
                 HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
-
-                this._parent.StopLoading();
             }
             catch (Newtonsoft.Json.JsonReaderException njex)
             {
-                this._parent.StopLoading();
-
                 UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
                 UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
                 UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
                 this._parent.ShowAuthentication();
             }
+
+            this._parent.StopLoading();
         }
 
         public void OnItemSelected(object sender)
