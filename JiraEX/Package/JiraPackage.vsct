@@ -7,6 +7,10 @@
 
   <Commands package="guidJiraPackage">
 
+    <Bitmaps>
+      <Bitmap guid="menuIconGuid" href="..\Resources\logo.png" usedList="menuIcon"/>  
+    </Bitmaps>
+    
     <Menus>
       <Menu guid="guidJiraPackage" id="JiraToolbar" type="ToolWindowToolbar">
         <CommandFlag>DefaultDocked</CommandFlag>
@@ -35,6 +39,7 @@
     <Buttons>
       <Button guid="guidJiraCommand" id="JiraCommand" priority="0x0100" type="Button">
         <Parent guid="guidJiraMenuGroup" id="JiraMenuGroup" />
+        <Icon guid="menuIconGuid" id="menuIcon" />
         <Strings>
           <ButtonText>Jira</ButtonText>
         </Strings>
@@ -138,5 +143,9 @@
       <IDSymbol name="JiraCommand" value="0x0101" />
     </GuidSymbol>
 
+    <GuidSymbol name="menuIconGuid" value="{D4800BE3-8A73-4EEF-9E06-A28983F6131D}">
+      <IDSymbol name="menuIcon" value="1" />
+    </GuidSymbol>
+    
   </Symbols>
 </CommandTable>

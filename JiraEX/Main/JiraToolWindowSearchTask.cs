@@ -43,7 +43,6 @@ namespace JiraEX.Main
 
         public override void ClearSearch()
         {
-            ((JiraToolWindowNavigatorViewModel)navigator).ShowProjects(null, null);
         }
 
         internal class SearchTask : VsSearchTask

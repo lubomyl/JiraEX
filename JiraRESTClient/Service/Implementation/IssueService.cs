@@ -278,5 +278,15 @@ namespace JiraRESTClient.Service.Implementation
                 this._baseService.DeleteResource(resource);
             });
         }
+
+        public Task<IssueList> GetIssuesByIssueKeyAsync(string searchString)
+        {
+            return Task.Run(() =>
+            {
+                var resource = $"search?jql=key = " + searchString;
+
+                return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
     }
 }

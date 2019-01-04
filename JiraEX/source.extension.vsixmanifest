@@ -8,6 +8,9 @@
 - quick search for issue(s)
 - see/edit details about issue
 - create issues/sub-tasks</Description>
+        <MoreInfo>https://github.com/lubomyl/JiraEX</MoreInfo>
+        <License>LICENSE.txt</License>
+        <Tags>Jira, Atlassian, Issue,  Bug, Project, Management</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
@@ -21,6 +24,7 @@
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Newtonsoft.Json.dll" AssemblyName="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.8.27729.1,16.0)" DisplayName="Visual Studio core editor" />

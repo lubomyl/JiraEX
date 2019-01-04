@@ -30,13 +30,13 @@
     <DockPanel>
 
         <!-- Attributes to show -->
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <Label Style="{StaticResource LabelFaded}">Attributes:</Label>
+        <DockPanel LastChildFill="False" DockPanel.Dock="Top">
+            <Label DockPanel.Dock="Left" VerticalAlignment="Top" Style="{StaticResource LabelFaded}">Attributes:</Label>
 
-            <Grid>
+            <Grid DockPanel.Dock="Left">
                 <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
                                         Visibility="{Binding IsEditingAttributes, Converter={StaticResource FalseToVisibleConverter}}">
-                    <TextBlock  AutomationProperties.AutomationId="AttributesOverlayTextBlock"
+                    <TextBlock  AutomationProperties.AutomationId="AttributesOverlayTextBlock" TextWrapping="Wrap" MinWidth="100"
                                 FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAttributes, Mode=OneWay}" Text="{Binding SelectedAttributes, Mode=OneWay}">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding EditAttributesCommand}" MouseAction="LeftClick" />
@@ -71,7 +71,7 @@
                     </i:Interaction.Triggers>
                 </ComboBox>
             </Grid>
-        </StackPanel>
+        </DockPanel>
 
         <Separator DockPanel.Dock="Top" Style="{StaticResource PaneHorizontalSeparator}" />
 

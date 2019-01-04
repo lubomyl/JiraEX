@@ -22,6 +22,8 @@ namespace JiraEX.ViewModel
 {
     public class IssueDetailViewModel : ViewModelBase, ITitleable, IReinitializable
     {
+        private const int TOTAL_NUMBER_OF_LOADINGS = 10;
+
         private bool _isEditingSummary = false;
         private bool _isEditingDescription = false;
         private bool _isEditingPriority = false;
@@ -32,6 +34,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingLabels = false;
         private bool _isEditingSprint = false;
         private bool _isLinkingIssue = false;
+        private bool _isEditingLinkedIssue = true;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -64,12 +67,14 @@ namespace JiraEX.ViewModel
         private Priority _selectedPriority;
         private Transition _selectedTransition;
         private User _selectedAssignee;
+
         private Sprint _selectedSprint;
         private Issue _selectedLinkIssue;
         private IssueLinkTypeSplitted _selectedLinkType;
 
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
+        private bool _isRefreshing = false;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -133,7 +138,12 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteLinkedIssueCommand { get; set; }
 
-        private int _totalNumberOfLoadings = 10;
+        public DelegateCommand OpenInBrowserCommand { get; set; }
+
+        public DelegateCommand EditLinkedIssueCommand { get; set; }
+        public DelegateCommand CancelEditLinkedIssueCommand { get; set; }
+
+        private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
         public IssueDetailViewModel(IJiraToolWindowNavigatorViewModel parent, Issue issue, Project project,
             IIssueService issueService, IPriorityService priorityService, ITransitionService transitionService,
@@ -158,13 +168,13 @@ namespace JiraEX.ViewModel
 
             GetIssuesAsync();
             GetIssueLinkTypesAsync();
-            GetPrioritiesAsync();
-            GetTransitionsAsync();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetBoardsAsync();
             GetCreatableIssueTypesAsync();
             GetEditablePropertiesAsync();
+            GetPrioritiesAsync();
+            GetTransitionsAsync();
 
             UpdateIssueAsync();
 
@@ -175,17 +185,20 @@ namespace JiraEX.ViewModel
 
         private void RefreshIssueDetails(object sender, EventArgs e)
         {
+            this.ResetTotalNumberOfActiveLoadings();
+            this._isRefreshing = true;
+
             this._parent.StartLoading();
 
             GetIssuesAsync();
             GetIssueLinkTypesAsync();
-            GetPrioritiesAsync();
-            GetTransitionsAsync();
             GetAssigneesAsync();
             GetLabelsAsync();
             GetBoardsAsync();
             GetCreatableIssueTypesAsync();
             GetEditablePropertiesAsync();
+            GetPrioritiesAsync();
+            GetTransitionsAsync();
 
             UpdateIssueAsync();
 
@@ -336,6 +349,11 @@ namespace JiraEX.ViewModel
             this.CancelLinkIssueCommand = new DelegateCommand(CancelLinkIssue);
 
             this.DeleteLinkedIssueCommand = new DelegateCommand(DeleteLinkedIssue);
+
+            this.OpenInBrowserCommand = new DelegateCommand(OpenInBrowser);
+
+            this.EditLinkedIssueCommand = new DelegateCommand(EnableEditLinkedIssue);
+            this.CancelEditLinkedIssueCommand = new DelegateCommand(CancelEditLinkedIssue);
         }
 
         private async void ShowIssue(object sender)
@@ -463,12 +481,15 @@ namespace JiraEX.ViewModel
                 }
 
                 CheckSubTaskCreatable();
-                this.CheckTotalNumberOfActiveLoadings();
+
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssuesAsync()
@@ -480,7 +501,7 @@ namespace JiraEX.ViewModel
             try
             {
                 var issueList = await issueTask as IssueList;
-
+               
                 this.IssueList.Clear();
 
                 foreach (Issue i in issueList.Issues)
@@ -488,15 +509,17 @@ namespace JiraEX.ViewModel
                     if (this._issue.Id != i.Id)
                     {
                         this.IssueList.Add(i);
+                        this.SelectedLinkIssue = i;
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetIssueLinkTypesAsync()
@@ -510,6 +533,7 @@ namespace JiraEX.ViewModel
                 var issueLinkTypeList = await issueLinkTypeTask as IssueLinkTypeList;
 
                 this.IssueList.Clear();
+                this.IssueLinkTypesList.Clear();
 
                 foreach (IssueLinkType i in issueLinkTypeList.IssueLinkTypes)
                 {
@@ -528,13 +552,14 @@ namespace JiraEX.ViewModel
                         this.IssueLinkTypesList.Add(ilts);
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetPrioritiesAsync()
@@ -559,14 +584,15 @@ namespace JiraEX.ViewModel
                     }
                 }
 
-                this.CheckTotalNumberOfActiveLoadings();
-
                 HideErrorMessages(this._parent);
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetTransitionsAsync()
@@ -590,13 +616,14 @@ namespace JiraEX.ViewModel
                         this.SelectedTransition = t;
                     }
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetAssigneesAsync()
@@ -632,13 +659,14 @@ namespace JiraEX.ViewModel
                 }
 
                 this._isInitializingAssignees = false;
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetBoardsAsync()
@@ -659,13 +687,14 @@ namespace JiraEX.ViewModel
                 }
 
                 GetSprintsAsync();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetSprintsAsync()
@@ -702,13 +731,14 @@ namespace JiraEX.ViewModel
                 }
 
                 this._isInitializingSprints = false;
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 this.IsSupportingSprints = false;
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetLabelsAsync()
@@ -739,13 +769,14 @@ namespace JiraEX.ViewModel
 
                     this.LabelsList.Add(l);
                 }
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         private async void GetEditablePropertiesAsync()
@@ -760,13 +791,14 @@ namespace JiraEX.ViewModel
                 this._editablePropertiesFields = editableProperties.Fields;
 
                 CheckEditableProperties();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.DecrementTotalNumberOfActiveLoadings();
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         #endregion
@@ -937,13 +969,13 @@ namespace JiraEX.ViewModel
                 CheckEmptyFields();
                 UpdateAttachments();
                 SeparateLinkedIssueTypes();
-
-                this.CheckTotalNumberOfActiveLoadings();
             }
             catch (JiraException ex)
             {
                 ShowErrorMessages(ex, this._parent);
             }
+
+            this.CheckTotalNumberOfActiveLoadings();
         }
 
         #endregion
@@ -975,6 +1007,11 @@ namespace JiraEX.ViewModel
             }
 
             UpdateIssueAsync();
+        }
+
+        private void OpenInBrowser(object sender)
+        {
+            System.Diagnostics.Process.Start(UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl") + "/browse/" + this.Issue.Key);
         }
 
         private async void ConfirmLinkIssue(object sender)
@@ -1073,6 +1110,7 @@ namespace JiraEX.ViewModel
                 Process.Start("shell:Downloads");
             }
 
+            this.DecrementTotalNumberOfActiveLoadings();
             this.CheckTotalNumberOfActiveLoadings();
         }
 
@@ -1107,16 +1145,145 @@ namespace JiraEX.ViewModel
 
                 string sSelectedPath = fileDialog.FileName;
 
-                try { 
+                try {
+                    this.IncrementTotalNumberOfActiveLoadings();
+
                     await this._issueService.PostAttachmentToIssueAsync(new FileInfo(sSelectedPath), this._issue.Key);
+
+                    this.DecrementTotalNumberOfActiveLoadings();
+
+                    UpdateIssueAsync();
                 }
                 catch (JiraException ex)
                 {
+                    this.DecrementTotalNumberOfActiveLoadings();
                     ShowErrorMessages(ex, this._parent);
-                }
-
-                UpdateIssueAsync();
+                }  
             }
+        }
+
+        internal async void SearchAssignee(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKeyAndByUsername(this._issue.Key, searchString);
+
+            try
+            {
+                var userList = await userTask as UserList;
+
+                this.AssigneeList.Clear();
+                this.AssigneeList.Add(this._unassigned);
+
+                foreach (User u in userList)
+                {
+                    this.AssigneeList.Add(u);
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this._parent.StopLoading();
+            this.IsEditingAssignee = true;
+        }
+
+
+        internal async void SearchLabels(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<LabelsList> labelsTask = this._issueService.GetAllLabelsAsync(searchString);
+
+            try
+            {
+                var labelsList = await labelsTask as LabelsList;
+
+                this.LabelsList.Clear();
+
+                foreach (JiraRESTClient.Model.LabelSuggestion l in labelsList.Suggestions)
+                {
+
+                    foreach (string label in this.Issue.Fields.Labels)
+                    {
+                        if (label.Equals(l.Label))
+                        {
+                            l.CheckedStatus = true;
+                            break;
+                        }
+
+                        l.CheckedStatus = false;
+                    }
+
+                    this.LabelsList.Add(l);
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this._parent.StopLoading();
+            this.IsEditingLabels = true;
+        }
+
+        internal async void SearchLinkedIssues(string searchString)
+        {
+            this._parent.StartLoading();
+
+            Task<IssueList> issueTask = this._issueService.GetIssuesByIssueKeyAsync(searchString);
+
+            try
+            {
+                var issueList = await issueTask as IssueList;
+
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    if (this._issue.Id != i.Id)
+                    {
+                        this.IssueList.Add(i);
+                    }
+                }
+            }
+            catch (JiraException ex)
+            {
+                
+            }
+
+            this.IsEditingLinkedIssue = true;
+            this._parent.StopLoading();
+        }
+
+        internal async void RefreshIssuesAsync()
+        {
+            this._parent.StartLoading();
+
+            Task<IssueList> issueTask = this._issueService.GetAllIssues();
+
+            try
+            {
+                var issueList = await issueTask as IssueList;
+
+                this.IssueList.Clear();
+
+                foreach (Issue i in issueList.Issues)
+                {
+                    if (this._issue.Id != i.Id)
+                    {
+                        this.IssueList.Add(i);
+                    }
+                }
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            this.IsEditingLinkedIssue = true;
+            this._parent.StopLoading();
         }
 
         #endregion
@@ -1223,17 +1390,44 @@ namespace JiraEX.ViewModel
             this.IsEditingLabels = false;
         }
 
+        private void EnableEditLinkedIssue(object parameter)
+        {
+            this.IsEditingLinkedIssue = true;
+        }
+
+        private void CancelEditLinkedIssue(object parameter)
+        {
+            if (this.SelectedLinkIssue == null)
+            {
+                this.IsEditingLinkedIssue = false;
+            }
+        }
+
         #endregion
 
         private void CheckTotalNumberOfActiveLoadings()
         {
-            this._totalNumberOfLoadings--;
-
             if (this._totalNumberOfLoadings <= 0)
             {
                 this._parent.StopLoading();
+                this._isRefreshing = false;
             }
-        }       
+        }     
+        
+        private void ResetTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings += TOTAL_NUMBER_OF_LOADINGS;
+        }
+
+        private void IncrementTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings += 1;
+        }
+
+        private void DecrementTotalNumberOfActiveLoadings()
+        {
+            this._totalNumberOfLoadings -= 1;
+        }
 
         public void SetPanelTitles()
         {
@@ -1364,6 +1558,16 @@ namespace JiraEX.ViewModel
             }
         }
 
+        public bool IsEditingLinkedIssue
+        {
+            get { return this._isEditingLinkedIssue; }
+            set
+            {
+                this._isEditingLinkedIssue = value;
+                OnPropertyChanged("IsEditingLinkedIssue");
+            }
+        }
+
         public Issue Issue
         {
             get { return this._issue; }
@@ -1399,7 +1603,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedPriority; }
             set
             {
-                if (this._selectedPriority != null)
+                if (this._selectedPriority != null && !this._isRefreshing)
                 {
                     this._selectedPriority = value;
                     this.UpdatePriorityAsync();
@@ -1429,7 +1633,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedTransition; }
             set
             {
-                if (this._selectedTransition != null)
+                if (this._selectedTransition != null && !this._isRefreshing)
                 {
                     this._selectedTransition = value;
                     this.DoTransitionAsync();
@@ -1489,10 +1693,13 @@ namespace JiraEX.ViewModel
             get { return this._selectedAssignee; }
             set
             {
-                if (!this._isInitializingAssignees)
+                if (!this._isInitializingAssignees && !this._isRefreshing)
                 {
-                    this._selectedAssignee = value;
-                    this.AssignAsync();
+                    if (value != null)
+                    {
+                        this._selectedAssignee = value;
+                        this.AssignAsync();
+                    }
                 }
                 else
                 {
@@ -1509,7 +1716,7 @@ namespace JiraEX.ViewModel
             get { return this._selectedSprint; }
             set
             {
-                if (!this._isInitializingSprints)
+                if (!this._isInitializingSprints && !this._isRefreshing)
                 {
                     this._selectedSprint = value;
                     this.UpdateSprint();
@@ -1530,8 +1737,11 @@ namespace JiraEX.ViewModel
             get { return this._selectedLinkIssue; }
             set
             {
-                this._selectedLinkIssue = value;
-                OnPropertyChanged("SelectedLinkIssue");
+                if (value != null)
+                {
+                    this._selectedLinkIssue = value;
+                    OnPropertyChanged("SelectedLinkIssue");
+                }
             }
         }
 
