@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace JiraRESTClient.Service.Implementation
 {
 
-    public class BasicService : IBasicService
+    public class BasicAuthenticationService : IBasicAuthenticationService
     {
 
         private IBaseService _baseService;
 
-        public BasicService()
+        public BasicAuthenticationService()
         {
             this._baseService = BaseService.JiraInstance;
         }
@@ -22,6 +22,11 @@ namespace JiraRESTClient.Service.Implementation
         public void InitializeBasicAuthenticationAuthenticator(string baseUrl, string username, string password)
         {
             ((BaseService)this._baseService).InitializeBasicAuthenticationAuthenticator(baseUrl, username, password);
+        }
+
+        public void DeleteAuthenticationCredentials()
+        {
+            ((BaseService)this._baseService).DeleteAuthenticationCredentials();
         }
     }
 }

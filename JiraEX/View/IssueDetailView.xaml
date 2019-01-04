@@ -61,8 +61,8 @@
             </StackPanel>
 
             <!-- Parent, Type, Status, Priority -->
-            <StackPanel Orientation="Horizontal">
-                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0" BorderThickness="1" BorderBrush="#FF4B4D50"
+            <DockPanel LastChildFill="False">
+                <Border DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5" BorderThickness="1" BorderBrush="#FF4B4D50"
                             Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}">
                     <TextBlock>
                         <Hyperlink Command="{Binding ShowIssueCommand}" CommandParameter="{Binding Issue.Fields.Parent}">
@@ -71,77 +71,79 @@
                     </TextBlock>
                 </Border>
 
-                <TextBlock Style="{StaticResource TitleText}" Text="/" Margin="0 0 5 0"
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource TitleText}" Text="/" Margin="0 0 5 5"
                                Visibility="{Binding IsSubTask, Converter={StaticResource TrueToVisibleConverter}}"/>
 
-                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50">
-                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" />
-                </Border>
-
-                <Grid>
-                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
-                                        Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
-                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedTransition.Name, Mode=OneWay}" Text="{Binding SelectedTransition.Name, Mode=OneWay}">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding EditTransitionCommand}" MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
+                <WrapPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                        <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Issue.Fields.IssueType.Name, Mode=OneWay}" />
                     </Border>
 
-                    <ComboBox ItemsSource="{Binding TransitionList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedTransition}">
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeave">
-                                <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ComboBox>
-                </Grid>
-
-                <Grid Visibility="{Binding IsPriorityEditable, Converter={StaticResource TrueToVisibleConverter}}">
-                    <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Margin="0 0 5 0" BorderThickness="1" BorderBrush="{Binding SelectedPriority.StatusColor, Mode=OneWay}"
-                                        Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border HorizontalAlignment="Stretch" Width="5" Background="{Binding SelectedPriority.StatusColor, Mode=OneWay}" Margin="0 0 5 0"></Border>
-                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriority.Name, Mode=OneWay}" Text="{Binding SelectedPriority.Name, Mode=OneWay}">
+                    <Grid Margin="0 0 0 5">
+                        <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 0"  BorderThickness="1" BorderBrush="#FF4B4D50"
+                                            Visibility="{Binding IsEditingTransition, Converter={StaticResource FalseToVisibleConverter}}">
+                            <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedTransition.Name, Mode=OneWay}" Text="{Binding SelectedTransition.Name, Mode=OneWay}">
                                 <TextBlock.InputBindings>
-                                    <MouseBinding Command="{Binding EditPriorityCommand}" MouseAction="LeftClick" />
+                                    <MouseBinding Command="{Binding EditTransitionCommand}" MouseAction="LeftClick" />
                                 </TextBlock.InputBindings>
                             </TextBlock>
-                            <Border HorizontalAlignment="Stretch" Width="5" Background="{Binding SelectedPriority.StatusColor}" Margin="5 0 0 0"></Border>
-                        </StackPanel>
-                    </Border>
+                        </Border>
 
-                    <ComboBox ItemsSource="{Binding PriorityList}"
-                                Margin="0 0 5 0"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id"
-                                Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
-                                SelectedValue="{Binding Path=Name}"
-                                SelectedItem="{Binding SelectedPriority}">
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeave">
-                                <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ComboBox>
-                </Grid>
-            </StackPanel>
+                        <ComboBox ItemsSource="{Binding TransitionList}"
+                                    Margin="0 0 5 0"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    Visibility="{Binding IsEditingTransition, Converter={StaticResource TrueToVisibleConverter}}"
+                                    SelectedValue="{Binding Path=Name}"
+                                    SelectedItem="{Binding SelectedTransition}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <i:InvokeCommandAction Command="{Binding CancelEditTransitionCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid Visibility="{Binding IsPriorityEditable, Converter={StaticResource TrueToVisibleConverter}}" Margin="0 0 0 5">
+                        <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Margin="0 0 5 0" BorderThickness="1" BorderBrush="{Binding SelectedPriority.StatusColor, Mode=OneWay}"
+                                            Visibility="{Binding IsEditingPriority, Converter={StaticResource FalseToVisibleConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border HorizontalAlignment="Stretch" Width="5" Background="{Binding SelectedPriority.StatusColor, Mode=OneWay}" Margin="0 0 5 0"></Border>
+                                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedPriority.Name, Mode=OneWay}" Text="{Binding SelectedPriority.Name, Mode=OneWay}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding Command="{Binding EditPriorityCommand}" MouseAction="LeftClick" />
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
+                                <Border HorizontalAlignment="Stretch" Width="5" Background="{Binding SelectedPriority.StatusColor}" Margin="5 0 0 0"></Border>
+                            </StackPanel>
+                        </Border>
+
+                        <ComboBox ItemsSource="{Binding PriorityList}"
+                                    Margin="0 0 5 0"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    Visibility="{Binding IsEditingPriority, Converter={StaticResource TrueToVisibleConverter}}"
+                                    SelectedValue="{Binding Path=Name}"
+                                    SelectedItem="{Binding SelectedPriority}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <i:InvokeCommandAction Command="{Binding CancelEditPriorityCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                    </Grid>
+                </WrapPanel>
+            </DockPanel>
 
             <!-- Created, Updated -->
             <Grid>
@@ -602,7 +604,7 @@
                                 Visibility="{Binding IsEditingAffectsVersions, Converter={StaticResource FalseToVisibleConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
+                                    <WrapPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>

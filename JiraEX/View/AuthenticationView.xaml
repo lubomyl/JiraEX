@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:JiraEX.View"
              xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:watermark="clr-namespace:JiraEX.Controls.Watermark"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d"
@@ -21,25 +22,66 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <DockPanel LastChildFill="False">
+        <StackPanel Orientation="Vertical">
+            <!-- OAuth authentication form -->
+            <DockPanel LastChildFill="False" Margin="0 0 0 20">
 
-            <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Margin="0,0,0,8">Jira URL:</TextBlock>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Margin="0,0,0,8">OAuth autentication</TextBlock>
 
-            <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding BaseUrl}" Margin="32,0,32,8"/>
+                <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding BaseUrl}" Margin="32,0,32,8"/>
 
-            <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInOAuthCommand}" 
-                    CommandParameter="{Binding ElementName=This}" Content="Authenticate" 
-                    Margin="0,0,0,24" Height="25" x:Name="SignInOAuth"/>
+                <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInOAuthCommand}" 
+                        CommandParameter="{Binding ElementName=This}" Content="Authenticate" 
+                        Margin="0,0,0,24" Height="25" x:Name="SignInOAuth"/>
 
-            <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"  
-                       Style="{StaticResource PlainText}" Margin="0 0 0 0">
-                            <Hyperlink Command="{Binding HowToSetupOAuthCommand}" 
-                                        CommandParameter="{Binding}">
-                                How to setup OAuth? (Jira administrator)
-                            </Hyperlink>
-            </TextBlock>
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"  
+                           Style="{StaticResource PlainText}" Margin="0 0 0 0">
+                                <Hyperlink Command="{Binding HowToSetupOAuthCommand}" 
+                                            CommandParameter="{Binding}">
+                                    How to setup OAuth? (Jira administrator)
+                                </Hyperlink>
+                </TextBlock>
             
-        </DockPanel>
+            </DockPanel>
+
+            <Separator Margin="0,0,0,2"
+                       Style="{StaticResource PaneHorizontalSeparator}" />
+            
+            <!-- Basic authentication form -->
+            <DockPanel LastChildFill="False">
+
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Margin="8,0,0,8">Basic authentication</TextBlock>
+
+                <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
+                    <TextBox TextAlignment="Center" Text="{Binding BaseUrlBasic}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock TextAlignment="Center">Jira application URL (example.atlassian.com)</TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
+                    <TextBox TextAlignment="Center" Text="{Binding Username}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock TextAlignment="Center">Username</TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
+                    <TextBox TextAlignment="Center" Text="{Binding Password}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock TextAlignment="Center">Password</TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInBasicCommand}" 
+                        CommandParameter="{Binding ElementName=This}" Content="Authenticate" 
+                        Margin="0,0,0,24" Height="25" x:Name="SignInBasic"/>
+
+            </DockPanel>
+        </StackPanel>
     </ScrollViewer>
 
 

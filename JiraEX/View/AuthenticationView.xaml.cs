@@ -24,13 +24,16 @@ namespace JiraEX.View
     public partial class AuthenticationView : UserControl
     {
 
-        private AuthenticateViewModel _viewModel;
+        private AuthenticationViewModel _viewModel;
 
-        public AuthenticationView(JiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
+        public AuthenticationView(JiraToolWindowNavigatorViewModel parent, 
+            IOAuthService oAuthService, 
+            IBasicAuthenticationService basicService,
+            IUserService userService)
         {
             InitializeComponent();
 
-            this._viewModel = new AuthenticateViewModel(parent, oAuthService);
+            this._viewModel = new AuthenticationViewModel(parent, oAuthService, basicService, userService);
             this.DataContext = this._viewModel;
         }
     }

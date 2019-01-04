@@ -8,7 +8,7 @@ namespace JiraRESTClient.Model
 {
     public enum AuthenticationType
     {
-        Base,
+        Basic,
         OAuth
     }
 }

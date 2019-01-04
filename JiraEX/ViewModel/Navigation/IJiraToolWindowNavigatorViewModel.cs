@@ -11,6 +11,8 @@ namespace JiraEX.ViewModel.Navigation
     public interface IJiraToolWindowNavigatorViewModel
     {
 
+        void InitializeServicesWithAuthenticationType(AuthenticationType type);
+
         void TryToSignIn();
 
         void ShowAuthentication();
@@ -44,5 +46,9 @@ namespace JiraEX.ViewModel.Navigation
         void SetErrorMessage(string errorMessage);
 
         void ShowNoIssueFound(string issueKey);
+
+        void DisposeConnectionView();
+
+        void AreUserCredentialsCorrect();
     }
 }

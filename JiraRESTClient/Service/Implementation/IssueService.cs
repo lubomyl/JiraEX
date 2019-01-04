@@ -25,7 +25,7 @@ namespace JiraRESTClient.Service.Implementation
 
         public IssueService(AuthenticationType type)
         {
-            if (type == AuthenticationType.Base)
+            if (type == AuthenticationType.Basic)
             {
                 this._baseService = BaseService.JiraInstance;
             }
@@ -74,7 +74,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}";
 
-                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PutResource(resource, updateString);
             });
         }
 
@@ -124,7 +124,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issue";
 
-                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, createString);
             });
         }
 
@@ -150,7 +150,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issue";
 
-                return this._baseService.PostResourceContentWithResponse<Issue>(resource, Encoding.UTF8.GetBytes(createString));
+                return this._baseService.PostResourceContentWithResponse<Issue>(resource, createString);
             });
         }
 
@@ -161,7 +161,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}/assignee";
 
-                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PutResource(resource, updateString);
             });
         }
 
@@ -174,7 +174,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}";
 
-                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PutResource(resource, updateString);
             });
         }
 
@@ -187,7 +187,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}";
 
-                this._baseService.PutResource(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PutResource(resource, updateString);
             });
         }
 
@@ -207,7 +207,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"sprint/{sprintId}/issue";
 
-                this._baseService.PostAgileResourceContent(resource, Encoding.UTF8.GetBytes(updateString));
+                this._baseService.PostAgileResourceContent(resource, updateString);
             });
         }
 
@@ -274,7 +274,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = "issueLink";
 
-                this._baseService.PostResourceContent(resource, Encoding.UTF8.GetBytes(linkString));
+                this._baseService.PostResourceContent(resource, linkString);
             });
         }
 

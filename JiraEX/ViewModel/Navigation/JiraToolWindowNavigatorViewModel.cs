@@ -1,4 +1,5 @@
-﻿using ConfluenceEX.Helper;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Helper;
 using ConfluenceEX.ViewModel.Navigation;
 using DevDefined.OAuth.Framework;
 using JiraEX.Main;
@@ -31,7 +32,7 @@ namespace JiraEX.ViewModel.Navigation
         private IVsWindowSearchHost _searchHost;
 
         private IOAuthService _oAuthService;
-        private IBasicService _basicService;
+        private IBasicAuthenticationService _basicAuthenticationService;
 
         private IUserService _userService;
         private IIssueService _issueService;
@@ -77,23 +78,23 @@ namespace JiraEX.ViewModel.Navigation
             this._service = JiraPackage.Mcs;
 
             this._oAuthService = new OAuthService();
-            this._basicService = new BasicService();
+            this._basicAuthenticationService = new BasicAuthenticationService();
             
             InitializeCommands(this._service);
         }
 
         public void InitializeServicesWithAuthenticationType(AuthenticationType type)
         {
-            if(type == AuthenticationType.Base)
+            if(type == AuthenticationType.Basic)
             {
-                this._userService = new UserService(AuthenticationType.Base);
-                this._issueService = new IssueService(AuthenticationType.Base);
-                this._transitionService = new TransitionService(AuthenticationType.Base);
-                this._priorityService = new PriorityService(AuthenticationType.Base);
-                this._attachmentService = new AttachmentService(AuthenticationType.Base);
-                this._boardService = new BoardService(AuthenticationType.Base);
-                this._sprintService = new SprintService(AuthenticationType.Base);
-                this._projectService = new ProjectService(AuthenticationType.Base);
+                this._userService = new UserService(AuthenticationType.Basic);
+                this._issueService = new IssueService(AuthenticationType.Basic);
+                this._transitionService = new TransitionService(AuthenticationType.Basic);
+                this._priorityService = new PriorityService(AuthenticationType.Basic);
+                this._attachmentService = new AttachmentService(AuthenticationType.Basic);
+                this._boardService = new BoardService(AuthenticationType.Basic);
+                this._sprintService = new SprintService(AuthenticationType.Basic);
+                this._projectService = new ProjectService(AuthenticationType.Basic);
             }
             else if (type == AuthenticationType.OAuth)
             {
@@ -144,6 +145,7 @@ namespace JiraEX.ViewModel.Navigation
                 {
                     this._oAuthService.ReinitializeOAuthSessionAccessToken(accessToken, accessTokenSecret, baseUrl);
 
+                    this.InitializeServicesWithAuthenticationType(AuthenticationType.OAuth);
                     this.ShowProjects(null, null);
                 } else
                 {
@@ -170,7 +172,7 @@ namespace JiraEX.ViewModel.Navigation
 
             if (this._authenticationView == null)
             {
-                this._authenticationView = new AuthenticationView(this, this._oAuthService);
+                this._authenticationView = new AuthenticationView(this, this._oAuthService, this._basicAuthenticationService, this._userService);
 
                 SelectedView = this._authenticationView;
             }
@@ -323,7 +325,7 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_CONNECTION_ID);
 
-            this._connectionView = new ConnectionView(this, this._userService);
+            this._connectionView = new ConnectionView(this, this._userService, this._basicAuthenticationService);
             this._historyNavigator.AddView(this._connectionView);
 
             SelectedView = this._connectionView;
@@ -426,6 +428,33 @@ namespace JiraEX.ViewModel.Navigation
         public void SetErrorMessage(string errorMessage)
         {
             this.ErrorMessage = errorMessage;
+        }
+
+        public void DisposeConnectionView()
+        {
+            this._connectionView = null;
+        }
+
+        public async void AreUserCredentialsCorrect()
+        {
+            try
+            {
+                await this._userService.GetAuthenticatedUserAsync();
+
+                this.ShowConnection(null, null);
+            }
+            catch (UnauthorizedException ex)
+            {
+                this.ShowAuthentication();
+
+                ShowErrorMessages(ex, this);
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this);
+            }
+
+            this.StopLoading();
         }
 
         public object SelectedView

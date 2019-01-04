@@ -1,7 +1,9 @@
-﻿using ConfluenceEX.Command;
+﻿using AtlassianConnector.Model.Exceptions;
+using ConfluenceEX.Command;
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
 using JiraEX.ViewModel.Navigation;
+using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
 using Microsoft.VisualStudio.Settings;
@@ -18,30 +20,42 @@ using System.Windows.Threading;
 
 namespace JiraEX.ViewModel
 {
-    public class AuthenticateViewModel : ViewModelBase, ITitleable
+    public class AuthenticationViewModel : ViewModelBase, ITitleable
     {
 
         private IOAuthService _oAuthService;
+        private IBasicAuthenticationService _basicService;
+        private IUserService _userService;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
         private string _baseUrl;
+        private string _baseUrlBasic;
+        private string _username;
+        private string _password;
 
         private WritableSettingsStore _userSettingsStore;
 
         public DelegateCommand SignInOAuthCommand { get; private set; }
+        public DelegateCommand SignInBasicCommand { get; private set; }
         public DelegateCommand HowToSetupOAuthCommand { get; private set; }
 
-        public AuthenticateViewModel(IJiraToolWindowNavigatorViewModel parent, IOAuthService oAuthService)
+        public AuthenticationViewModel(IJiraToolWindowNavigatorViewModel parent, 
+            IOAuthService oAuthService, 
+            IBasicAuthenticationService basicService,
+            IUserService userService)
         {
             this._parent = parent;
 
             this._oAuthService = oAuthService;
+            this._basicService = basicService;
+            this._userService = userService;
 
             SettingsManager settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             this._userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
+            this.SignInBasicCommand = new DelegateCommand(SignInBasic);
             this.HowToSetupOAuthCommand = new DelegateCommand(HowToSetupOAuth);
 
             SetPanelTitles();
@@ -59,6 +73,8 @@ namespace JiraEX.ViewModel
                 this._baseUrl = this.ProcessBaseUrlInput(this.BaseUrl);
 
                 this._oAuthService.InitializeOAuthSession(this.BaseUrl);
+
+                this._parent.InitializeServicesWithAuthenticationType(AuthenticationType.OAuth);
 
                 UserSettingsHelper.WriteToUserSettings("JiraBaseUrl", this.BaseUrl);
 
@@ -82,6 +98,36 @@ namespace JiraEX.ViewModel
             }
 
             this._parent.StopLoading();
+        }
+
+        private void SignInBasic(object parameter)
+        {
+            try
+            {
+                this._parent.StartLoading();
+
+                this._baseUrlBasic = this.ProcessBaseUrlInput(this.BaseUrlBasic);
+
+                UserSettingsHelper.WriteToUserSettings("JiraBaseUrl", this.BaseUrlBasic);
+
+                this._basicService.InitializeBasicAuthenticationAuthenticator(this.BaseUrlBasic, this.Username, this.Password);
+
+                this._parent.InitializeServicesWithAuthenticationType(AuthenticationType.Basic);
+
+                this._parent.AreUserCredentialsCorrect();
+            }
+            catch (OAuthException ex)
+            {
+                this._parent.SetErrorMessage(ex.Message);
+            }
+            catch (SecurityException ex)
+            {
+                this._parent.SetErrorMessage(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                this._parent.SetErrorMessage(ex.Message);
+            }
         }
 
         private void HowToSetupOAuth(object sender)
@@ -130,6 +176,45 @@ namespace JiraEX.ViewModel
             {
                 this._baseUrl = value;
                 OnPropertyChanged("BaseUrl");
+            }
+        }
+
+        public string BaseUrlBasic
+        {
+            get
+            {
+                return this._baseUrlBasic;
+            }
+            set
+            {
+                this._baseUrlBasic = value;
+                OnPropertyChanged("BaseUrlBasic");
+            }
+        }
+
+        public string Username
+        {
+            get
+            {
+                return this._username;
+            }
+            set
+            {
+                this._username = value;
+                OnPropertyChanged(Username);
+            }
+        }
+
+        public string Password
+        {
+            get
+            {
+                return this._password;
+            }
+            set
+            {
+                this._password = value;
+                OnPropertyChanged("Password");
             }
         }
 

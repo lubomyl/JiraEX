@@ -23,7 +23,7 @@ namespace JiraRESTClient.Service.Implementation
 
         public TransitionService(AuthenticationType type)
         {
-            if (type == AuthenticationType.Base)
+            if (type == AuthenticationType.Basic)
             {
                 this._baseService = BaseService.JiraInstance;
             }
@@ -55,7 +55,7 @@ namespace JiraRESTClient.Service.Implementation
 
                 var resource = $"issue/{issueKey}/transitions";
 
-                this._baseService.PostResourceContent(resource, Encoding.UTF8.GetBytes(transitionString));
+                this._baseService.PostResourceContent(resource, transitionString);
             });
         }
     }

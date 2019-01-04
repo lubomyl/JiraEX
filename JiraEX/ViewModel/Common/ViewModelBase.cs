@@ -68,6 +68,31 @@ namespace JiraEX.ViewModel
             parent.SetErrorMessage(errorMessage);
         }
 
+        protected void ShowErrorMessages(UnauthorizedException ex, IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.StopLoading();
+
+            string errorMessage = "";
+
+            if (ex.ErrorResponse.ErrorMessages.Length != 0 && ex.ErrorResponse.ErrorMessages != null)
+            {
+                foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
+                {
+                    errorMessage += errorMsg;
+                }
+            }
+
+            if (ex.ErrorResponse.Errors != null)
+            {
+                foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+                {
+                    errorMessage += error.Value;
+                }
+            }
+
+            parent.SetErrorMessage(errorMessage);
+        }
+
         protected void ShowErrorMessages(WebException ex, IJiraToolWindowNavigatorViewModel parent)
         {
             parent.StopLoading();

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Service
 {
-    public interface IBasicService
+    public interface IBasicAuthenticationService
     {
 
         void InitializeBasicAuthenticationAuthenticator(string baseUrl, string username, string password);
 
+        void DeleteAuthenticationCredentials();
     }
 }

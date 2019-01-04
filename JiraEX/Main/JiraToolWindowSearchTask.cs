@@ -54,7 +54,7 @@ namespace JiraEX.Main
             {
                 m_toolWindow = toolwindow;
 
-                _issueService = new IssueService(AuthenticationType.Base);
+                _issueService = new IssueService(AuthenticationType.OAuth);
             }
 
             protected override void OnStartSearch()

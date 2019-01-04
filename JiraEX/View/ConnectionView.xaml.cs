@@ -26,11 +26,11 @@ namespace JiraEX.View
 
         private ConnectionViewModel _viewModel;
 
-        public ConnectionView(JiraToolWindowNavigatorViewModel parent, IUserService userService)
+        public ConnectionView(JiraToolWindowNavigatorViewModel parent, IUserService userService, IBasicAuthenticationService basicAuthenticationService)
         {
             InitializeComponent();
 
-            this._viewModel = new ConnectionViewModel(parent, userService);
+            this._viewModel = new ConnectionViewModel(parent, userService, basicAuthenticationService);
             this.DataContext = this._viewModel;
         }
     }

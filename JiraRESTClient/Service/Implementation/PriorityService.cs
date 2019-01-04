@@ -22,7 +22,7 @@ namespace JiraRESTClient.Service.Implementation
 
         public PriorityService(AuthenticationType type)
         {
-            if (type == AuthenticationType.Base)
+            if (type == AuthenticationType.Basic)
             {
                 this._baseService = BaseService.JiraInstance;
             }
