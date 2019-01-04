@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using JiraRESTClient.Model;
 using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.RestSharp;
 
 namespace JiraRESTClient.Service.Implementation
 {
@@ -16,11 +18,18 @@ namespace JiraRESTClient.Service.Implementation
     public class BoardService : IBoardService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public BoardService()
+        public BoardService(AuthenticationType type)
         {
-            this._baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Base)
+            {
+                this._baseService = BaseService.JiraInstance;
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

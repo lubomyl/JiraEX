@@ -1,5 +1,6 @@
-﻿using AtlassianConnector.Base.Implementation.DevDefined;
-using AtlassianConnector.Service;
+﻿using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Base.Implementation.RestSharp;
 using DevDefined.OAuth.Framework;
 using JiraRESTClient.Model;
 using System;
@@ -13,11 +14,18 @@ namespace JiraRESTClient.Service.Implementation
     public class UserService : IUserService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public UserService()
+        public UserService(AuthenticationType type)
         {
-            _baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Base)
+            {
+                this._baseService = BaseService.JiraInstance;
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

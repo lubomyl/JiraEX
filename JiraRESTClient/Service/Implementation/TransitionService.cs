@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using JiraRESTClient.Model;
 using AtlassianConnector.Base.Implementation.DevDefined;
 using Newtonsoft.Json;
+using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.RestSharp;
 
 namespace JiraRESTClient.Service.Implementation
 {
@@ -17,11 +19,18 @@ namespace JiraRESTClient.Service.Implementation
     public class TransitionService : ITransitionService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public TransitionService()
+        public TransitionService(AuthenticationType type)
         {
-            this._baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Base)
+            {
+                this._baseService = BaseService.JiraInstance;
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
-﻿using AtlassianConnector.Base.Implementation.DevDefined;
+﻿using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Base.Implementation.RestSharp;
 using AtlassianConnector.Model.Exceptions;
-using AtlassianConnector.Service;
 using DevDefined.OAuth.Framework;
 using JiraRESTClient.Model;
 using Newtonsoft.Json;
@@ -20,11 +21,18 @@ namespace JiraRESTClient.Service.Implementation
     public class IssueService : IIssueService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public IssueService()
+        public IssueService(AuthenticationType type)
         {
-            this._baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Base)
+            {
+                this._baseService = BaseService.JiraInstance;
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

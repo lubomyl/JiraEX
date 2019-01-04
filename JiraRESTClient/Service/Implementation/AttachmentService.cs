@@ -1,4 +1,7 @@
-﻿using AtlassianConnector.Base.Implementation.DevDefined;
+﻿using AtlassianConnector.Base;
+using AtlassianConnector.Base.Implementation.DevDefined;
+using AtlassianConnector.Base.Implementation.RestSharp;
+using JiraRESTClient.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +18,18 @@ namespace JiraRESTClient.Service.Implementation
     public class AttachmentService : IAttachmentService
     {
 
-        private JiraService _baseService;
+        private IBaseJiraService _baseService;
 
-        public AttachmentService()
+        public AttachmentService(AuthenticationType type)
         {
-            this._baseService = BaseService.JiraInstance;
+            if (type == AuthenticationType.Base)
+            {
+                this._baseService = BaseService.JiraInstance;
+            } 
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._baseService = BaseOAuthService.JiraInstance;
+            }
         }
 
         /// <summary>

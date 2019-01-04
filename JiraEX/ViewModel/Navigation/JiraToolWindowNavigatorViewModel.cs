@@ -28,10 +28,12 @@ namespace JiraEX.ViewModel.Navigation
         private object _selectedView;
         private JiraToolWindow _parent;
 
-        private IVsWindowSearchHost _searchHost; 
+        private IVsWindowSearchHost _searchHost;
+
+        private IOAuthService _oAuthService;
+        private IBasicService _basicService;
 
         private IUserService _userService;
-        private IOAuthService _oAuthService;
         private IIssueService _issueService;
         private ITransitionService _transitionService;
         private IPriorityService _priorityService;
@@ -74,17 +76,36 @@ namespace JiraEX.ViewModel.Navigation
             
             this._service = JiraPackage.Mcs;
 
-            this._userService = new UserService();
             this._oAuthService = new OAuthService();
-            this._issueService = new IssueService();
-            this._transitionService = new TransitionService();
-            this._priorityService = new PriorityService();
-            this._attachmentService = new AttachmentService();
-            this._boardService = new BoardService();
-            this._sprintService = new SprintService();
-            this._projectService = new ProjectService();
-
+            this._basicService = new BasicService();
+            
             InitializeCommands(this._service);
+        }
+
+        public void InitializeServicesWithAuthenticationType(AuthenticationType type)
+        {
+            if(type == AuthenticationType.Base)
+            {
+                this._userService = new UserService(AuthenticationType.Base);
+                this._issueService = new IssueService(AuthenticationType.Base);
+                this._transitionService = new TransitionService(AuthenticationType.Base);
+                this._priorityService = new PriorityService(AuthenticationType.Base);
+                this._attachmentService = new AttachmentService(AuthenticationType.Base);
+                this._boardService = new BoardService(AuthenticationType.Base);
+                this._sprintService = new SprintService(AuthenticationType.Base);
+                this._projectService = new ProjectService(AuthenticationType.Base);
+            }
+            else if (type == AuthenticationType.OAuth)
+            {
+                this._userService = new UserService(AuthenticationType.OAuth);
+                this._issueService = new IssueService(AuthenticationType.OAuth);
+                this._transitionService = new TransitionService(AuthenticationType.OAuth);
+                this._priorityService = new PriorityService(AuthenticationType.OAuth);
+                this._attachmentService = new AttachmentService(AuthenticationType.OAuth);
+                this._boardService = new BoardService(AuthenticationType.OAuth);
+                this._sprintService = new SprintService(AuthenticationType.OAuth);
+                this._projectService = new ProjectService(AuthenticationType.OAuth);
+            }
         }
 
         public void SignOut(object sender, EventArgs e)
