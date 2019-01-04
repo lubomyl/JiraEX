@@ -170,16 +170,9 @@ namespace JiraEX.ViewModel.Navigation
 
             this._historyNavigator.ClearStack();
 
-            if (this._authenticationView == null)
-            {
-                this._authenticationView = new AuthenticationView(this, this._oAuthService, this._basicAuthenticationService, this._userService);
+            this._authenticationView = new AuthenticationView(this, this._oAuthService, this._basicAuthenticationService, this._userService);
 
-                SelectedView = this._authenticationView;
-            }
-            else
-            {
-                SelectedView = _authenticationView;
-            }
+            SelectedView = this._authenticationView;
         }
 
         public void ShowAuthenticationVerification(object sender, EventArgs e, IToken requestToken)
@@ -533,6 +526,14 @@ namespace JiraEX.ViewModel.Navigation
         public HistoryNavigator HistoryNavigator
         {
             get { return this._historyNavigator; }
+        }
+
+        public IIssueService IssueService
+        {
+            get
+            {
+                return this._issueService;
+            }
         }
     }
 }

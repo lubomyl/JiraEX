@@ -287,7 +287,8 @@ namespace JiraEX.ViewModel
                     {
                         this.IssueList.Add(i);
                     }
-                } else
+                }
+                else
                 {
                     this.NoIssuesSearch = true;
                 }

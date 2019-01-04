@@ -2,6 +2,7 @@
 using ConfluenceEX.Command;
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
+using JiraEX.Common;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
@@ -13,6 +14,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +48,10 @@ namespace JiraEX.ViewModel
             IUserService userService)
         {
             this._parent = parent;
+
+            this._baseUrl = UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl");
+            this._baseUrlBasic = UserSettingsHelper.ReadStringFromUserSettings("JiraBaseUrl");
+            this._username = UserSettingsHelper.ReadStringFromUserSettings("JiraUsername");
 
             this._oAuthService = oAuthService;
             this._basicService = basicService;
@@ -104,13 +110,21 @@ namespace JiraEX.ViewModel
         {
             try
             {
+                var passwordContainer = parameter as IHavePassword;
+                if (passwordContainer != null)
+                {
+                    var secureString = passwordContainer.Password;
+                    this._password = ConvertToUnsecureString(secureString);
+                }
+
                 this._parent.StartLoading();
 
                 this._baseUrlBasic = this.ProcessBaseUrlInput(this.BaseUrlBasic);
 
                 UserSettingsHelper.WriteToUserSettings("JiraBaseUrl", this.BaseUrlBasic);
+                UserSettingsHelper.WriteToUserSettings("JiraUsername", this.Username);
 
-                this._basicService.InitializeBasicAuthenticationAuthenticator(this.BaseUrlBasic, this.Username, this.Password);
+                this._basicService.InitializeBasicAuthenticationAuthenticator(this.BaseUrlBasic, this.Username, this._password);
 
                 this._parent.InitializeServicesWithAuthenticationType(AuthenticationType.Basic);
 
@@ -159,9 +173,28 @@ namespace JiraEX.ViewModel
             return ret;
         }
 
+        private string ConvertToUnsecureString(SecureString securePassword)
+        {
+            if (securePassword == null)
+            {
+                return string.Empty;
+            }
+
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
+
         public void SetPanelTitles()
         {
-            this._parent.SetPanelTitles("JiraEX", "OAuth authentication");
+            this._parent.SetPanelTitles("JiraEX", "Authentication");
         }
 
         #region BeforeSignInViewModel Members   
@@ -202,19 +235,6 @@ namespace JiraEX.ViewModel
             {
                 this._username = value;
                 OnPropertyChanged(Username);
-            }
-        }
-
-        public string Password
-        {
-            get
-            {
-                return this._password;
-            }
-            set
-            {
-                this._password = value;
-                OnPropertyChanged("Password");
             }
         }
 

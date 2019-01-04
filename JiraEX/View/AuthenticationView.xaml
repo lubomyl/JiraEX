@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="JiraEX.View.AuthenticationView"
+             x:Name="This" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -26,9 +27,15 @@
             <!-- OAuth authentication form -->
             <DockPanel LastChildFill="False" Margin="0 0 0 20">
 
-                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Margin="0,0,0,8">OAuth autentication</TextBlock>
-
-                <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding BaseUrl}" Margin="32,0,32,8"/>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Margin="8,0,0,8">OAuth authentication</TextBlock>
+                
+                <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
+                    <TextBox TextAlignment="Center" Text="{Binding BaseUrl}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">Jira application URL (example.atlassian.com)</TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
 
                 <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInOAuthCommand}" 
                         CommandParameter="{Binding ElementName=This}" Content="Authenticate" 
@@ -50,12 +57,15 @@
             <!-- Basic authentication form -->
             <DockPanel LastChildFill="False">
 
-                <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainText}" Margin="8,0,0,8">Basic authentication</TextBlock>
-
+                <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8 0 0 8">
+                    <TextBlock Style="{StaticResource PlainText}" Margin="0 0 8 0">Basic authentication</TextBlock>
+                    <TextBlock Style="{StaticResource PlainTextFaded}">(Does not support remember me functionality)</TextBlock>
+                </WrapPanel>
+                    
                 <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
                     <TextBox TextAlignment="Center" Text="{Binding BaseUrlBasic}">
                         <watermark:WatermarkService.Watermark>
-                            <TextBlock TextAlignment="Center">Jira application URL (example.atlassian.com)</TextBlock>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">Jira application URL (example.atlassian.com)</TextBlock>
                         </watermark:WatermarkService.Watermark>
                     </TextBox>
                 </AdornerDecorator>
@@ -63,17 +73,17 @@
                 <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
                     <TextBox TextAlignment="Center" Text="{Binding Username}">
                         <watermark:WatermarkService.Watermark>
-                            <TextBlock TextAlignment="Center">Username</TextBlock>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">Username</TextBlock>
                         </watermark:WatermarkService.Watermark>
                     </TextBox>
                 </AdornerDecorator>
 
                 <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
-                    <TextBox TextAlignment="Center" Text="{Binding Password}">
+                    <PasswordBox TextBlock.TextAlignment="Center" x:Name="UserPassword" >
                         <watermark:WatermarkService.Watermark>
-                            <TextBlock TextAlignment="Center">Password</TextBlock>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">Password</TextBlock>
                         </watermark:WatermarkService.Watermark>
-                    </TextBox>
+                    </PasswordBox>
                 </AdornerDecorator>
 
                 <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInBasicCommand}" 

@@ -57,6 +57,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Common\IHavePassword.cs" />
     <Compile Include="Common\MvvmMessageBoxEventArgs.cs" />
     <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\NullToVisibilityConverter.cs" />

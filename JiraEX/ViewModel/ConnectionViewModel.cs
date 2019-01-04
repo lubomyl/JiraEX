@@ -76,7 +76,6 @@ namespace JiraEX.ViewModel
         {
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessToken");
             UserSettingsHelper.DeletePropertyFromUserSettings("JiraAccessTokenSecret");
-            UserSettingsHelper.DeletePropertyFromUserSettings("JiraBaseUrl");
 
             this._basicAuthenticationService.DeleteAuthenticationCredentials();
 

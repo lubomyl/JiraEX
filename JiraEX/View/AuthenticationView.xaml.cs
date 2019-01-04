@@ -1,4 +1,5 @@
-﻿using JiraEX.ViewModel;
+﻿using JiraEX.Common;
+using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Service;
 using System;
@@ -21,7 +22,7 @@ namespace JiraEX.View
     /// <summary>
     /// Interaction logic for BeforeSignInView.xaml
     /// </summary>
-    public partial class AuthenticationView : UserControl
+    public partial class AuthenticationView : UserControl, IHavePassword
     {
 
         private AuthenticationViewModel _viewModel;
@@ -35,6 +36,14 @@ namespace JiraEX.View
 
             this._viewModel = new AuthenticationViewModel(parent, oAuthService, basicService, userService);
             this.DataContext = this._viewModel;
+        }
+
+        public System.Security.SecureString Password
+        {
+            get
+            {
+                return UserPassword.SecurePassword;
+            }
         }
     }
 }
