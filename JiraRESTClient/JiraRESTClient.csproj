@@ -75,6 +75,7 @@
     <Compile Include="Model\IssueModel\IssueListPaged.cs" />
     <Compile Include="Model\IssueModel\StatusList.cs" />
     <Compile Include="Model\IssueModel\StatusObject.cs" />
+    <Compile Include="Model\IssueModel\Timetracking.cs" />
     <Compile Include="Model\IssueModel\Version.cs" />
     <Compile Include="Model\IssueModel\IssueFields.cs" />
     <Compile Include="Model\IssueModel\Issue.cs" />
