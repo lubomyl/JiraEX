@@ -11,7 +11,6 @@ namespace JiraRESTClient.Model
 
         public User()
         {
-
         }
 
         public User(string displayName, string name)

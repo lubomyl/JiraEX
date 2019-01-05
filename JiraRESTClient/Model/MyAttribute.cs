@@ -15,6 +15,11 @@ namespace JiraRESTClient.Model
             this.CheckedStatus = checkedStatus;
         }
 
+        public MyAttribute()
+        {
+
+        }
+
         public string Name { get; set; }
         public bool CheckedStatus { get; set; }
 
