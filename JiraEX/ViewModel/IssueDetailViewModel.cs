@@ -35,6 +35,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingSprint = false;
         private bool _isLinkingIssue = false;
         private bool _isEditingLinkedIssue = true;
+        private bool _isEditingOriginalEstimate = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -142,6 +143,10 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand EditLinkedIssueCommand { get; set; }
         public DelegateCommand CancelEditLinkedIssueCommand { get; set; }
+
+        public DelegateCommand EditOriginalEstimateCommand { get; set; }
+        public DelegateCommand ConfirmEditOriginalEstimateCommand { get; private set; }
+        public DelegateCommand CancelEditOriginalEstimateCommand { get; set; }
 
         private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
@@ -354,6 +359,10 @@ namespace JiraEX.ViewModel
 
             this.EditLinkedIssueCommand = new DelegateCommand(EnableEditLinkedIssue);
             this.CancelEditLinkedIssueCommand = new DelegateCommand(CancelEditLinkedIssue);
+
+            this.EditOriginalEstimateCommand = new DelegateCommand(EnableEditOriginalEstimate);
+            this.ConfirmEditOriginalEstimateCommand = new DelegateCommand(ConfirmEditOriginalEstimate);
+            this.CancelEditOriginalEstimateCommand = new DelegateCommand(CancelEditOriginalEstimate);
         }
 
         private async void ShowIssue(object sender)
@@ -1403,6 +1412,36 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private void EnableEditOriginalEstimate(object parameter)
+        {
+            this.IsEditingOriginalEstimate = true;
+        }
+
+        private async void ConfirmEditOriginalEstimate(object parameter)
+        {
+            this._parent.StartLoading();
+
+            try
+            {
+                HideErrorMessages(this._parent);
+
+                await this._issueService.UpdateOriginalEstimatePropertyAsync(this._issue.Key, this.Issue.Fields.Timetracking.OriginalEstimate);
+
+                this.IsEditingOriginalEstimate = false;
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            UpdateIssueAsync();
+        }
+
+        private void CancelEditOriginalEstimate(object parameter)
+        {
+            this.IsEditingOriginalEstimate= false;
+        }
+
         #endregion
 
         private void CheckTotalNumberOfActiveLoadings()
@@ -1565,6 +1604,16 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingLinkedIssue = value;
                 OnPropertyChanged("IsEditingLinkedIssue");
+            }
+        }
+
+        public bool IsEditingOriginalEstimate
+        {
+            get { return this._isEditingOriginalEstimate; }
+            set
+            {
+                this._isEditingOriginalEstimate = value;
+                OnPropertyChanged("IsEditingOriginalEstimate");
             }
         }
 

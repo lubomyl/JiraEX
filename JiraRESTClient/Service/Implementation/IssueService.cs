@@ -78,6 +78,19 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task UpdateOriginalEstimatePropertyAsync(string issueKey, object newValue)
+        {
+            return Task.Run(() => {
+                newValue = JsonConvert.SerializeObject(newValue);
+
+                string updateString = $"{{\"update\":{{\"timetracking\":[{{\"edit\": {{\"originalEstimate\":{newValue}}}}}]}}}}";
+
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource(resource, updateString);
+            });
+        }
+
         public Task<Issue> GetIssueByIssueKeyAsync(string issueKey)
         {
             return Task.Run(() => {
