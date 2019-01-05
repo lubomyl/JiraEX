@@ -17,6 +17,11 @@ namespace JiraRESTClient.Model
             this.Type = type;
         }
 
+        public IssueLinkTypeSplitted()
+        {
+
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public string RelationName { get; set; }

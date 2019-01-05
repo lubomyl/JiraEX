@@ -15,6 +15,11 @@ namespace JiraRESTClient.Model
             this.Name = name;
         }
 
+        public Sprint()
+        {
+
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public string State { get; set; }
