@@ -12,6 +12,7 @@ namespace JiraEX.Main
         public const string GUID_JIRA_COMMAND_STRING = "3F01A173-9B5A-4CCF-A484-EB41152ABAB2";
         public const string GUID_JIRA_PACKAGE_STRING = "923D3D57-D913-4751-93AA-14D5026B1144";
         public const string GUID_JIRA_TOOL_WINDOW_STRING = "7953b9ea-8958-4cea-abe9-7cf58fc7d0c6";
+        public const string GUID_JIRA_WORKLOG_TOOL_WINDOW_STRING = "40C7E909-875F-45AB-BCB0-89B165B71F93";
         public const string GUID_JIRA_TOOLBAR_MENU_STRING = "81EE54E9-FC51-4A19-8964-6C52F1917B97";
 
         public const int COMMAND_HOME_ID = 0x0129;

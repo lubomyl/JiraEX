@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="JiraEX.View.WorklogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraEX.View"
+             xmlns:controls="clr-namespace:JiraEX.Controls"
+             xmlns:watermark="clr-namespace:JiraEX.Controls.Watermark"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{DynamicResource ToolWindowBackgroundBrushKey}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Uid="VisualStudioThemeResources"
+					Source="pack://application:,,,/JiraEX;component/Theme/VisualStudioThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel Margin="10 10" Width="300" Height="500" LastChildFill="False">
+
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 25">
+            <TextBlock Text="The original estimate for this issue was " 
+                    TextWrapping="Wrap"
+                    Style="{StaticResource PlainText}"/>
+            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" Text="{Binding Issue.Fields.Timetracking.OriginalEstimate, Mode=OneWay}"/>
+            </Border>
+        </StackPanel>
+        
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <DockPanel LastChildFill="False"
+                    Width="130"
+                    Margin="0 0 20 0">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainTextFaded}"
+                           Text="Log time"/>
+                <AdornerDecorator Width="130" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+                    <TextBox TextAlignment="Center" Text="{Binding TimeSpent}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">e.g. 3w 4d 12h</TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+            </DockPanel>
+
+            <DockPanel LastChildFill="False"
+                    Width="130"
+                    Margin="0 0 20 0">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainTextFaded}"
+                           Text="Time remaining"/>
+                <AdornerDecorator Width="130" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+                    <TextBox TextAlignment="Center" Text="{Binding TimeRemaining}">
+                        <watermark:WatermarkService.Watermark>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center" Text="{Binding TimeRemainingSubtract}"></TextBlock>
+                        </watermark:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+            </DockPanel>
+        </StackPanel>
+        
+    </DockPanel>
+</UserControl>

@@ -67,9 +67,9 @@ namespace JiraEX.ViewModel.Navigation
 
         private bool _isLoading;
 
-        public JiraToolWindowNavigatorViewModel(JiraToolWindow parent)
+        public JiraToolWindowNavigatorViewModel(ToolWindowPane parent)
         {
-            this._parent = parent;
+            this._parent = (JiraToolWindow) parent;
 
             this._searchHost = parent.SearchHost;
 
