@@ -377,7 +377,7 @@ namespace JiraEX.ViewModel
         {
             JiraWorklogToolWindow tw = JiraPackage.JiraWorklogToolWindowVar;
 
-            tw.ViewModel.OpenCreateWorklogForIssue(this.Issue);
+            tw.ViewModel.OpenCreateWorklogForIssue(this.Issue, this._issueService);
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)tw.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());

@@ -1,6 +1,7 @@
 ﻿using JiraEX.ViewModel;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace JiraEX.View
 
         private WorklogViewModel _viewModel;
 
-        public WorklogView(Issue issue)
+        public WorklogView(RefreshableWorklogViewModel parent, Issue issue, IIssueService issueService)
         {
             InitializeComponent();
 
-            this._viewModel = new WorklogViewModel(issue);
+            this._viewModel = new WorklogViewModel(parent, issue, issueService);
             this.DataContext = this._viewModel;
         }
     }

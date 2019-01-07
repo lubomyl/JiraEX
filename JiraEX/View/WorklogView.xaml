@@ -27,7 +27,10 @@
 
     <DockPanel Margin="10 10" Width="300" Height="500" LastChildFill="False">
 
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 25">
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource TitleText}" Text="Time tracking" Margin="0 0 0 5"/>
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainTextFaded}" Text="{Binding Issue.Fields.Timetracking.TimeSpent, StringFormat={}{0} logged}" Margin="0 0 0 25"/>
+
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 5">
             <TextBlock Text="The original estimate for this issue was " 
                     TextWrapping="Wrap"
                     Style="{StaticResource PlainText}"/>
@@ -36,7 +39,16 @@
             </Border>
         </StackPanel>
         
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 25">
+            <TextBlock Text="The remaining estimate for this issue is " 
+                    TextWrapping="Wrap"
+                    Style="{StaticResource PlainText}"/>
+            <Border VerticalAlignment="Center" CornerRadius="2" Padding="5 1" BorderThickness="1" BorderBrush="#FF4B4D50">
+                <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" Text="{Binding Issue.Fields.Timetracking.RemainingEstimate, Mode=OneWay}"/>
+            </Border>
+        </StackPanel>
+        
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0 0 0 25">
             <DockPanel LastChildFill="False"
                     Width="130"
                     Margin="0 0 20 0">
@@ -59,12 +71,54 @@
                 <AdornerDecorator Width="130" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
                     <TextBox TextAlignment="Center" Text="{Binding TimeRemaining}">
                         <watermark:WatermarkService.Watermark>
-                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center" Text="{Binding TimeRemainingSubtract}"></TextBlock>
+                            <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Center">Auto adjust</TextBlock>
                         </watermark:WatermarkService.Watermark>
                     </TextBox>
                 </AdornerDecorator>
             </DockPanel>
         </StackPanel>
+
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0 0 0 25">
+            <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainTextFaded}"
+                        Text="Date started"/>
+            <AdornerDecorator HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                <TextBox TextAlignment="Left" 
+                            Text="{Binding DateStarted}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap">
+                    <watermark:WatermarkService.Watermark>
+                        <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Left">2019/01/07 16:08</TextBlock>
+                    </watermark:WatermarkService.Watermark>
+                </TextBox>
+            </AdornerDecorator>
+        </DockPanel>
         
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0 0 0 25">
+            <TextBlock DockPanel.Dock="Top" Style="{StaticResource PlainTextFaded}"
+                        Text="Work description"/>
+            <AdornerDecorator HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                <TextBox TextAlignment="Left" 
+                            Text="{Binding Comment}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap">
+                    <watermark:WatermarkService.Watermark>
+                        <TextBlock Style="{StaticResource PlainTextFaded}" TextAlignment="Left">Comment</TextBlock>
+                    </watermark:WatermarkService.Watermark>
+                </TextBox>
+            </AdornerDecorator>
+        </DockPanel>
+
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Right" Orientation="Horizontal"
+                        Visibility="{Binding IsEditingDescription, Converter={StaticResource TrueToVisibleConverter}}">
+            <Button Command="{Binding ConfirmCreateWorklogCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Save" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="0 0 5 0"/>
+
+            <Button Command="{Binding CancelCreateWorklogCommand}" CommandParameter="{Binding ElementName=This}"
+                            Content="Cancel" 
+                            HorizontalAlignment="Left"
+                            Height="25" Width="75"/>
+        </StackPanel>
     </DockPanel>
 </UserControl>

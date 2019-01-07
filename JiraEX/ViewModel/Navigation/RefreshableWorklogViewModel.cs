@@ -1,6 +1,7 @@
 ﻿using JiraEX.Main;
 using JiraEX.View;
 using JiraRESTClient.Model;
+using JiraRESTClient.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,9 @@ namespace JiraEX.ViewModel.Navigation
             this._parent = parent;
         }
 
-        public void OpenCreateWorklogForIssue(Issue issue)
+        public void OpenCreateWorklogForIssue(Issue issue, IIssueService issueService)
         {
-            this.SelectedView = new WorklogView(issue);
+            this.SelectedView = new WorklogView(this, issue, issueService);
         }
 
         public WorklogView SelectedView

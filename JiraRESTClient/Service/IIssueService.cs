@@ -65,5 +65,9 @@ namespace JiraRESTClient.Service
         Task DeleteLinkedIssue(string linkId);
 
         Task<IssueList> GetIssuesByIssueKeyAsync(string searchString);
+
+        Task RemarkTimeSpentOnIssue(string timeSpent, string comment, string dateStarted, string issueKey);
+
+        Task RemarkTimeRemainingOnIssue(string timeRemaining, string originalEstimate, string issueKey);
     }
 }
