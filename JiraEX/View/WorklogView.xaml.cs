@@ -27,11 +27,11 @@ namespace JiraEX.View
 
         private WorklogViewModel _viewModel;
 
-        public WorklogView(RefreshableWorklogViewModel parent, Issue issue, IIssueService issueService)
+        public WorklogView(RefreshableWorklogViewModel parent, Issue issue, IIssueService issueService, IssueDetailViewModel refreshViewModel)
         {
             InitializeComponent();
 
-            this._viewModel = new WorklogViewModel(parent, issue, issueService);
+            this._viewModel = new WorklogViewModel(parent, issue, issueService, refreshViewModel);
             this.DataContext = this._viewModel;
         }
     }

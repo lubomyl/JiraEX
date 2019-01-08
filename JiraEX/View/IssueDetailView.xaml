@@ -531,7 +531,7 @@
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <Grid>
                         <TextBlock
-                        Text="{Binding Issue.Fields.Timetracking.OriginalEstimate}"
+                        Text="{Binding OriginalEstimate}"
                         TextWrapping="Wrap"
                         Visibility="{Binding IsEditingOriginalEstimate, Converter={StaticResource FalseToVisibleConverter}}"
                         Style="{StaticResource PlainText}">
@@ -545,18 +545,7 @@
                             MinWidth="100"
                             TextWrapping="Wrap"
                             VerticalAlignment="Center"
-                            
                             Visibility="{Binding IsEditingOriginalEstimate, Converter={StaticResource TrueToVisibleConverter}}"/>
-
-                        <TextBlock
-                            Width="80"
-                            Style="{StaticResource PlainTextFaded}"
-                            Visibility="{Binding Issue.Fields.Timetracking.OriginalEstimate, Converter={StaticResource NullToVisibilityConverter}}"
-                            Text="0m" >
-                                <TextBlock.InputBindings>
-                                    <MouseBinding Command="{Binding EditOriginalEstimateCommand}" MouseAction="LeftClick" />
-                                </TextBlock.InputBindings>
-                        </TextBlock>
                     </Grid>
                     
                     <StackPanel Orientation="Horizontal"
@@ -580,7 +569,8 @@
             <DockPanel LastChildFill="False">
                 <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Time tracking:</Label>
 
-                <TextBlock Style="{StaticResource PlainText}">
+                <TextBlock Style="{StaticResource PlainText}"
+                           IsEnabled="{Binding IsCreateWorklogCommandEnabled}">
                             <Hyperlink Command="{Binding CreateWorklogCommand}" 
                                         CommandParameter="{Binding}">
                                 Create worklog...

@@ -54,6 +54,7 @@ namespace JiraEX.ViewModel
         private bool _isAffectsVersionsEmpty = true;
         private bool _haveLinks = false;
         private bool _isSupportingSprints = false;
+        private bool _isCreateWorklogCommandEnabled = false;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
@@ -80,6 +81,8 @@ namespace JiraEX.ViewModel
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
         private bool _isRefreshing = false;
+
+        private string _originalEstimate;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -377,7 +380,7 @@ namespace JiraEX.ViewModel
         {
             JiraWorklogToolWindow tw = JiraPackage.JiraWorklogToolWindowVar;
 
-            tw.ViewModel.OpenCreateWorklogForIssue(this.Issue, this._issueService);
+            tw.ViewModel.OpenCreateWorklogForIssue(this.Issue, this._issueService, this);
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)tw.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
@@ -987,15 +990,25 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void UpdateIssueAsync()
+        public async void UpdateIssueAsync()
         {
             try
             {
                 this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
-            
+
+                if (this.Issue.Fields.Timetracking.OriginalEstimate == null)
+                {
+                    OriginalEstimate = "0m";
+                } else
+                {
+                    OriginalEstimate = this.Issue.Fields.Timetracking.OriginalEstimate;
+                }
+
                 CheckEmptyFields();
                 UpdateAttachments();
                 SeparateLinkedIssueTypes();
+
+                this.IsCreateWorklogCommandEnabled = true;
             }
             catch (JiraException ex)
             {
@@ -2021,6 +2034,32 @@ namespace JiraEX.ViewModel
             {
                 this._outwardLinkedIssueList = value;
                 OnPropertyChanged("OutwardLinkedIssueList");
+            }
+        }
+
+        public string OriginalEstimate
+        {
+            get
+            {
+                return this._originalEstimate;
+            }
+            set
+            {
+                this._originalEstimate = value;
+                OnPropertyChanged("OriginalEstimate");
+            }
+        }
+
+        public bool IsCreateWorklogCommandEnabled
+        {
+            get
+            {
+                return this._isCreateWorklogCommandEnabled;
+            }
+            set
+            {
+                this._isCreateWorklogCommandEnabled = value;
+                OnPropertyChanged("IsCreateWorklogCommandEnabled");
             }
         }
     }

@@ -51,8 +51,6 @@ namespace JiraEX.Main
             base.Dispose(disposing);
         }
 
-
-
         public RefreshableWorklogViewModel ViewModel
         {
             get { return this._viewModel; }
