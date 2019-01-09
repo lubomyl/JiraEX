@@ -26,5 +26,5 @@ _Works same for Jira_
 - AtlassianConnector *(class library)* available at: [AtlassianConnector](https://github.com/lubomyl/AtlassianConnector)
 
 ## Dependencies
-- RestSharp 106.2.1: currently not in use *(no support for OAuth with RSA)*
+- RestSharp 106.2.1
 - DevDefined.OAuth 0.2.0
