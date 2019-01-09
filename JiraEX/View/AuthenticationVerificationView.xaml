@@ -23,8 +23,10 @@
 
             <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Style="{StaticResource PlainText}" Margin="0,0,0,8">Verification code:</TextBlock>
             
-            <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding OAuthVerificationCode}" Margin="32,0,32,8"/>
+            <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding OAuthVerificationCode}" Margin="32,0,32,5"/>
 
+            <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding RequestTokenExpirationTime}" Margin="0,0,0,10" Style="{StaticResource PlainTextFaded}"/>
+            
             <Button DockPanel.Dock="Top" HorizontalAlignment="Center" Command="{Binding SignInCommand}" 
                     CommandParameter="{Binding ElementName=This}" Content="Verify" 
                     Margin="0,0,0,24" Height="25" x:Name="SignInOAuth"/>

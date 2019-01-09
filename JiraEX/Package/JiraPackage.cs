@@ -46,8 +46,10 @@ namespace JiraEX
         Window = "3ae79031-e1bc-11d0-8f78-00a0c9110057")]
     [ProvideToolWindow(typeof(JiraWorklogToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.AlwaysFloat,
-        Width = 300,
-        Height = 500,
+        Width = 320,
+        Height = 450,
+        PositionX = 500,
+        PositionY = 200,
         Transient = true)]
     public sealed class JiraPackage : Package
     {
