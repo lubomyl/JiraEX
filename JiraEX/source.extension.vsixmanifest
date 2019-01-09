@@ -1,13 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="8f4fd3bc-f29e-4e20-8d1b-5145ec98a341" Version="1.1" Language="en-US" Publisher="Lubomír Kletenský" />
+        <Identity Id="8f4fd3bc-f29e-4e20-8d1b-5145ec98a341" Version="1.2" Language="en-US" Publisher="Lubomír Kletenský" />
         <DisplayName>JiraEX</DisplayName>
-        <Description xml:space="preserve">Atlassian Jira unofficial extension integrating most of the web features. 
-- list issues by project/filter/advanced search
-- quick search for issue(s)
-- see/edit details about issue
-- create issues/sub-tasks</Description>
+        <Description xml:space="preserve">Atlassian Jira unofficial extension integrating most of the web features.</Description>
         <MoreInfo>https://github.com/lubomyl/JiraEX</MoreInfo>
         <License>LICENSE.txt</License>
         <Tags>Jira, Atlassian, Issue,  Bug, Project, Management</Tags>

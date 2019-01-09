@@ -2,10 +2,14 @@
 using ConfluenceEX.Command;
 using ConfluenceEX.Helper;
 using DevDefined.OAuth.Framework;
+using JiraEX.Controls;
+using JiraEX.Main;
 using JiraEX.ViewModel.Navigation;
 using JiraRESTClient.Model;
 using JiraRESTClient.Service;
 using JiraRESTClient.Service.Implementation;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -35,6 +39,7 @@ namespace JiraEX.ViewModel
         private bool _isEditingSprint = false;
         private bool _isLinkingIssue = false;
         private bool _isEditingLinkedIssue = true;
+        private bool _isEditingOriginalEstimate = false;
 
         private bool _isPriorityEditable = false;
         private bool _isSubTaskCreatable = false;
@@ -49,6 +54,7 @@ namespace JiraEX.ViewModel
         private bool _isAffectsVersionsEmpty = true;
         private bool _haveLinks = false;
         private bool _isSupportingSprints = false;
+        private bool _isCreateWorklogCommandEnabled = false;
 
         private IJiraToolWindowNavigatorViewModel _parent;
 
@@ -75,6 +81,8 @@ namespace JiraEX.ViewModel
         private bool _isInitializingSprints = true;
         private bool _isInitializingAssignees = true;
         private bool _isRefreshing = false;
+
+        private string _originalEstimate;
 
         private ObservableCollection<Priority> _priorityList;
         private ObservableCollection<Transition> _transitionList;
@@ -110,38 +118,44 @@ namespace JiraEX.ViewModel
 
         public DelegateCommand DeleteAttachmentCommand { get; private set; }
 
-        public DelegateCommand CreateSubTaskCommand { get; set; }
+        public DelegateCommand CreateSubTaskCommand { get; private set; }
 
-        public DelegateCommand ShowIssueCommand { get; set; }
+        public DelegateCommand ShowIssueCommand { get; private set; }
 
-        public DelegateCommand EditAssigneeCommand { get; set; }
-        public DelegateCommand CancelEditAssigneeCommand { get; set; }
+        public DelegateCommand EditAssigneeCommand { get; private set; }
+        public DelegateCommand CancelEditAssigneeCommand { get; private set; }
 
-        public DelegateCommand EditSprintCommand { get; set; }
-        public DelegateCommand CancelEditSprintCommand { get; set; }
+        public DelegateCommand EditSprintCommand { get; private set; }
+        public DelegateCommand CancelEditSprintCommand { get; private set; }
 
-        public DelegateCommand EditFixVersionsCommand { get; set; }
-        public DelegateCommand CancelEditFixVersionsCommand { get; set; }
-        public DelegateCommand CheckedFixVersionCommand { get; set; }
+        public DelegateCommand EditFixVersionsCommand { get; private set; }
+        public DelegateCommand CancelEditFixVersionsCommand { get; private set; }
+        public DelegateCommand CheckedFixVersionCommand { get; private set; }
 
-        public DelegateCommand EditAffectsVersionsCommand { get; set; }
-        public DelegateCommand CancelEditAffectsVersionsCommand { get; set; }
-        public DelegateCommand CheckedAffectsVersionCommand { get; set; }
+        public DelegateCommand EditAffectsVersionsCommand { get; private set; }
+        public DelegateCommand CancelEditAffectsVersionsCommand { get; private set; }
+        public DelegateCommand CheckedAffectsVersionCommand { get; private set; }
 
-        public DelegateCommand EditLabelsCommand { get; set; }
-        public DelegateCommand CancelEditLabelsCommand { get; set; }
-        public DelegateCommand CheckedLabelsCommand { get; set; }
+        public DelegateCommand EditLabelsCommand { get; private set; }
+        public DelegateCommand CancelEditLabelsCommand { get; private set; }
+        public DelegateCommand CheckedLabelsCommand { get; private set; }
 
-        public DelegateCommand LinkIssueCommand { get; set; }
-        public DelegateCommand ConfirmLinkIssueCommand { get; set; }
-        public DelegateCommand CancelLinkIssueCommand { get; set; }
+        public DelegateCommand LinkIssueCommand { get; private set; }
+        public DelegateCommand ConfirmLinkIssueCommand { get; private set; }
+        public DelegateCommand CancelLinkIssueCommand { get; private set; }
 
-        public DelegateCommand DeleteLinkedIssueCommand { get; set; }
+        public DelegateCommand DeleteLinkedIssueCommand { get; private set; }
 
-        public DelegateCommand OpenInBrowserCommand { get; set; }
+        public DelegateCommand OpenInBrowserCommand { get; private set; }
 
-        public DelegateCommand EditLinkedIssueCommand { get; set; }
-        public DelegateCommand CancelEditLinkedIssueCommand { get; set; }
+        public DelegateCommand EditLinkedIssueCommand { get; private set; }
+        public DelegateCommand CancelEditLinkedIssueCommand { get; private set; }
+
+        public DelegateCommand EditOriginalEstimateCommand { get; private set; }
+        public DelegateCommand ConfirmEditOriginalEstimateCommand { get; private set; }
+        public DelegateCommand CancelEditOriginalEstimateCommand { get; private set; }
+
+        public DelegateCommand CreateWorklogCommand { get; private set; }
 
         private int _totalNumberOfLoadings = TOTAL_NUMBER_OF_LOADINGS;
 
@@ -354,6 +368,22 @@ namespace JiraEX.ViewModel
 
             this.EditLinkedIssueCommand = new DelegateCommand(EnableEditLinkedIssue);
             this.CancelEditLinkedIssueCommand = new DelegateCommand(CancelEditLinkedIssue);
+
+            this.EditOriginalEstimateCommand = new DelegateCommand(EnableEditOriginalEstimate);
+            this.ConfirmEditOriginalEstimateCommand = new DelegateCommand(ConfirmEditOriginalEstimate);
+            this.CancelEditOriginalEstimateCommand = new DelegateCommand(CancelEditOriginalEstimate);
+
+            this.CreateWorklogCommand = new DelegateCommand(CreateWorklog);
+        }
+
+        private void CreateWorklog(object obj)
+        {
+            JiraWorklogToolWindow tw = JiraPackage.JiraWorklogToolWindowVar;
+
+            tw.ViewModel.OpenCreateWorklogForIssue(this.Issue, this._issueService, this);
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)tw.Frame;
+            ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         private async void ShowIssue(object sender)
@@ -960,15 +990,25 @@ namespace JiraEX.ViewModel
             }
         }
 
-        private async void UpdateIssueAsync()
+        public async void UpdateIssueAsync()
         {
             try
             {
                 this.Issue = await this._issueService.GetIssueByIssueKeyAsync(this._issue.Key);
-            
+
+                if (this.Issue.Fields.Timetracking.OriginalEstimate == null)
+                {
+                    OriginalEstimate = "0m";
+                } else
+                {
+                    OriginalEstimate = this.Issue.Fields.Timetracking.OriginalEstimate;
+                }
+
                 CheckEmptyFields();
                 UpdateAttachments();
                 SeparateLinkedIssueTypes();
+
+                this.IsCreateWorklogCommandEnabled = true;
             }
             catch (JiraException ex)
             {
@@ -1403,6 +1443,36 @@ namespace JiraEX.ViewModel
             }
         }
 
+        private void EnableEditOriginalEstimate(object parameter)
+        {
+            this.IsEditingOriginalEstimate = true;
+        }
+
+        private async void ConfirmEditOriginalEstimate(object parameter)
+        {
+            this._parent.StartLoading();
+
+            try
+            {
+                HideErrorMessages(this._parent);
+
+                await this._issueService.UpdateOriginalEstimatePropertyAsync(this._issue.Key, this.Issue.Fields.Timetracking.OriginalEstimate);
+
+                this.IsEditingOriginalEstimate = false;
+            }
+            catch (JiraException ex)
+            {
+                ShowErrorMessages(ex, this._parent);
+            }
+
+            UpdateIssueAsync();
+        }
+
+        private void CancelEditOriginalEstimate(object parameter)
+        {
+            this.IsEditingOriginalEstimate= false;
+        }
+
         #endregion
 
         private void CheckTotalNumberOfActiveLoadings()
@@ -1565,6 +1635,16 @@ namespace JiraEX.ViewModel
             {
                 this._isEditingLinkedIssue = value;
                 OnPropertyChanged("IsEditingLinkedIssue");
+            }
+        }
+
+        public bool IsEditingOriginalEstimate
+        {
+            get { return this._isEditingOriginalEstimate; }
+            set
+            {
+                this._isEditingOriginalEstimate = value;
+                OnPropertyChanged("IsEditingOriginalEstimate");
             }
         }
 
@@ -1954,6 +2034,32 @@ namespace JiraEX.ViewModel
             {
                 this._outwardLinkedIssueList = value;
                 OnPropertyChanged("OutwardLinkedIssueList");
+            }
+        }
+
+        public string OriginalEstimate
+        {
+            get
+            {
+                return this._originalEstimate;
+            }
+            set
+            {
+                this._originalEstimate = value;
+                OnPropertyChanged("OriginalEstimate");
+            }
+        }
+
+        public bool IsCreateWorklogCommandEnabled
+        {
+            get
+            {
+                return this._isCreateWorklogCommandEnabled;
+            }
+            set
+            {
+                this._isCreateWorklogCommandEnabled = value;
+                OnPropertyChanged("IsCreateWorklogCommandEnabled");
             }
         }
     }

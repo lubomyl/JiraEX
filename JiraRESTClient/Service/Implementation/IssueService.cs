@@ -78,6 +78,19 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
+        public Task UpdateOriginalEstimatePropertyAsync(string issueKey, object newValue)
+        {
+            return Task.Run(() => {
+                newValue = JsonConvert.SerializeObject(newValue);
+
+                string updateString = $"{{\"update\":{{\"timetracking\":[{{\"edit\": {{\"originalEstimate\":{newValue}}}}}]}}}}";
+
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource(resource, updateString);
+            });
+        }
+
         public Task<Issue> GetIssueByIssueKeyAsync(string issueKey)
         {
             return Task.Run(() => {
@@ -294,6 +307,44 @@ namespace JiraRESTClient.Service.Implementation
                 var resource = $"search?jql=key = " + searchString;
 
                 return this._baseService.GetResource<IssueList>(resource);
+            });
+        }
+
+        public Task RemarkTimeSpentOnIssue(string timeSpent, string comment, string dateStarted, string issueKey)
+        {
+            return Task.Run(() => {
+                string updateString = $"{{\"timeSpent\":\"{timeSpent}\"";
+                updateString += $", \"started\":\"{dateStarted}\"";
+
+                if (comment != null)
+                {
+                    updateString += $", \"comment\":\"{comment}\"";
+                }
+
+                updateString += "}";
+
+                var resource = $"issue/{issueKey}/worklog";
+
+                this._baseService.PostResourceContent(resource, updateString);
+            });
+        }
+
+        public Task RemarkTimeRemainingOnIssue(string timeRemaining, string originalEstimate, string issueKey)
+        {
+            return Task.Run(() => {
+                string createString = "{\"fields\":" +
+                                            "{" +
+                                                "\"timetracking\": { " +
+                                                    $"\"originalEstimate\":\"{originalEstimate}\"," +
+                                                    $"\"remainingEstimate\":\"{timeRemaining}\"" +
+                                                "}" +
+                                             "}" +
+                                       "}";
+
+
+                var resource = $"issue/{issueKey}";
+
+                this._baseService.PutResource(resource, createString);
             });
         }
     }

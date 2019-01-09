@@ -28,6 +28,8 @@ namespace JiraRESTClient.Model
 
         public List<string> Labels { get; set; }
 
+        public Timetracking Timetracking { get; set; }
+
         public List<Attachment> Attachment { get; set; }
 
         public Issue Parent { get; set; }

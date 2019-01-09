@@ -30,6 +30,8 @@ namespace JiraRESTClient.Service
 
         Task UpdateIssuePropertyAsync(string issueKey, string action, string propertyName, object newValue);
 
+        Task UpdateOriginalEstimatePropertyAsync(string issueKey, object newValue);
+
         Task<Issue> GetIssueByIssueKeyAsync(string issueKey);
 
         Task<EditableProperties> GetAllEditablePropertiesAsync(string issueKey);
@@ -63,5 +65,9 @@ namespace JiraRESTClient.Service
         Task DeleteLinkedIssue(string linkId);
 
         Task<IssueList> GetIssuesByIssueKeyAsync(string searchString);
+
+        Task RemarkTimeSpentOnIssue(string timeSpent, string comment, string dateStarted, string issueKey);
+
+        Task RemarkTimeRemainingOnIssue(string timeRemaining, string originalEstimate, string issueKey);
     }
 }

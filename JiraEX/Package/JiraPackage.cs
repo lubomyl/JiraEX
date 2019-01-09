@@ -44,10 +44,24 @@ namespace JiraEX
     [ProvideToolWindow(typeof(JiraToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
         Window = "3ae79031-e1bc-11d0-8f78-00a0c9110057")]
+    [ProvideToolWindow(typeof(JiraWorklogToolWindow),
+        Style = Microsoft.VisualStudio.Shell.VsDockStyle.AlwaysFloat,
+        Width = 320,
+        Height = 450,
+        PositionX = 500,
+        PositionY = 200,
+        Transient = true)]
     public sealed class JiraPackage : Package
     {
 
         private static OleMenuCommandService _mcs;
+        private static JiraWorklogToolWindow _jiraWorklogToolWindow;
+
+        public static JiraWorklogToolWindow JiraWorklogToolWindowVar
+        {
+            get { return _jiraWorklogToolWindow; }
+            private set { _jiraWorklogToolWindow = value; }
+        }
 
         public static OleMenuCommandService Mcs
         {
@@ -83,6 +97,8 @@ namespace JiraEX
         protected override void Initialize()
         {
             base.Initialize();
+
+            JiraWorklogToolWindowVar = (JiraWorklogToolWindow)this.FindToolWindow(typeof(JiraWorklogToolWindow), 0, true);
 
             _mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null != _mcs)

@@ -168,29 +168,29 @@
 
             <!-- Add attachment, Create sub-task-->
             <DockPanel LastChildFill="False">
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
-                            <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
-                                        CommandParameter="{Binding}">
-                                Attachment...
-                            </Hyperlink>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0">
+                                <Hyperlink Command="{Binding SelectFileToUploadCommand}" 
+                                            CommandParameter="{Binding}">
+                                    Attachment...
+                                </Hyperlink>
+                    </TextBlock>
 
-                <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0"
-                               Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
-                            <Hyperlink Command="{Binding CreateSubTaskCommand}" 
-                                        CommandParameter="{Binding}">
-                                Sub-task...
-                            </Hyperlink>
-                </TextBlock>
+                    <TextBlock Style="{StaticResource PlainText}" Margin="0 0 10 0"
+                                   Visibility="{Binding IsSubTaskCreatable, Converter={StaticResource TrueToVisibleConverter}}">
+                                <Hyperlink Command="{Binding CreateSubTaskCommand}" 
+                                            CommandParameter="{Binding}">
+                                    Sub-task...
+                                </Hyperlink>
+                    </TextBlock>
 
-                <TextBlock Style="{StaticResource PlainText}">
-                            <Hyperlink Command="{Binding LinkIssueCommand}" 
-                                        CommandParameter="{Binding}">
-                                Link issue...
-                            </Hyperlink>
-                </TextBlock>
-            </StackPanel>
+                    <TextBlock Style="{StaticResource PlainText}">
+                                <Hyperlink Command="{Binding LinkIssueCommand}" 
+                                            CommandParameter="{Binding}">
+                                    Link issue...
+                                </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
                 <TextBlock Style="{StaticResource PlainText}" DockPanel.Dock="Right">
                             <Hyperlink Command="{Binding OpenInBrowserCommand}" 
                                         CommandParameter="{Binding}">
@@ -521,6 +521,61 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
+
+            </DockPanel>
+            
+            <!-- Time estimate -->
+            <DockPanel LastChildFill="False">
+                <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Time estimate:</Label>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <Grid>
+                        <TextBlock
+                        Text="{Binding OriginalEstimate}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding IsEditingOriginalEstimate, Converter={StaticResource FalseToVisibleConverter}}"
+                        Style="{StaticResource PlainText}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOriginalEstimateCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+
+                        <TextBox Text="{Binding Issue.Fields.Timetracking.OriginalEstimate}" 
+                            AcceptsReturn="True"
+                            MinWidth="100"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding IsEditingOriginalEstimate, Converter={StaticResource TrueToVisibleConverter}}"/>
+                    </Grid>
+                    
+                    <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding IsEditingOriginalEstimate, Converter={StaticResource TrueToVisibleConverter}}">
+
+                        <Button Command="{Binding ConfirmEditOriginalEstimateCommand}" CommandParameter="{Binding ElementName=This}"
+                        Content="Save" 
+                        HorizontalAlignment="Left"
+                        Height="25" Width="75" Margin="10 0 5 0"/>
+
+                        <Button Command="{Binding CancelEditOriginalEstimateCommand}" CommandParameter="{Binding ElementName=This}"
+                            Content="Cancel" 
+                            HorizontalAlignment="Left"
+                            Height="25" Width="75" Margin="0 0 0 0"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </DockPanel>
+
+            <!-- Time tracking -->
+            <DockPanel LastChildFill="False">
+                <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Time tracking:</Label>
+
+                <TextBlock Style="{StaticResource PlainText}"
+                           IsEnabled="{Binding IsCreateWorklogCommandEnabled}">
+                            <Hyperlink Command="{Binding CreateWorklogCommand}" 
+                                        CommandParameter="{Binding}">
+                                Create worklog...
+                            </Hyperlink>
+                </TextBlock>
 
             </DockPanel>
 

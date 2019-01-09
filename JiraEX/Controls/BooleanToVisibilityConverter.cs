@@ -13,7 +13,7 @@ namespace JiraEX.Controls
     /// <summary>
     /// Converts a Boolean into a Visibility.
     /// </summary>
-    public class BooleanToVisibilityConverter : IValueConverter
+    public class BooleanToVisibilityConverter : IValueConverter 
     {
         /// <summary>
         /// If set to True, conversion is reversed: True will become Collapsed.
