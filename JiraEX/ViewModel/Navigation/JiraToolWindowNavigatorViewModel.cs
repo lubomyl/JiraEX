@@ -191,19 +191,10 @@ namespace JiraEX.ViewModel.Navigation
             this.EnableCommand(true, this._service, Guids.COMMAND_REFRESH_ID);
             this.EnableCommand(true, this._service, Guids.COMMAND_CONNECTION_ID);
 
-            if (this._projectListView == null)
-            {
-                this._projectListView = new ProjectListView(this, this._projectService, this._boardService);
-                this._historyNavigator.AddView(this._projectListView);
+            this._projectListView = new ProjectListView(this, this._projectService, this._boardService);
+            this._historyNavigator.AddView(this._projectListView);
 
-                SelectedView = this._projectListView;
-            }
-            else
-            {
-                this._historyNavigator.AddView(this._projectListView);
-
-                SelectedView = this._projectListView;
-            }
+            SelectedView = this._projectListView;
         }
 
         public void ShowIssuesOfProject(Project project)

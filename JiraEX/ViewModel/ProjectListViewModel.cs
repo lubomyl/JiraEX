@@ -63,8 +63,6 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            this.ProjectList.Clear();
-
             Task<ProjectList> projectTask = this._projectService.GetAllProjectsAsync();
 
             try
@@ -72,6 +70,8 @@ namespace JiraEX.ViewModel
                 var projectList = await projectTask as ProjectList;
 
                 this._projectCreatableList = await this._projectService.GetAllProjectsCreatableIssueTypesAsync();
+
+                this.ProjectList.Clear();
 
                 if (projectList.Count > 0)
                 {
