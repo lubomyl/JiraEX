@@ -47,11 +47,6 @@ namespace JiraEX.ViewModel
         private bool _isAffectsVersionsEditable = false;
         private bool _haveSubtasks = false;
         private bool _haveAttachments = false;
-        private bool _isDescriptionEmpty = true;
-        private bool _isSprintEmpty = true;
-        private bool _isLabelsEmpty = true;
-        private bool _isFixVersionsEmpty = true;
-        private bool _isAffectsVersionsEmpty = true;
         private bool _haveLinks = false;
         private bool _isSupportingSprints = false;
         private bool _isCreateWorklogCommandEnabled = false;
@@ -248,46 +243,6 @@ namespace JiraEX.ViewModel
             else
             {
                 this.HaveAttachments = false;
-            }
-
-            if (this._issue.Fields.Description != null)
-            {
-                this.IsDescriptionEmpty = false;
-            } else
-            {
-                this.IsDescriptionEmpty = true;
-            }
-
-            if (this._issue.Fields.Sprint != null) {
-                this.IsSprintEmpty = false;
-            } else
-            {
-                this.IsSprintEmpty = true;
-            }
-
-            if (this._issue.Fields.Labels.Count > 0)
-            {
-                this.IsLabelsEmpty = false;
-            } else
-            {
-                this.IsLabelsEmpty = true;
-            }
-
-            if (this._issue.Fields.FixVersions.Count > 0)
-            {
-                this.IsFixVersionsEmpty = false;
-            }
-            else
-            {
-                this.IsFixVersionsEmpty = true;
-            }
-
-            if (this._issue.Fields.Versions.Count > 0)
-            {
-                this.IsAffectsVersionsEmpty = false;
-            } else
-            {
-                this.IsAffectsVersionsEmpty = true;
             }
         }
 
@@ -1924,56 +1879,6 @@ namespace JiraEX.ViewModel
             {
                 this._isSupportingSprints = value;
                 OnPropertyChanged("IsSupportingSprints");
-            }
-        }
-
-        public bool IsDescriptionEmpty
-        {
-            get { return this._isDescriptionEmpty; }
-            set
-            {
-                this._isDescriptionEmpty = value;
-                OnPropertyChanged("IsDescriptionEmpty");
-            }
-        }
-
-        public bool IsSprintEmpty
-        {
-            get { return this._isSprintEmpty; }
-            set
-            {
-                this._isSprintEmpty = value;
-                OnPropertyChanged("IsSprintEmpty");
-            }
-        }
-
-        public bool IsLabelsEmpty
-        {
-            get { return this._isLabelsEmpty; }
-            set
-            {
-                this._isLabelsEmpty = value;
-                OnPropertyChanged("IsLabelsEmpty");
-            }
-        }
-
-        public bool IsFixVersionsEmpty
-        {
-            get { return this._isFixVersionsEmpty; }
-            set
-            {
-                this._isFixVersionsEmpty = value;
-                OnPropertyChanged("IsFixVersionsEmpty");
-            }
-        }
-
-        public bool IsAffectsVersionsEmpty
-        {
-            get { return this._isAffectsVersionsEmpty; }
-            set
-            {
-                this._isAffectsVersionsEmpty = value;
-                OnPropertyChanged("IsAffectsVersionsEmpty");
             }
         }
 

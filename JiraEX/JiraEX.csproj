@@ -61,6 +61,7 @@
     <Compile Include="Common\IHavePassword.cs" />
     <Compile Include="Common\MvvmMessageBoxEventArgs.cs" />
     <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Controls\EmptyToVisibilityConverter.cs" />
     <Compile Include="Controls\NullToVisibilityConverter.cs" />
     <Compile Include="Controls\Watermark\WatermarkAdorner.cs" />
     <Compile Include="Controls\Watermark\WatermarkService.cs" />

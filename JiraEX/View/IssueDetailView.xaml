@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <controls:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+            <controls:EmptyToVisibilityConverter x:Key="EmptyToVisibleConverter" />
             <controls:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <controls:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
         </ResourceDictionary>
@@ -305,7 +306,7 @@
                 <TextBlock Text="Add a description..." 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsDescriptionEmpty, Converter={StaticResource TrueToVisibleConverter}}"
+                        Visibility="{Binding Issue.Fields.Description, Converter={StaticResource NullToVisibilityConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                     
                 <TextBlock
@@ -422,7 +423,7 @@
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsSprintEmpty, Converter={StaticResource TrueToVisibleConverter}}"
+                        Visibility="{Binding Issue.Fields.Sprint, Converter={StaticResource NullToVisibilityConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <TextBlock Style="{StaticResource PlainText}"
@@ -464,7 +465,7 @@
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsLabelsEmpty, Converter={StaticResource TrueToVisibleConverter}}"
+                        Visibility="{Binding Issue.Fields.Labels, Converter={StaticResource NullToVisibilityConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <Grid>
@@ -587,7 +588,7 @@
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsFixVersionsEmpty, Converter={StaticResource TrueToVisibleConverter}}"
+                        Visibility="{Binding Issue.Fields.FixVersions, Converter={StaticResource EmptyToVisibleConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <Grid>
@@ -651,7 +652,7 @@
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsAffectsVersionsEmpty, Converter={StaticResource TrueToVisibleConverter}}"
+                        Visibility="{Binding Binding Issue.Fields.Versions, Converter={StaticResource EmptyToVisibleConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <Grid>
