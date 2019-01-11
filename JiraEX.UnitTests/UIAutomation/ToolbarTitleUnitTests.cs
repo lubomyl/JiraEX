@@ -57,7 +57,7 @@ namespace JiraEX.UnitTests.UIAutomation
 
             this._connections.Click();
             textBlock = (Label)this._window.Get(toolbarSubtitleTextSearchCriteria);
-            Assert.AreEqual("https://lubomyl9.atlassian.net", textBlock.Text);
+            Assert.AreEqual("https://lubomyl12.atlassian.net", textBlock.Text);
 
             this._filters.Click();
             textBlock = (Label)this._window.Get(toolbarSubtitleTextSearchCriteria);

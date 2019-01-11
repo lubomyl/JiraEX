@@ -652,7 +652,7 @@
                     <TextBlock Text="None" 
                         TextWrapping="Wrap"
                         VerticalAlignment="Center"
-                        Visibility="{Binding Binding Issue.Fields.Versions, Converter={StaticResource EmptyToVisibleConverter}}"
+                        Visibility="{Binding Issue.Fields.Versions, Converter={StaticResource EmptyToVisibleConverter}}"
                         Style="{StaticResource PlainTextFaded}"/>
                         
                     <Grid>
