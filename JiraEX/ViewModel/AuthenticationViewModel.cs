@@ -92,7 +92,14 @@ namespace JiraEX.ViewModel
             }
             catch (OAuthException ex)
             {
-                this._parent.SetErrorMessage(ex.Message);
+                if (ex.Message.Equals("consumer_key_unknown"))
+                {
+                    this._parent.SetErrorMessage("Your Jira administrator has not registered JiraEX as an OAuth consumer yet.");
+                }
+                else
+                {
+                    this._parent.SetErrorMessage(ex.Message);
+                }
             }
             catch (SecurityException ex)
             {

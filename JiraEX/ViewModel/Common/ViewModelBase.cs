@@ -49,7 +49,7 @@ namespace JiraEX.ViewModel
 
             string errorMessage = "";
 
-            if (ex.ErrorResponse.ErrorMessages.Length != 0 && ex.ErrorResponse.ErrorMessages != null)
+            if (ex.ErrorResponse.ErrorMessages != null && ex.ErrorResponse.ErrorMessages.Length != 0)
             {
                 foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
                 {
@@ -65,29 +65,9 @@ namespace JiraEX.ViewModel
                 }
             }
 
-            parent.SetErrorMessage(errorMessage);
-        }
-
-        protected void ShowErrorMessages(UnauthorizedException ex, IJiraToolWindowNavigatorViewModel parent)
-        {
-            parent.StopLoading();
-
-            string errorMessage = "";
-
-            if (ex.ErrorResponse.ErrorMessages.Length != 0 && ex.ErrorResponse.ErrorMessages != null)
+            if(ex.ErrorResponse.ErrorMessage != null)
             {
-                foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
-                {
-                    errorMessage += errorMsg;
-                }
-            }
-
-            if (ex.ErrorResponse.Errors != null)
-            {
-                foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
-                {
-                    errorMessage += error.Value;
-                }
+                errorMessage += ex.ErrorResponse.ErrorMessage;
             }
 
             parent.SetErrorMessage(errorMessage);
@@ -106,7 +86,37 @@ namespace JiraEX.ViewModel
 
             string errorMessage = "";
 
-            if (ex.ErrorResponse.ErrorMessages.Length != 0 && ex.ErrorResponse.ErrorMessages != null)
+            if (ex.ErrorResponse.ErrorMessages != null && ex.ErrorResponse.ErrorMessages.Length != 0)
+            {
+                foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
+                {
+                    errorMessage += errorMsg;
+                }
+            }
+
+            if (ex.ErrorResponse.Errors != null)
+            {
+                foreach (KeyValuePair<string, string> error in ex.ErrorResponse.Errors)
+                {
+                    errorMessage += error.Value;
+                }
+            }
+
+            if (ex.ErrorResponse.ErrorMessage != null)
+            {
+                errorMessage += ex.ErrorResponse.ErrorMessage;
+            }
+
+            parent.SetErrorMessage(errorMessage);
+        }
+
+        protected void ShowErrorMessages(UnauthorizedException ex, IJiraToolWindowNavigatorViewModel parent)
+        {
+            parent.StopLoading();
+
+            string errorMessage = "";
+
+            if (ex.ErrorResponse.ErrorMessages != null && ex.ErrorResponse.ErrorMessages.Length != 0)
             {
                 foreach (string errorMsg in ex.ErrorResponse.ErrorMessages)
                 {
