@@ -60,6 +60,7 @@
                 <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8 0 0 8">
                     <TextBlock Style="{StaticResource PlainText}" Margin="0 0 8 0">Basic authentication</TextBlock>
                     <TextBlock Style="{StaticResource PlainTextFaded}">(Does not support remember me functionality)</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource PlainTextFadedWarning}">June 3rd, 2019: Basic authentication using password might be deprecated on your server. Please, follow "How to generate API token instead of password?" and use it as a password. </TextBlock>
                 </WrapPanel>
                     
                 <AdornerDecorator DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="32,0,32,8">
@@ -90,6 +91,13 @@
                         CommandParameter="{Binding ElementName=This}" Content="Authenticate" 
                         Margin="0,0,0,24" Height="25" x:Name="SignInBasic"/>
 
+                <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center"  
+                           Style="{StaticResource PlainText}" Margin="0 0 0 0">
+                                <Hyperlink Command="{Binding HowToGenerateAPITokenCommand}" 
+                                            CommandParameter="{Binding}">
+                                    How to generate API token instead of password?
+                                </Hyperlink>
+                </TextBlock>
             </DockPanel>
         </StackPanel>
     </ScrollViewer>

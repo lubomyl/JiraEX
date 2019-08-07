@@ -122,6 +122,12 @@
         <Setter Property="TextBlock.Opacity" Value="0.5"/>
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style x:Key="PlainTextFadedWarning" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextBlock.Foreground" Value="{StaticResource ToolWindowTextBrushKey}" />
+        <Setter Property="TextBlock.Opacity" Value="0.5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="OrangeRed"/>
+    </Style>
     <Style x:Key="ShadedText" TargetType="{x:Type TextBlock}">
 		<Setter Property="TextBlock.Background" Value="{StaticResource ItemSelectedNotFocusedBrushKey}" />
 		<Setter Property="TextBlock.Foreground" Value="{StaticResource ItemSelectedTextNotFocusedBrushKey}" />

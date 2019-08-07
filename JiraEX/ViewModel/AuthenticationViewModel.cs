@@ -41,6 +41,7 @@ namespace JiraEX.ViewModel
         public DelegateCommand SignInOAuthCommand { get; private set; }
         public DelegateCommand SignInBasicCommand { get; private set; }
         public DelegateCommand HowToSetupOAuthCommand { get; private set; }
+        public DelegateCommand HowToGenerateAPITokenCommand { get; private set; }
 
         public AuthenticationViewModel(IJiraToolWindowNavigatorViewModel parent, 
             IOAuthService oAuthService, 
@@ -63,6 +64,7 @@ namespace JiraEX.ViewModel
             this.SignInOAuthCommand = new DelegateCommand(SignInOAuth);
             this.SignInBasicCommand = new DelegateCommand(SignInBasic);
             this.HowToSetupOAuthCommand = new DelegateCommand(HowToSetupOAuth);
+            this.HowToGenerateAPITokenCommand = new DelegateCommand(HowToGenerateAPIToken);
 
             SetPanelTitles();
         }
@@ -154,6 +156,13 @@ namespace JiraEX.ViewModel
         private void HowToSetupOAuth(object sender)
         {
             string howToURL = "https://github.com/lubomyl/JiraEX/wiki/How-to-setup-OAuth-(Jira-administrator)";
+
+            System.Diagnostics.Process.Start(howToURL);
+        }
+
+        private void HowToGenerateAPIToken(object sender)
+        {
+            string howToURL = "https://id.atlassian.com/manage/api-tokens";
 
             System.Diagnostics.Process.Start(howToURL);
         }
