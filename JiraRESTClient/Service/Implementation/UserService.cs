@@ -40,21 +40,21 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<UserList> GetAllAssignableUsersForIssueByIssueKey(string issueKey)
+        public Task<List<User>> GetAllAssignableUsersForIssueByIssueKey(string issueKey)
         {
             return Task.Run(() => {
                 var resource = $"user/assignable/search?issueKey={issueKey}";
 
-                return this._baseService.GetResource<UserList>(resource);
+                return this._baseService.GetResource<List<User>>(resource);
             });
         }
 
-        public Task<UserList> GetAllAssignableUsersForIssueByIssueKeyAndByUsername(string issueKey, string username)
+        public Task<List<User>> GetAllAssignableUsersForIssueByIssueKeyAndByUsername(string issueKey, string username)
         {
             return Task.Run(() => {
                 var resource = $"user/assignable/search?issueKey={issueKey}&username={username}";
 
-                return this._baseService.GetResource<UserList>(resource);
+                return this._baseService.GetResource<List<User>>(resource);
             });
         }
     }

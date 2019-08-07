@@ -52,7 +52,7 @@ namespace JiraRESTClient.Service
 
         Task MoveIssueToSprintAsync(string issueKey, string sprintId);
 
-        Task<FilterList> GetAllFiltersAsync();
+        Task<List<Filter>> GetAllFiltersAsync();
 
         Task<IssueListPaged> GetAllIssuesByJqlAsync(int startAt, string jql);
 

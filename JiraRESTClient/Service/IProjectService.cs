@@ -21,7 +21,7 @@ namespace JiraRESTClient.Service
 
         Task<ProjectCreatableList> GetAllProjectsCreatableIssueTypesAsync();
 
-        Task<StatusList> GetAllStatusesByProjectKeyAsync(string projectKey);
+        Task<List<StatusObject>> GetAllStatusesByProjectKeyAsync(string projectKey);
 
     }
 }

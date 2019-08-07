@@ -384,6 +384,10 @@ namespace JiraEX.ViewModel
                     OnPropertyChanged("PriorityAttribute");
                     UserSettingsHelper.WriteToUserSettings("PriorityAttribute", this.AttributesList[6].CheckedStatus);
                     break;
+                case "FixVersion":
+                    OnPropertyChanged("FixVersionAttribute");
+                    UserSettingsHelper.WriteToUserSettings("FixVersionAttribute", this.AttributesList[7].CheckedStatus);
+                    break;
             }
         }
 
@@ -406,6 +410,7 @@ namespace JiraEX.ViewModel
             this.AttributesList.Add(new MyAttribute("Assignee", UserSettingsHelper.ReadBoolFromUserSettings("AssigneeAttribute")));
             this.AttributesList.Add(new MyAttribute("Summary", UserSettingsHelper.ReadBoolFromUserSettings("SummaryAttribute")));
             this.AttributesList.Add(new MyAttribute("Priority", UserSettingsHelper.ReadBoolFromUserSettings("PriorityAttribute")));
+            this.AttributesList.Add(new MyAttribute("FixVersion", UserSettingsHelper.ReadBoolFromUserSettings("FixVersionAttribute")));
         }
 
         public void SetPanelTitles()
@@ -527,6 +532,11 @@ namespace JiraEX.ViewModel
         public bool PriorityAttribute
         {
             get { return this.AttributesList[6].CheckedStatus; }
+        }
+
+        public bool FixVersionAttribute
+        {
+            get { return this.AttributesList[7].CheckedStatus; }
         }
 
         public bool HasNext

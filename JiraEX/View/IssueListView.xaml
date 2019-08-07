@@ -139,6 +139,7 @@
                                                 <TextBlock AutomationProperties.AutomationId="IssueType" 
                                                            FontFamily="Consolas" ToolTip="{Binding Fields.IssueType.Name, Mode=OneWay}" Text="{Binding Fields.IssueType.Name, Mode=OneWay}"/>
                                             </Border>
+           
                                         </StackPanel>
                                     </DockPanel>
                                 </Grid>
@@ -177,6 +178,27 @@
                                     <TextBlock Visibility="{Binding Fields.Assignee, Converter={StaticResource NotNullToVisibleConverter}}"
                                                Style="{StaticResource PlainText}" Text="{Binding Fields.Assignee.Name, StringFormat=(@{0})}" />
                                 </StackPanel>
+
+                                <DockPanel LastChildFill="False" Visibility="{Binding DataContext.FixVersionAttribute, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Converter={StaticResource TrueToVisibleConverter}}">
+                                    <Label DockPanel.Dock="Left" Style="{StaticResource LabelFaded}">Fix versions:</Label>
+
+                                    <ItemsControl ItemsSource="{Binding Fields.FixVersions}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2" Padding="5 1" Margin="0 0 5 5"  BorderThickness="1" BorderBrush="#FF4B4D50">
+                                                    <TextBlock FontFamily="Consolas" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Text="{Binding Name}" Style="{StaticResource PlainText}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                </DockPanel>
+                                
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

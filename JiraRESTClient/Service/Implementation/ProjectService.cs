@@ -54,12 +54,12 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        public Task<StatusList> GetAllStatusesByProjectKeyAsync(string projectKey)
+        public Task<List<StatusObject>> GetAllStatusesByProjectKeyAsync(string projectKey)
         {
             return Task.Run(() => {
                 var resource = $"project/{projectKey}/statuses";
 
-                return this._baseService.GetResource<StatusList>(resource);
+                return this._baseService.GetResource<List<StatusObject>>(resource);
             });
         }
     }

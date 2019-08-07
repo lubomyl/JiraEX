@@ -19,7 +19,7 @@ namespace JiraEX.UnitTests.ViewModel
         Mock<IJiraToolWindowNavigatorViewModel> _mockJiraToolWindowNavigatorViewModel;
         Mock<IIssueService> _mockIssueService;
 
-        Mock<FilterList> _mockFilterList;
+        Mock<List<Filter>> _mockFilterList;
         Mock<Filter> _mockFilter;
 
         FilterListViewModel _viewModel;
@@ -29,7 +29,7 @@ namespace JiraEX.UnitTests.ViewModel
         {
             this._mockJiraToolWindowNavigatorViewModel = new Mock<IJiraToolWindowNavigatorViewModel>();
 
-            this._mockFilterList = new Mock<FilterList>();
+            this._mockFilterList = new Mock<List<Filter>>();
             this._mockFilter = new Mock<Filter>();
 
             this._mockIssueService = new Mock<IIssueService>();

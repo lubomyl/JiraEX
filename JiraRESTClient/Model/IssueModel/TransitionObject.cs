@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class TransitionList
+    public class TransitionObject
     {
 
         public List<Transition> Transitions { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JiraRESTClient.Model
 {
-    public class StatusOjbect
+    public class StatusObject
     {
 
         public List<Status> Statuses { get; set; }

@@ -35,12 +35,12 @@ namespace JiraRESTClient.Service.Implementation
         /// <summary>
         /// <see cref="IPriorityService.GetAllPrioritiesAsync"/>
         /// </summary>
-        public Task<PriorityList> GetAllPrioritiesAsync()
+        public Task<List<Priority>> GetAllPrioritiesAsync()
         {
             return Task.Run(() => {
                 var resource = "priority";
 
-                return this._baseService.GetResource<PriorityList>(resource);
+                return this._baseService.GetResource<List<Priority>>(resource);
             });
         }
 

@@ -147,11 +147,11 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
+            Task<List<Priority>> priorityTask = this._priorityService.GetAllPrioritiesAsync();
 
             try
             {
-                var priorityList = await priorityTask as PriorityList;
+                var priorityList = await priorityTask as List<Priority>;
 
                 this.PriorityList.Clear();
 
@@ -184,9 +184,9 @@ namespace JiraEX.ViewModel
 
                 foreach (Project p in projectList)
                 {
-                    Task<StatusList> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
+                    Task<List<StatusObject>> statusTask = this._projectService.GetAllStatusesByProjectKeyAsync(p.Key);
 
-                    var statusList = await statusTask as StatusList;
+                    var statusList = await statusTask as List<StatusObject>;
 
                     foreach (Status s in statusList[0].Statuses)
                     {

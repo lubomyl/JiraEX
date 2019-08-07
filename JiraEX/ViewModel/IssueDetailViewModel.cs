@@ -551,11 +551,11 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Task<PriorityList> priorityTask = this._priorityService.GetAllPrioritiesAsync();
+            Task<List<Priority>> priorityTask = this._priorityService.GetAllPrioritiesAsync();
 
             try
             {
-                var priorityList = await priorityTask as PriorityList;
+                var priorityList = await priorityTask as List<Priority>;
 
                 this.PriorityList.Clear();
 
@@ -584,15 +584,15 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Task<TransitionList> transitionTask = this._transitionService.GetAllTransitionsForIssueByIssueKey(this._issue.Key);
+            Task<TransitionObject> transitionTask = this._transitionService.GetAllTransitionsForIssueByIssueKey(this._issue.Key);
 
             try
             {
-                var transitionList = await transitionTask as TransitionList;
+                var transitionObject = await transitionTask as TransitionObject;
 
                 this.TransitionList.Clear();
 
-                foreach (Transition t in transitionList.Transitions)
+                foreach (Transition t in transitionObject.Transitions)
                 {
                     this.TransitionList.Add(t);
 
@@ -615,11 +615,11 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKey(this._issue.Key);
+            Task<List<User>> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKey(this._issue.Key);
 
             try
             {
-                var userList = await userTask as UserList;
+                var userList = await userTask as List<User>;
 
                 this.AssigneeList.Clear();
 
@@ -1161,11 +1161,11 @@ namespace JiraEX.ViewModel
         {
             this._parent.StartLoading();
 
-            Task<UserList> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKeyAndByUsername(this._issue.Key, searchString);
+            Task<List<User>> userTask = this._userService.GetAllAssignableUsersForIssueByIssueKeyAndByUsername(this._issue.Key, searchString);
 
             try
             {
-                var userList = await userTask as UserList;
+                var userList = await userTask as List<User>;
 
                 this.AssigneeList.Clear();
                 this.AssigneeList.Add(this._unassigned);

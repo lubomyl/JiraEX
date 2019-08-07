@@ -16,8 +16,8 @@ namespace JiraRESTClient.Service
         /// <returns>Task containing deserialized <see cref="User"/> model class object.</returns>
         Task<User> GetAuthenticatedUserAsync();
 
-        Task<UserList> GetAllAssignableUsersForIssueByIssueKey(string issueKey);
+        Task<List<User>> GetAllAssignableUsersForIssueByIssueKey(string issueKey);
 
-        Task<UserList> GetAllAssignableUsersForIssueByIssueKeyAndByUsername(string issueKey, string username);
+        Task<List<User>> GetAllAssignableUsersForIssueByIssueKeyAndByUsername(string issueKey, string username);
     }
 }

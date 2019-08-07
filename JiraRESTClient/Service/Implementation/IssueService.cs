@@ -224,12 +224,12 @@ namespace JiraRESTClient.Service.Implementation
             });
         }
 
-        Task<FilterList> IIssueService.GetAllFiltersAsync()
+        Task<List<Filter>> IIssueService.GetAllFiltersAsync()
         {
             return Task.Run(() => {
                 var resource = "filter/favourite";
 
-                return this._baseService.GetResource<FilterList>(resource);
+                return this._baseService.GetResource<List<Filter>>(resource);
             });
         }
 

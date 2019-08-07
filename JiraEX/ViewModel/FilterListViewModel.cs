@@ -47,10 +47,10 @@ namespace JiraEX.ViewModel
 
             this.FilterList.Clear();
 
-            Task<FilterList> filterTask = this._issueService.GetAllFiltersAsync();
+            Task<List<Filter>> filterTask = this._issueService.GetAllFiltersAsync();
 
             try { 
-                var filterList = await filterTask as FilterList;
+                var filterList = await filterTask as List<Filter>;
 
                 if (filterList.Count > 0)
                 {

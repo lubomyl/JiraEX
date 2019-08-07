@@ -16,8 +16,8 @@ namespace JiraRESTClient.Service
         /// <summary>
         /// Async method to get a <see cref="List{Priority}"/> object containg all <see cref="Priority"/> related to currently authenticated user.
         /// </summary>
-        /// <returns>Task containing deserialized <see cref="PriorityList"/> model class object.</returns>
-        Task<PriorityList> GetAllPrioritiesAsync();
+        /// <returns>Task containing deserialized <see cref="List<Priority>"/> model class object.</returns>
+        Task<List<Priority>> GetAllPrioritiesAsync();
 
     }
 }

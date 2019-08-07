@@ -36,12 +36,12 @@ namespace JiraRESTClient.Service.Implementation
         /// <summary>
         /// <see cref="ITransitionService.GetAllTransitionsForIssueByIssueKey(string)"/>
         /// </summary>
-        public Task<TransitionList> GetAllTransitionsForIssueByIssueKey(string issueKey)
+        public Task<TransitionObject> GetAllTransitionsForIssueByIssueKey(string issueKey)
         {
             return Task.Run(() => {
                 var resource = $"issue/{issueKey}/transitions";
 
-                return this._baseService.GetResource<TransitionList>(resource);
+                return this._baseService.GetResource<TransitionObject>(resource);
             });
         }
 
